@@ -14,6 +14,7 @@
 		129F4348217F54D8008E856D /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4347217F54D8008E856D /* Menu.swift */; };
 		129F434B217F5B1D008E856D /* I18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434A217F5B1D008E856D /* I18n.swift */; };
 		129F434D217F5C5D008E856D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 129F434C217F5C5D008E856D /* Localizable.strings */; };
+		129F4350217F6F5D008E856D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434F217F6F5D008E856D /* Settings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		129F4347217F54D8008E856D /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		129F434A217F5B1D008E856D /* I18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18n.swift; sourceTree = "<group>"; };
 		129F434C217F5C5D008E856D /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		129F434F217F6F5D008E856D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		129F4334217E1CD3008E856D /* StarPteranoMac */ = {
 			isa = PBXGroup;
 			children = (
+				129F434E217F6F4A008E856D /* Data */,
 				129F4349217F5B0E008E856D /* Utils */,
 				129F4346217F54B0008E856D /* Menu */,
 				129F4343217F4EED008E856D /* SettingsWindow */,
@@ -94,6 +97,14 @@
 				129F434A217F5B1D008E856D /* I18n.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		129F434E217F6F4A008E856D /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				129F434F217F6F5D008E856D /* Settings.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,6 +182,7 @@
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
 				129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */,
+				129F4350217F6F5D008E856D /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

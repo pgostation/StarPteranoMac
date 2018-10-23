@@ -11,12 +11,20 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    @IBOutlet weak var window: NSWindow!
+    //@IBOutlet weak var window: NSWindow!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
+        // メニューを作成する
         Menu.makeMainMenus()
+        
+        if Settings.hostName == nil {
+            // アカウント登録がなければ設定ウィンドウのアカウントViewControllerを開く
+            SettingsWindow.show()
+        } else {
+            // アカウント登録があればMainViewControllerを開く
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -24,11 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-// メニューを作成する
-// アカウント登録がなければ設定ウィンドウのアカウントViewControllerを開く
-// アカウント登録があればMainViewControllerを開く
-//   MainViewControllerはタブ的だが、複数のViewControllerを同時に表示するだけ
 
+//   MainViewControllerはタブ的だが、複数のViewControllerを同時に表示するだけ
 // TwUIあたりを使うか、CALayer中心にビューを構築するのが良さそう
 
 // キーボードショートカット

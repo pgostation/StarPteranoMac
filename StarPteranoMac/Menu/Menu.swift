@@ -63,5 +63,8 @@ class Menu: NSObject, NSMenuDelegate {
         if item.title == I18n.get("Quit StarPterano") {
             NSApplication.shared.terminate(nil)
         }
+        else if item.title == I18n.get("Preferences…") {
+            SettingsWindow.show()
+        }
     }
 }
