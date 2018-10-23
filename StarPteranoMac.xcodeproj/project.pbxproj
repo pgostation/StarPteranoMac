@@ -10,6 +10,10 @@
 		129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4335217E1CD3008E856D /* AppDelegate.swift */; };
 		129F4338217E1CD4008E856D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 129F4337217E1CD4008E856D /* Assets.xcassets */; };
 		129F433B217E1CD4008E856D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129F4339217E1CD4008E856D /* MainMenu.xib */; };
+		129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4344217F4F18008E856D /* SettingsWindow.swift */; };
+		129F4348217F54D8008E856D /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4347217F54D8008E856D /* Menu.swift */; };
+		129F434B217F5B1D008E856D /* I18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434A217F5B1D008E856D /* I18n.swift */; };
+		129F434D217F5C5D008E856D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 129F434C217F5C5D008E856D /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		129F433A217E1CD4008E856D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		129F433C217E1CD4008E856D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		129F433D217E1CD4008E856D /* StarPteranoMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StarPteranoMac.entitlements; sourceTree = "<group>"; };
+		129F4344217F4F18008E856D /* SettingsWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindow.swift; sourceTree = "<group>"; };
+		129F4347217F54D8008E856D /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		129F434A217F5B1D008E856D /* I18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18n.swift; sourceTree = "<group>"; };
+		129F434C217F5C5D008E856D /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,13 +59,41 @@
 		129F4334217E1CD3008E856D /* StarPteranoMac */ = {
 			isa = PBXGroup;
 			children = (
+				129F4349217F5B0E008E856D /* Utils */,
+				129F4346217F54B0008E856D /* Menu */,
+				129F4343217F4EED008E856D /* SettingsWindow */,
 				129F4335217E1CD3008E856D /* AppDelegate.swift */,
 				129F4337217E1CD4008E856D /* Assets.xcassets */,
 				129F4339217E1CD4008E856D /* MainMenu.xib */,
 				129F433C217E1CD4008E856D /* Info.plist */,
 				129F433D217E1CD4008E856D /* StarPteranoMac.entitlements */,
+				129F434C217F5C5D008E856D /* Localizable.strings */,
 			);
 			path = StarPteranoMac;
+			sourceTree = "<group>";
+		};
+		129F4343217F4EED008E856D /* SettingsWindow */ = {
+			isa = PBXGroup;
+			children = (
+				129F4344217F4F18008E856D /* SettingsWindow.swift */,
+			);
+			path = SettingsWindow;
+			sourceTree = "<group>";
+		};
+		129F4346217F54B0008E856D /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				129F4347217F54D8008E856D /* Menu.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		129F4349217F5B0E008E856D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				129F434A217F5B1D008E856D /* I18n.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				129F4338217E1CD4008E856D /* Assets.xcassets in Resources */,
+				129F434D217F5C5D008E856D /* Localizable.strings in Resources */,
 				129F433B217E1CD4008E856D /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +167,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				129F4348217F54D8008E856D /* Menu.swift in Sources */,
+				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
+				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
 				129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -276,6 +316,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.pgostation.StarPteranoMac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -295,6 +336,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = jp.pgostation.StarPteranoMac;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;

@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  StarPteranoMac
+
+  Created by takayoshi on 2018/10/23.
+  Copyright © 2018 pgostation. All rights reserved.
+*/
+
+// Menu
+"About StarPterano" = "星プテラノについて";
+"Preferences…" = "環境設定…";
+"Hide StarPterano" = "星プテラノを隠す";
+"Hide Others" = "ほかを隠す";
+"Show All" = "すべてを表示";
+"Quit StarPterano" = "星プテラノを終了";
