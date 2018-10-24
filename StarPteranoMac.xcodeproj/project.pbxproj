@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4335217E1CD3008E856D /* AppDelegate.swift */; };
 		129F4338217E1CD4008E856D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 129F4337217E1CD4008E856D /* Assets.xcassets */; };
 		129F433B217E1CD4008E856D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129F4339217E1CD4008E856D /* MainMenu.xib */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		129F4332217E1CD3008E856D /* StarPteranoMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarPteranoMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129F4335217E1CD3008E856D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		129F4337217E1CD4008E856D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				129F4339217E1CD4008E856D /* MainMenu.xib */,
 				129F433C217E1CD4008E856D /* Info.plist */,
 				129F433D217E1CD4008E856D /* StarPteranoMac.entitlements */,
+				1291FC432180B03A009B8788 /* InfoPlist.strings */,
 				129F434C217F5C5D008E856D /* Localizable.strings */,
 			);
 			path = StarPteranoMac;
@@ -166,6 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				129F4338217E1CD4008E856D /* Assets.xcassets in Resources */,
+				1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */,
 				129F434D217F5C5D008E856D /* Localizable.strings in Resources */,
 				129F433B217E1CD4008E856D /* MainMenu.xib in Resources */,
 			);
