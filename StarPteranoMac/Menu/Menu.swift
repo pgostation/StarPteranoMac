@@ -19,33 +19,33 @@ class Menu: NSObject, NSMenuDelegate {
             let appMenu = NSMenu(title: "App")
             
             do {
-                let menuItem = NSMenuItem(title: I18n.get("About StarPterano"), action: #selector(domenu(_:)), keyEquivalent: "")
+                let menuItem = NSMenuItem(title: I18n.get("About StarPterano"), action: #selector(doAppMenu(_:)), keyEquivalent: "")
                 menuItem.target = menuTarget
                 appMenu.addItem(menuItem)
             }
             appMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem = NSMenuItem(title: I18n.get("Preferences…"), action: #selector(domenu(_:)), keyEquivalent: "")
+                let menuItem = NSMenuItem(title: I18n.get("Preferences…"), action: #selector(doAppMenu(_:)), keyEquivalent: "")
                 menuItem.target = menuTarget
                 appMenu.addItem(menuItem)
             }
             appMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem1 = NSMenuItem(title: I18n.get("Hide StarPterano"), action: #selector(domenu(_:)), keyEquivalent: "h")
+                let menuItem1 = NSMenuItem(title: I18n.get("Hide StarPterano"), action: #selector(doAppMenu(_:)), keyEquivalent: "h")
                 menuItem1.target = menuTarget
                 appMenu.addItem(menuItem1)
                 
-                let menuItem2 = NSMenuItem(title: I18n.get("Hide Others"), action: #selector(domenu(_:)), keyEquivalent: "^h")
+                let menuItem2 = NSMenuItem(title: I18n.get("Hide Others"), action: #selector(doAppMenu(_:)), keyEquivalent: "^h")
                 menuItem2.target = menuTarget
                 appMenu.addItem(menuItem2)
                 
-                let menuItem3 = NSMenuItem(title: I18n.get("Show All"), action: #selector(domenu(_:)), keyEquivalent: "")
+                let menuItem3 = NSMenuItem(title: I18n.get("Show All"), action: #selector(doAppMenu(_:)), keyEquivalent: "")
                 menuItem3.target = menuTarget
                 appMenu.addItem(menuItem3)
             }
             appMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem = NSMenuItem(title: I18n.get("Quit StarPterano"), action: #selector(domenu(_:)), keyEquivalent: "q")
+                let menuItem = NSMenuItem(title: I18n.get("Quit StarPterano"), action: #selector(doAppMenu(_:)), keyEquivalent: "q")
                 menuItem.target = menuTarget
                 appMenu.addItem(menuItem)
             }
@@ -59,12 +59,24 @@ class Menu: NSObject, NSMenuDelegate {
         NSApplication.shared.mainMenu = mainMenu
     }
     
-    @objc func domenu(_ item: NSMenuItem) {
+    @objc func doAppMenu(_ item: NSMenuItem) {
         if item.title == I18n.get("Quit StarPterano") {
             NSApplication.shared.terminate(nil)
         }
         else if item.title == I18n.get("Preferences…") {
             SettingsWindow.show()
+        }
+        else if item.title == I18n.get("Show All") {
+            NSApplication.shared.unhideAllApplications(nil)
+        }
+        else if item.title == I18n.get("Hide StarPterano") {
+            NSApplication.shared.hide(nil)
+        }
+        else if item.title == I18n.get("Hide Others") {
+            NSApplication.shared.hideOtherApplications(nil)
+        }
+        else if item.title == I18n.get("About StarPterano") {
+            NSApplication.shared.orderFrontStandardAboutPanel(nil)
         }
     }
 }
