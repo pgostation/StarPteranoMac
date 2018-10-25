@@ -25,7 +25,7 @@ class Menu: NSObject, NSMenuDelegate {
             }
             appMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem = NSMenuItem(title: I18n.get("Preferences…"), action: #selector(doAppMenu(_:)), keyEquivalent: "")
+                let menuItem = NSMenuItem(title: I18n.get("Preferences…"), action: #selector(doAppMenu(_:)), keyEquivalent: ",")
                 menuItem.target = menuTarget
                 appMenu.addItem(menuItem)
             }
@@ -53,9 +53,63 @@ class Menu: NSObject, NSMenuDelegate {
             appMenuItem.submenu = appMenu
         }
         
+        // File Menu
+        let fileMenuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
+        fileMenuItem.target = menuTarget
+        do {
+            let fileMenu = NSMenu(title: I18n.get("File"))
+            
+            do {
+                let menuItem = NSMenuItem(title: I18n.get("Close"), action: #selector(doAppMenu(_:)), keyEquivalent: "w")
+                menuItem.target = menuTarget
+                fileMenu.addItem(menuItem)
+            }
+            
+            fileMenuItem.submenu = fileMenu
+        }
+        
+        // Edit Menu
+        let editMenuItem = NSMenuItem(title: "Edit", action: nil, keyEquivalent: "")
+        editMenuItem.target = menuTarget
+        do {
+            let editMenu = NSMenu(title: I18n.get("Edit"))
+            
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Undo"), action: #selector(doEditMenu(_:)), keyEquivalent: "z")
+                menuItem1.target = menuTarget
+                editMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Redo"), action: #selector(doEditMenu(_:)), keyEquivalent: "Z")
+                menuItem2.target = menuTarget
+                editMenu.addItem(menuItem2)
+            }
+            editMenu.addItem(NSMenuItem.separator())
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Cut"), action: #selector(doEditMenu(_:)), keyEquivalent: "x")
+                menuItem1.target = menuTarget
+                editMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Copy"), action: #selector(doEditMenu(_:)), keyEquivalent: "c")
+                menuItem2.target = menuTarget
+                editMenu.addItem(menuItem2)
+                
+                let menuItem3 = NSMenuItem(title: I18n.get("Paste"), action: #selector(doEditMenu(_:)), keyEquivalent: "v")
+                menuItem3.target = menuTarget
+                editMenu.addItem(menuItem3)
+                
+                let menuItem4 = NSMenuItem(title: I18n.get("Select All"), action: #selector(doEditMenu(_:)), keyEquivalent: "a")
+                menuItem4.target = menuTarget
+                editMenu.addItem(menuItem4)
+            }
+            
+            editMenuItem.submenu = editMenu
+        }
+        
         // Set Menus to App
         let mainMenu = NSMenu(title: "Main")
         mainMenu.addItem(appMenuItem)
+        mainMenu.addItem(fileMenuItem)
+        mainMenu.addItem(editMenuItem)
         NSApplication.shared.mainMenu = mainMenu
     }
     
@@ -77,6 +131,32 @@ class Menu: NSObject, NSMenuDelegate {
         }
         else if item.title == I18n.get("About StarPterano") {
             NSApplication.shared.orderFrontStandardAboutPanel(nil)
+        }
+        else if item.title == I18n.get("Close") {
+            NSApplication.shared.keyWindow?.close()
+        }
+    }
+    
+    @objc func doEditMenu(_ item: NSMenuItem) {
+        guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return }
+        
+        if item.title == I18n.get("Undo") {
+            activeField.undoManager?.undo()
+        }
+        else if item.title == I18n.get("Redo") {
+            activeField.undoManager?.redo()
+        }
+        else if item.title == I18n.get("Cut") {
+            activeField.cut(nil)
+        }
+        else if item.title == I18n.get("Copy") {
+            activeField.copy(nil)
+        }
+        else if item.title == I18n.get("Paste") {
+            activeField.pasteAsPlainText(nil)
+        }
+        else if item.title == I18n.get("Select All") {
+            activeField.selectAll(nil)
         }
     }
 }

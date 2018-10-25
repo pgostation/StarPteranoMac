@@ -6,10 +6,23 @@
   Copyright © 2018 pgostation. All rights reserved.
 */
 
-// Menu
+// Application Menu
 "About StarPterano" = "星プテラノについて";
 "Preferences…" = "環境設定…";
 "Hide StarPterano" = "星プテラノを隠す";
 "Hide Others" = "ほかを隠す";
 "Show All" = "すべてを表示";
 "Quit StarPterano" = "星プテラノを終了";
+
+// File Menu
+"File" = "ファイル";
+"Close" = "閉じる";
+
+// Edit Menu
+"Edit" = "編集";
+"Undo" = "取り消す";
+"Redo" = "やり直す";
+"Cut" = "カット";
+"Copy" = "コピー";
+"Paste" = "ペースト";
+"Select All" = "すべてを選択";
