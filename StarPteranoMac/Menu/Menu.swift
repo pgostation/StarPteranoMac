@@ -159,4 +159,40 @@ class Menu: NSObject, NSMenuDelegate {
             activeField.selectAll(nil)
         }
     }
+    
+    @objc func validateMenuItem(_ item: NSMenuItem) -> Bool {
+        if item.title == I18n.get("Show All") {
+            return true
+        }
+        else if item.title == I18n.get("Hide StarPterano") {
+            return true
+        }
+        else if item.title == I18n.get("Hide Others") {
+            return true
+        }
+        else if item.title == I18n.get("Undo") {
+            guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return false }
+            return activeField.undoManager?.canUndo ?? false
+        }
+        else if item.title == I18n.get("Redo") {
+            guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return false }
+            return activeField.undoManager?.canRedo ?? false
+        }
+        else if item.title == I18n.get("Cut") {
+            guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return false }
+            return activeField.selectedRange().length > 0
+        }
+        else if item.title == I18n.get("Copy") {
+            guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return false }
+            return activeField.selectedRange().length > 0
+        }
+        else if item.title == I18n.get("Paste") {
+            return NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string) != nil
+        }
+        else if item.title == I18n.get("Select All") {
+            return true
+        }
+        
+        return true
+    }
 }
