@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class Menu: NSObject, NSMenuDelegate {
+final class Menu: NSObject, NSMenuDelegate {
     private static var menuTarget = Menu()
     
     static func makeMainMenus() {

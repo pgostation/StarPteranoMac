@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class I18n {
+final class I18n {
     static func get(_ text: String) -> String {
         return NSLocalizedString(text, comment: "")
     }

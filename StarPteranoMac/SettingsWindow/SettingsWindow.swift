@@ -8,8 +8,9 @@
 
 import Cocoa
 
-class SettingsWindow: NSWindow {
+final class SettingsWindow: NSWindow {
     static weak var window: SettingsWindow?
+    static let contentRect = NSRect(x: 0, y: 0, width: 640, height: 480)
     
     static func show() {
         if let window = self.window {
@@ -17,7 +18,7 @@ class SettingsWindow: NSWindow {
             return
         }
         
-        let window = SettingsWindow(contentRect: NSRect.init(x: 0, y: 0, width: 640, height: 480),
+        let window = SettingsWindow(contentRect: contentRect,
                                     styleMask: NSWindow.StyleMask.closable,
                                     backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)
@@ -26,6 +27,10 @@ class SettingsWindow: NSWindow {
         window.center()
         self.window = window
         window.makeKeyAndOrderFront(window)
+        
+        let vc = SettingsViewController()
+        window.contentViewController = vc
+        window.contentView = vc.view
     }
     
     override func close() {

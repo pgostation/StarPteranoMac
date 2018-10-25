@@ -26,3 +26,12 @@
 "Copy" = "コピー";
 "Paste" = "ペースト";
 "Select All" = "すべてを選択";
+
+// Settings Segment
+"SETTINGS_ACCOUNT" = "アカウント";
+"SETTINGS_GENERAL" = "一般";
+"SETTINGS_UI" = "UI";
+"SETTINGS_NOTIFICATIONS" = "通知";
+"SETTINGS_SEARCH" = "検索";
+"SETTINGS_DETAIL" = "詳細";
+

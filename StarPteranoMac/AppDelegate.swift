@@ -19,7 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // メニューを作成する
         Menu.makeMainMenus()
         
-        if Settings.hostName == nil {
+        if Settings.accountList.count == 0 {
             // アカウント登録がなければ設定ウィンドウのアカウントViewControllerを開く
             SettingsWindow.show()
         } else {
