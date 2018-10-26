@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC452181FD8B009B8788 /* SettingsViewController.swift */; };
+		1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4721834628009B8788 /* AccountSettingsViewController.swift */; };
+		1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4A21835D5A009B8788 /* Dialog.swift */; };
+		1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4D21835F08009B8788 /* MastodonRequest.swift */; };
 		129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4335217E1CD3008E856D /* AppDelegate.swift */; };
 		129F4338217E1CD4008E856D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 129F4337217E1CD4008E856D /* Assets.xcassets */; };
 		129F433B217E1CD4008E856D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129F4339217E1CD4008E856D /* MainMenu.xib */; };
@@ -22,6 +25,9 @@
 /* Begin PBXFileReference section */
 		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		1291FC452181FD8B009B8788 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		1291FC4721834628009B8788 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
+		1291FC4A21835D5A009B8788 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		1291FC4D21835F08009B8788 /* MastodonRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MastodonRequest.swift; sourceTree = "<group>"; };
 		129F4332217E1CD3008E856D /* StarPteranoMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarPteranoMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129F4335217E1CD3008E856D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		129F4337217E1CD4008E856D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -46,6 +52,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1291FC4921835D3D009B8788 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				1291FC4A21835D5A009B8788 /* Dialog.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		1291FC4C21835EF2009B8788 /* Mastodon */ = {
+			isa = PBXGroup;
+			children = (
+				1291FC4D21835F08009B8788 /* MastodonRequest.swift */,
+			);
+			path = Mastodon;
+			sourceTree = "<group>";
+		};
 		129F4329217E1CD3008E856D = {
 			isa = PBXGroup;
 			children = (
@@ -65,8 +87,10 @@
 		129F4334217E1CD3008E856D /* StarPteranoMac */ = {
 			isa = PBXGroup;
 			children = (
+				1291FC4C21835EF2009B8788 /* Mastodon */,
 				129F434E217F6F4A008E856D /* Data */,
 				129F4349217F5B0E008E856D /* Utils */,
+				1291FC4921835D3D009B8788 /* UI */,
 				129F4346217F54B0008E856D /* Menu */,
 				129F4343217F4EED008E856D /* SettingsWindow */,
 				129F4335217E1CD3008E856D /* AppDelegate.swift */,
@@ -85,6 +109,7 @@
 			children = (
 				129F4344217F4F18008E856D /* SettingsWindow.swift */,
 				1291FC452181FD8B009B8788 /* SettingsViewController.swift */,
+				1291FC4721834628009B8788 /* AccountSettingsViewController.swift */,
 			);
 			path = SettingsWindow;
 			sourceTree = "<group>";
@@ -190,7 +215,10 @@
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
 				129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */,
 				129F4350217F6F5D008E856D /* Settings.swift in Sources */,
+				1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */,
 				1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */,
+				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
+				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +355,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = StarPteranoMac/StarPteranoMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;
@@ -347,7 +374,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = StarPteranoMac/StarPteranoMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;

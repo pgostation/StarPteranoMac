@@ -27,7 +27,8 @@
 "Paste" = "ペースト";
 "Select All" = "すべてを選択";
 
-// Settings Segment
+// Settings Window
+"TITLE_PREFERENCES" = "環境設定";
 "SETTINGS_ACCOUNT" = "アカウント";
 "SETTINGS_GENERAL" = "一般";
 "SETTINGS_UI" = "UI";
@@ -35,3 +36,11 @@
 "SETTINGS_SEARCH" = "検索";
 "SETTINGS_DETAIL" = "詳細";
 
+// ログイン
+"PLACEHOLDER_INPUT_DOMAIN" = "Input domain (ex：mastodon.social)";
+"BUTTON_MASTODON_OAUTH" = "Mastodon Server Auth";
+"ALERT_INPUT_DOMAIN" = "Input domain.";
+"PLACEHOLDER_INPUT_CODE" = "Input code";
+"BUTTON_ENTER_CODE" = "Enter code";
+"ALERT_INPUT_CODE_FAILURE" = "Bad code.";
+"REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";

@@ -23,7 +23,7 @@ final class SettingsWindow: NSWindow {
                                     backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)
         window.styleMask.insert(NSWindow.StyleMask.titled)
-        window.title = "Settings"
+        window.title = I18n.get("TITLE_PREFERENCES")
         window.center()
         self.window = window
         window.makeKeyAndOrderFront(window)
@@ -31,6 +31,9 @@ final class SettingsWindow: NSWindow {
         let vc = SettingsViewController()
         window.contentViewController = vc
         window.contentView = vc.view
+        
+        // 最初はアカウントページ
+        vc.accountAction()
     }
     
     override func close() {
