@@ -18,6 +18,7 @@ final class SettingsWindow: NSWindow {
     
     static func show() {
         if let window = self.window {
+            window.setIsVisible(true)
             window.center()
             return
         }

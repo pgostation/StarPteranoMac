@@ -8,6 +8,7 @@
 
 import Cocoa
 
-class MainViewController: NSViewController {
-
+final class MainViewController: NSViewController {
+    static weak var instance: MainViewController?
+    var timelineList: [String: TimeLineViewController] = [:]
 }

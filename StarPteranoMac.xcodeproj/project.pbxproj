@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
+		128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751AB218478CA00BC8828 /* ImageUtils.swift */; };
+		128751AE2184792500BC8828 /* EmojiImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751AD2184792500BC8828 /* EmojiImage.swift */; };
+		128751B021847D9C00BC8828 /* SubViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751AF21847D9C00BC8828 /* SubViewController.swift */; };
+		128751B22184811600BC8828 /* AnalyzeJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751B12184811600BC8828 /* AnalyzeJson.swift */; };
+		128751B42184816700BC8828 /* TimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751B32184816700BC8828 /* TimeLineViewController.swift */; };
+		128751B62184817000BC8828 /* TimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751B52184817000BC8828 /* TimeLineView.swift */; };
+		128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751B72184817D00BC8828 /* TimeLineViewModel.swift */; };
+		128751BA2184830200BC8828 /* ThemeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751B92184830200BC8828 /* ThemeColor.swift */; };
+		128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751BB21848A1900BC8828 /* MastodonStreaming.swift */; };
 		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC452181FD8B009B8788 /* SettingsViewController.swift */; };
 		1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4721834628009B8788 /* AccountSettingsViewController.swift */; };
@@ -30,6 +39,15 @@
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		128751AB218478CA00BC8828 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
+		128751AD2184792500BC8828 /* EmojiImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiImage.swift; sourceTree = "<group>"; };
+		128751AF21847D9C00BC8828 /* SubViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubViewController.swift; sourceTree = "<group>"; };
+		128751B12184811600BC8828 /* AnalyzeJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeJson.swift; sourceTree = "<group>"; };
+		128751B32184816700BC8828 /* TimeLineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineViewController.swift; sourceTree = "<group>"; };
+		128751B52184817000BC8828 /* TimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineView.swift; sourceTree = "<group>"; };
+		128751B72184817D00BC8828 /* TimeLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineViewModel.swift; sourceTree = "<group>"; };
+		128751B92184830200BC8828 /* ThemeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeColor.swift; sourceTree = "<group>"; };
+		128751BB21848A1900BC8828 /* MastodonStreaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MastodonStreaming.swift; sourceTree = "<group>"; };
 		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		1291FC452181FD8B009B8788 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1291FC4721834628009B8788 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +85,8 @@
 			isa = PBXGroup;
 			children = (
 				1291FC4A21835D5A009B8788 /* Dialog.swift */,
+				128751AD2184792500BC8828 /* EmojiImage.swift */,
+				128751B92184830200BC8828 /* ThemeColor.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -75,6 +95,8 @@
 			isa = PBXGroup;
 			children = (
 				1291FC4D21835F08009B8788 /* MastodonRequest.swift */,
+				128751BB21848A1900BC8828 /* MastodonStreaming.swift */,
+				128751B12184811600BC8828 /* AnalyzeJson.swift */,
 			);
 			path = Mastodon;
 			sourceTree = "<group>";
@@ -84,6 +106,10 @@
 			children = (
 				1291FC522183EE3B009B8788 /* MainWindow.swift */,
 				128751A92184340E00BC8828 /* MainViewController.swift */,
+				128751AF21847D9C00BC8828 /* SubViewController.swift */,
+				128751B32184816700BC8828 /* TimeLineViewController.swift */,
+				128751B52184817000BC8828 /* TimeLineView.swift */,
+				128751B72184817D00BC8828 /* TimeLineViewModel.swift */,
 			);
 			path = MainWindow;
 			sourceTree = "<group>";
@@ -150,6 +176,7 @@
 			children = (
 				129F434A217F5B1D008E856D /* I18n.swift */,
 				128751A72184225800BC8828 /* ImageCache.swift */,
+				128751AB218478CA00BC8828 /* ImageUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -309,15 +336,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
+				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
+				128751AE2184792500BC8828 /* EmojiImage.swift in Sources */,
+				128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
+				128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */,
+				128751B62184817000BC8828 /* TimeLineView.swift in Sources */,
+				128751BA2184830200BC8828 /* ThemeColor.swift in Sources */,
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
 				129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */,
 				129F4350217F6F5D008E856D /* SettingsData.swift in Sources */,
+				128751B42184816700BC8828 /* TimeLineViewController.swift in Sources */,
+				128751B22184811600BC8828 /* AnalyzeJson.swift in Sources */,
 				1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */,
 				1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */,
+				128751B021847D9C00BC8828 /* SubViewController.swift in Sources */,
 				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
 				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
 			);

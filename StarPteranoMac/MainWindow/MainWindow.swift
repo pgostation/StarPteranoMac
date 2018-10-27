@@ -14,10 +14,13 @@ final class MainWindow: NSWindow {
     
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
         super.init(contentRect: contentRect, styleMask: style, backing: backingStoreType, defer: flag)
+        
+        AccountSettingsViewController.getAccountData(view: nil)
     }
     
     static func show() {
         if self.window != nil {
+            self.window?.setIsVisible(true)
             setFrame()
             return
         }

@@ -17,6 +17,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // メニューを作成する
         Menu.makeMainMenus()
         
+        showWindow()
+    }
+
+    func applicationWillTerminate(_ aNotification: Notification) {
+        // Insert code here to tear down your application
+    }
+    
+    func applicationDidBecomeActive(_ notification: Notification) {
+        showWindow()
+    }
+    
+    private func showWindow() {
         if SettingsData.accountList.count == 0 {
             // アカウント登録がなければ設定ウィンドウのアカウントViewControllerを開く
             SettingsWindow.show()
@@ -24,10 +36,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // アカウント登録があればMainViewControllerを開く
             MainWindow.show()
         }
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
 }
 

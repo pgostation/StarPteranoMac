@@ -127,6 +127,9 @@ final class AccountSettingsViewController: NSViewController {
                         view.inputCodeField.isHidden = true
                         view.codeEnterButton.isHidden = true
                         
+                        // avatarやdisplaynameを取得しておく
+                        AccountSettingsViewController.getAccountData(view: view)
+                        
                         view.accountsView.refresh()
                     }
                 } catch {
@@ -136,9 +139,45 @@ final class AccountSettingsViewController: NSViewController {
             }
         }
     }
+    
+    // avatarやdisplaynameの情報を取得する
+    static func getAccountData(view: AccountSettingsView?) {
+        for data in SettingsData.accountList {
+            let hostName = data.0
+            let accessToken = data.1
+            
+            guard let url = URL(string: "https://\(hostName)/api/v1/accounts/verify_credentials") else { return }
+            
+            try? MastodonRequest.get(url: url, accessToken: accessToken, completionHandler: { (data, response, error) in
+                if let data = data {
+                    do {
+                        if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                            let accountData = AnalyzeJson.analyzeAccountJson(account: responseJson)
+                            
+                            if let username = accountData.username, SettingsData.accountUsername(accessToken: accessToken) != username {
+                                SettingsData.setAccountUsername(accessToken: accessToken, value: username)
+                            }
+                            if let icon = accountData.avatar_static, SettingsData.accountIconUrl(accessToken: accessToken) != icon {
+                                SettingsData.setAccountIconUrl(accessToken: accessToken, value: icon)
+                                
+                                view?.accountsView.refresh()
+                            }
+                            if let id = accountData.id {
+                                SettingsData.setAccountNumberID(accessToken: accessToken, value: id)
+                            }
+                            if let locked = accountData.locked {
+                                SettingsData.setAccountLocked(accessToken: accessToken, value: locked == 1)
+                            }
+                        }
+                    } catch {
+                    }
+                }
+            })
+        }
+    }
 }
 
-private final class AccountSettingsView: NSView {
+final class AccountSettingsView: NSView {
     let hostNameField = NSTextField()
     let authButton = NSButton()
     let inputCodeField = NSTextField()
@@ -219,7 +258,7 @@ private final class AccountSettingsView: NSView {
     }
 }
 
-private final class AccountsView: NSScrollView {
+final class AccountsView: NSScrollView {
     private var accountViews: [AccountView] = []
     
     init() {
@@ -305,6 +344,12 @@ private final class AccountView: NSView {
         
         deleteButton.title = I18n.get("BUTTON_DELETE")
         deleteButton.bezelStyle = .roundRect
+        
+        if let imageUrl = SettingsData.accountIconUrl(accessToken: account.1) {
+            ImageCache.image(urlStr: imageUrl, isTemp: false, isSmall: true) { [weak self] image in
+                self?.iconView.image = image
+            }
+        }
     }
     
     override func layout() {
