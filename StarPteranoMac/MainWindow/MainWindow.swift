@@ -28,18 +28,15 @@ final class MainWindow: NSWindow {
                                     defer: true)
         window.styleMask.insert(NSWindow.StyleMask.titled)
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
-        window.styleMask.insert(NSWindow.StyleMask.fullScreen)
+        window.styleMask.insert(NSWindow.StyleMask.resizable)
         window.title = ""
         self.window = window
         setFrame()
         window.makeKeyAndOrderFront(window)
         
-        let vc = SettingsViewController()
+        let vc = MainViewController()
         window.contentViewController = vc
         window.contentView = vc.view
-        
-        // 最初はアカウントページ
-        vc.accountAction()
     }
     
     private static func setFrame() {

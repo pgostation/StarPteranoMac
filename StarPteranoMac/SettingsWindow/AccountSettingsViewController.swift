@@ -237,9 +237,15 @@ private final class AccountsView: NSScrollView {
     func refresh() {
         let accountList = SettingsData.accountList
         
+        for view in accountViews {
+            view.removeFromSuperview()
+        }
         accountViews = []
+        
         for account in accountList {
-            accountViews.append(AccountView(account: account))
+            let view = AccountView(account: account)
+            accountViews.append(view)
+            self.addSubview(view)
         }
         
         needsLayout = true
@@ -261,12 +267,19 @@ private final class AccountsView: NSScrollView {
 
 private final class AccountView: NSView {
     private let iconView = NSImageView()
-    private let nameLabel = CATextLayer()
+    private let hostLabel = CATextLayer()
     private let idLabel = CATextLayer()
     private let deleteButton = NSButton()
     
     init(account: (String, String)) {
         super.init(frame: SettingsWindow.contentRect)
+        
+        self.wantsLayer = true
+        
+        self.addSubview(iconView)
+        self.layer?.addSublayer(hostLabel)
+        self.layer?.addSublayer(idLabel)
+        self.addSubview(deleteButton)
         
         setProperties(account: account)
     }
@@ -280,9 +293,39 @@ private final class AccountView: NSView {
         self.layer?.backgroundColor = NSColor.white.cgColor
         self.layer?.cornerRadius = 6
         
+        hostLabel.string = account.0
+        hostLabel.foregroundColor = NSColor.black.cgColor
+        hostLabel.fontSize = 14
+        hostLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
         
+        idLabel.string = account.1
+        idLabel.foregroundColor = NSColor.darkGray.cgColor
+        idLabel.fontSize = 14
+        idLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
+        
+        deleteButton.title = I18n.get("BUTTON_DELETE")
+        deleteButton.bezelStyle = .roundRect
     }
     
     override func layout() {
+        self.iconView.frame = NSRect(x: 10,
+                                     y: 5,
+                                     width: 40,
+                                     height: 40)
+        
+        self.hostLabel.frame = NSRect(x: 55,
+                                      y: 25,
+                                      width: 250,
+                                      height: 20)
+        
+        self.idLabel.frame = NSRect(x: 55,
+                                    y: 5,
+                                    width: 250,
+                                    height: 20)
+        
+        self.deleteButton.frame = NSRect(x: 310,
+                                         y: 10,
+                                         width: 80,
+                                         height: 30)
     }
 }

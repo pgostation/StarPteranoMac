@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
+		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
 		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC452181FD8B009B8788 /* SettingsViewController.swift */; };
 		1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4721834628009B8788 /* AccountSettingsViewController.swift */; };
@@ -28,6 +29,7 @@
 /* Begin PBXFileReference section */
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		1291FC452181FD8B009B8788 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1291FC4721834628009B8788 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				1291FC522183EE3B009B8788 /* MainWindow.swift */,
+				128751A92184340E00BC8828 /* MainViewController.swift */,
 			);
 			path = MainWindow;
 			sourceTree = "<group>";
@@ -308,6 +311,7 @@
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
+				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
 				129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */,

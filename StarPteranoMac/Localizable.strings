@@ -27,7 +27,7 @@
 "Paste" = "ペースト";
 "Select All" = "すべてを選択";
 
-// Settings Window
+// 設定画面
 "TITLE_PREFERENCES" = "環境設定";
 "SETTINGS_ACCOUNT" = "アカウント";
 "SETTINGS_GENERAL" = "一般";
@@ -35,6 +35,9 @@
 "SETTINGS_NOTIFICATIONS" = "通知";
 "SETTINGS_SEARCH" = "検索";
 "SETTINGS_DETAIL" = "詳細";
+
+// アカウント設定
+"BUTTON_DELETE" = "削除";
 
 // ログイン
 "PLACEHOLDER_INPUT_DOMAIN" = "Input domain (ex：mastodon.social)";

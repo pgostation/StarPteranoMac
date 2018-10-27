@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             SettingsWindow.show()
         } else {
             // アカウント登録があればMainViewControllerを開く
+            MainWindow.show()
         }
     }
 
