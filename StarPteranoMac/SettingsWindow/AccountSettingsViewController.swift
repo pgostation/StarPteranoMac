@@ -16,19 +16,16 @@ final class AccountSettingsViewController: NSViewController {
         self.view = view
         
         view.authButton.action = #selector(authAction)
+        view.codeEnterButton.action = #selector(codeEnterAction)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func authAction() {
-        auth()
-    }
-    
     // マストドン認証
     private var responseJson: [String: AnyObject]?
-    private func auth() {
+    @objc func authAction() {
         guard let view = self.view as? AccountSettingsView else { return }
         
         let hostName = (view.hostNameField.stringValue).replacingOccurrences(of: "/ ", with: "")
@@ -37,7 +34,6 @@ final class AccountSettingsViewController: NSViewController {
             return
         }
         
-        print("#### " + "https://\(hostName)/api/v1/apps")
         guard let registerUrl = URL(string: "https://\(hostName)/api/v1/apps") else { return }
         
         let body: [String: String] = ["client_name": "StarPterano Mac",
@@ -48,7 +44,7 @@ final class AccountSettingsViewController: NSViewController {
         try? MastodonRequest.firstPost(url: registerUrl, body: body) { (data, response, error) in
             if let data = data {
                 do {
-                    self.responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Dictionary<String, AnyObject>
+                    self.responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject]
                     
                     DispatchQueue.main.async {
                         // Safariでログイン
@@ -81,6 +77,65 @@ final class AccountSettingsViewController: NSViewController {
         
         NSWorkspace.shared.open(loginUrl)
     }
+    
+    // コード入力
+    @objc func codeEnterAction() {
+        guard let view = self.view as? AccountSettingsView else { return }
+        
+        if view.inputCodeField.stringValue.count < 10 {
+            Dialog.show(message: I18n.get("ALERT_INPUT_CODE_FAILURE"), window: SettingsWindow.window)
+            return
+        }
+        
+        // アクセストークンを取得
+        let tmpHostName = view.hostNameField.stringValue.replacingOccurrences(of: "/ ", with: "")
+        let hostName = String(tmpHostName).lowercased()
+        guard let registerUrl = URL(string: "https://\(hostName)/oauth/token") else { return }
+        
+        guard let clientId = responseJson?["client_id"] as? String else { return }
+        guard let clientSecret = responseJson?["client_secret"] as? String else { return }
+        let oauthCode = view.inputCodeField.stringValue
+        
+        let body: [String: String] = [
+            "grant_type" : "authorization_code",
+            "redirect_uri" : "urn:ietf:wg:oauth:2.0:oob",
+            "client_id": "\(clientId)",
+            "client_secret": "\(clientSecret)",
+            "code": "\(oauthCode)"]
+        
+        // クライアント認証POST
+        try? MastodonRequest.firstPost(url: registerUrl, body: body) { (data, response, error) in
+            if let data = data {
+                do {
+                    let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject]
+                    
+                    // ホスト名とアクセストークンを保存
+                    if let accessToken = responseJson?["access_token"] as? String {
+                        var accountList = SettingsData.accountList
+                        accountList.append((hostName, accessToken))
+                        SettingsData.accountList = accountList
+                    }
+                    
+                    DispatchQueue.main.async {
+                        if SettingsData.accountList.count == 1 {
+                            // 初回はメイン画面へ移動
+                            MainWindow.show()
+                        }
+                        
+                        view.hostNameField.isHidden = false
+                        view.authButton.isHidden = false
+                        view.inputCodeField.isHidden = true
+                        view.codeEnterButton.isHidden = true
+                        
+                        view.accountsView.refresh()
+                    }
+                } catch {
+                }
+            } else if let error = error {
+                print(error)
+            }
+        }
+    }
 }
 
 private final class AccountSettingsView: NSView {
@@ -88,7 +143,6 @@ private final class AccountSettingsView: NSView {
     let authButton = NSButton()
     let inputCodeField = NSTextField()
     let codeEnterButton = NSButton()
-    let scrollView = NSScrollView()
     let accountsView = AccountsView()
     
     init() {
@@ -98,8 +152,7 @@ private final class AccountSettingsView: NSView {
         self.addSubview(authButton)
         self.addSubview(inputCodeField)
         self.addSubview(codeEnterButton)
-        self.addSubview(scrollView)
-        scrollView.addSubview(accountsView)
+        self.addSubview(accountsView)
         
         setProperties()
     }
@@ -120,8 +173,6 @@ private final class AccountSettingsView: NSView {
         codeEnterButton.title = I18n.get("BUTTON_ENTER_CODE")
         codeEnterButton.bezelStyle = .roundRect
         codeEnterButton.isHidden = true
-        
-        scrollView.drawsBackground = false
     }
     
     func showInputCodeField() {
@@ -161,25 +212,75 @@ private final class AccountSettingsView: NSView {
                                        width: 150,
                                        height: 30)
         
-        scrollView.frame = NSRect(x: 0,
-                                  y: 0,
-                                  width: viewWidth,
-                                  height: SettingsWindow.contentRect.height - 50)
+        accountsView.frame = NSRect(x: 0,
+                                    y: 0,
+                                    width: viewWidth,
+                                    height: SettingsWindow.contentRect.height - 50)
     }
 }
 
-private final class AccountsView: NSView {
+private final class AccountsView: NSScrollView {
+    private var accountViews: [AccountView] = []
+    
     init() {
         super.init(frame: SettingsWindow.contentRect)
         
-        setProperties()
+        self.drawsBackground = false
+        
+        refresh()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setProperties() {
+    func refresh() {
+        let accountList = SettingsData.accountList
+        
+        accountViews = []
+        for account in accountList {
+            accountViews.append(AccountView(account: account))
+        }
+        
+        needsLayout = true
+    }
+    
+    override func layout() {
+        let height: CGFloat = 50
+        
+        for (index, view) in accountViews.enumerated() {
+            view.frame = NSRect(x: 50,
+                                y: CGFloat(accountViews.count - index) * height,
+                                width: self.frame.width - 100,
+                                height: height)
+        }
+        
+        self.documentView?.frame.size = CGSize(width: self.frame.width, height: CGFloat(accountViews.count) * height)
+    }
+}
+
+private final class AccountView: NSView {
+    private let iconView = NSImageView()
+    private let nameLabel = CATextLayer()
+    private let idLabel = CATextLayer()
+    private let deleteButton = NSButton()
+    
+    init(account: (String, String)) {
+        super.init(frame: SettingsWindow.contentRect)
+        
+        setProperties(account: account)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setProperties(account: (String, String)) {
+        self.wantsLayer = true
+        self.layer?.backgroundColor = NSColor.white.cgColor
+        self.layer?.cornerRadius = 6
+        
+        
     }
     
     override func layout() {

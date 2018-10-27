@@ -11,6 +11,10 @@ import Cocoa
 final class Menu: NSObject, NSMenuDelegate {
     private static var menuTarget = Menu()
     
+    private override init() {
+        super.init()
+    }
+    
     static func makeMainMenus() {
         // Application Menu
         let appMenuItem = NSMenuItem(title: "App", action: nil, keyEquivalent: "")

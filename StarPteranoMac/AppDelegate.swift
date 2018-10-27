@@ -14,12 +14,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     //@IBOutlet weak var window: NSWindow!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
-        
         // メニューを作成する
         Menu.makeMainMenus()
         
-        if Settings.accountList.count == 0 {
+        if SettingsData.accountList.count == 0 {
             // アカウント登録がなければ設定ウィンドウのアカウントViewControllerを開く
             SettingsWindow.show()
         } else {

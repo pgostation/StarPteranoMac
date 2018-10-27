@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class Settings {
+final class SettingsData {
     private static let defaults = UserDefaults(suiteName: "Settings")!
     
     // 接続が確認されたアカウントの情報を保持
@@ -33,6 +33,33 @@ final class Settings {
             }
             
             defaults.set(array, forKey: "accountList")
+            defaults.synchronize()
+        }
+    }
+    
+    // メインウィンドウの位置、大きさ
+    static var mainWindowFrame: NSRect? {
+        get {
+            let rect = defaults.object(forKey: "mainWindowFrame") as? NSRect
+            return rect
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                defaults.set(newValue, forKey: "mainWindowFrame")
+            }
+        }
+    }
+    
+    // 設定ウィンドウの位置
+    static var settingsWindowOrigin: CGPoint? {
+        get {
+            let point = defaults.object(forKey: "settingsWindowOrigin") as? CGPoint
+            return point
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                defaults.set(newValue, forKey: "settingsWindowOrigin")
+            }
         }
     }
 }

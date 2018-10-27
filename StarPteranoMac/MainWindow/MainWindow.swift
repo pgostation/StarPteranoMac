@@ -1,15 +1,15 @@
 //
-//  SettingsWindow.swift
+//  MainWindow.swift
 //  StarPteranoMac
 //
-//  Created by takayoshi on 2018/10/23.
+//  Created by takayoshi on 2018/10/27.
 //  Copyright © 2018 pgostation. All rights reserved.
 //
 
 import Cocoa
 
-final class SettingsWindow: NSWindow {
-    static weak var window: SettingsWindow?
+final class MainWindow: NSWindow {
+    static weak var window: MainWindow?
     static let contentRect = NSRect(x: 0, y: 0, width: 640, height: 480)
     
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
@@ -17,17 +17,19 @@ final class SettingsWindow: NSWindow {
     }
     
     static func show() {
-        if let window = self.window {
-            window.center()
+        if self.window != nil {
+            setFrame()
             return
         }
         
-        let window = SettingsWindow(contentRect: contentRect,
+        let window = MainWindow(contentRect: contentRect,
                                     styleMask: NSWindow.StyleMask.closable,
                                     backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)
         window.styleMask.insert(NSWindow.StyleMask.titled)
-        window.title = I18n.get("TITLE_PREFERENCES")
+        window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
+        window.styleMask.insert(NSWindow.StyleMask.fullScreen)
+        window.title = ""
         self.window = window
         setFrame()
         window.makeKeyAndOrderFront(window)
@@ -41,10 +43,11 @@ final class SettingsWindow: NSWindow {
     }
     
     private static func setFrame() {
-        if let origin = SettingsData.settingsWindowOrigin {
-            self.window?.setFrameOrigin(origin)
+        if let frame = SettingsData.mainWindowFrame {
+            self.window?.setFrame(frame, display: true)
         } else {
-            self.window?.setFrameOrigin(CGPoint(x: 50, y: (NSScreen.main?.visibleFrame.height ?? 800) - 50 - 480))
+            let frame = NSRect(x: 0, y: 0, width: min(800, (NSScreen.main?.visibleFrame.width ?? 1600) / 2), height: (NSScreen.main?.visibleFrame.height ?? 400))
+            self.window?.setFrame(frame, display: true)
         }
     }
     
