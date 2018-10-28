@@ -93,7 +93,7 @@ final class DecodeToot {
                     if execCallback {
                         callback?()
                     } else {
-                        attachment.image = image
+                        attachment.image = ImageUtils.flipped(image)
                     }
                 }
                 if attachment.image == nil {
@@ -181,7 +181,7 @@ final class DecodeToot {
                     if execCallback {
                         callback?()
                     } else {
-                        attachment.image = image
+                        attachment.image = ImageUtils.flipped(image)
                     }
                 }
                 if attachment.image == nil {
@@ -224,7 +224,7 @@ final class DecodeToot {
                     if execCallback {
                         callback?()
                     } else {
-                        attachment.image = image
+                        attachment.image = ImageUtils.flipped(image)
                     }
                 }
                 if attachment.image == nil {

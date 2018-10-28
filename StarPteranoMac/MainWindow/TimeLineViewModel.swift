@@ -379,7 +379,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         let imagesOffset: CGFloat
         if let mediaData = data.mediaData {
-            imagesOffset = (isSelected ? tableView.frame.width - 70 : 90) * CGFloat(mediaData.count)
+            let maxSize: CGFloat = min(400, tableView.frame.width - 70)
+            imagesOffset = (isSelected ? maxSize : 90) * CGFloat(mediaData.count)
         } else {
             imagesOffset = 0
         }

@@ -648,9 +648,9 @@ final class TimeLineViewCell: NSView {
         
         let nameLeft = iconSize + 7
         self.nameLabel.frame = CGRect(x: nameLeft,
-                                      y: height - (isMiniView != .normal ? 2 : 6) - (SettingsData.fontSize + 5),
+                                      y: height - (isMiniView != .normal ? 2 : 6) - (SettingsData.fontSize + 6),
                                       width: min(self.nameLabel.frame.width, screenBounds.width - nameLeft - 50),
-                                      height: SettingsData.fontSize + 5)
+                                      height: SettingsData.fontSize + 9)
         
         let idWidth: CGFloat
         if self.detailDateLabel != nil {
@@ -729,97 +729,98 @@ final class TimeLineViewCell: NSView {
         
         self.DMBarRight?.frame = CGRect(x: screenBounds.width - 5, y: 0, width: 5, height: 300)
         
-        var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? 20) + 10
+        var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? height - 20) - 10
         for imageView in self.imageViews {
             if isDetailMode, let image = imageView.image {
+                let maxSize: CGFloat = min(400, self.frame.width - 80)
                 var imageWidth: CGFloat = 0
-                var imageHeight: CGFloat = isDetailMode ? self.frame.width - 80 : 80
+                var imageHeight: CGFloat = isDetailMode ? maxSize : 80
                 let size = image.size
                 let rate = imageHeight / max(1, size.height)
                 imageWidth = size.width * rate
-                if imageWidth > screenBounds.width - 60 {
-                    imageWidth = screenBounds.width - 60
+                if imageWidth > maxSize {
+                    imageWidth = maxSize
                     let newRate = imageWidth / max(1, size.width)
                     imageHeight = size.height * newRate
                 }
                 imageView.frame = CGRect(x: nameLeft,
-                                         y: height - (imageTop) - imageHeight,
+                                         y: (imageTop) - imageHeight,
                                          width: imageWidth,
                                          height: imageHeight)
-                imageTop = imageView.frame.minY + 10
+                imageTop = (imageTop) - imageHeight - 10
             } else {
                 let imageWidth: CGFloat = screenBounds.width - 80
                 let imageHeight: CGFloat = 80
                 imageView.imageScaling = .scaleProportionallyUpOrDown
                 imageView.layer?.contentsGravity = CALayerContentsGravity.resizeAspectFill
                 imageView.frame = CGRect(x: nameLeft,
-                                         y: height - (imageTop) - imageHeight,
+                                         y: (imageTop) - imageHeight,
                                          width: imageWidth,
                                          height: imageHeight)
-                imageTop = imageView.frame.minY + 8
+                imageTop = (imageTop) - imageHeight - 8
             }
         }
         
         if self.replyButton != nil {
-            var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) + 8 + imagesOffset)
+            var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
             
             self.replyButton?.frame = CGRect(x: 50,
-                                             y: height - (top) - 40,
+                                             y: (top) - 40,
                                              width: 40,
                                              height: 40)
             
             self.repliedLabel?.frame = CGRect(x: 85,
-                                              y: height - (top + 10) - 20,
+                                              y: (top - 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.boostButton?.frame = CGRect(x: 110,
-                                             y: height - (top + 3) - 34,
+                                             y: (top - 3) - 34,
                                              width: 40,
                                              height: 34)
             
             self.boostedLabel?.frame = CGRect(x: 145,
-                                              y: height - (top + 10) - 20,
+                                              y: (top - 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.favoriteButton?.frame = CGRect(x: 170,
-                                                y: height - (top + 3) - 34,
+                                                y: (top - 3) - 34,
                                                 width: 40,
                                                 height: 34)
             
             self.favoritedLabel?.frame = CGRect(x: 205,
-                                                y: height - (top + 10) - 20,
+                                                y: (top - 10) - 20,
                                                 width: 20,
                                                 height: 20)
             
             self.detailButton?.frame = CGRect(x: 230,
-                                              y: height - top - 40,
+                                              y: top - 40,
                                               width: 40,
                                               height: 40)
             
             self.applicationLabel?.frame = CGRect(x: 50,
-                                                  y: height - (top - 5) - 20,
+                                                  y: (top - 5) - 20,
                                                   width: screenBounds.width - 52,
                                                   height: 20)
             
-            top += 48
+            top -= 48
             for label in self.rebologerLabels {
                 label.frame = CGRect(x: 50,
-                                     y: height - top - SettingsData.fontSize,
+                                     y: top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
                                      height: SettingsData.fontSize)
                 
-                top += SettingsData.fontSize + 4
+                top -= SettingsData.fontSize + 4
             }
             
             for label in self.favoriterLabels {
                 label.frame = CGRect(x: 50,
-                                     y: height - top - SettingsData.fontSize,
+                                     y: top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
                                      height: SettingsData.fontSize)
                 
-                top += SettingsData.fontSize + 4
+                top -= SettingsData.fontSize + 4
             }
         }
     }
