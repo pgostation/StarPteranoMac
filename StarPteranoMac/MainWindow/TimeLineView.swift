@@ -37,8 +37,7 @@ final class TimeLineView: NSTableView {
         column.width = 400;
         self.addTableColumn(column)
         
-        self.wantsLayer = true
-        self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        self.backgroundColor = ThemeColor.cellBgColor
         //self.separatorStyle = .none
         
         if type != .mentions {

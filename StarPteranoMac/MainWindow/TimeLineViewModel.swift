@@ -834,15 +834,17 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: {
             if cell.id == id {
                 cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: nil)
-                cell?.needsLayout = true
+                cell.needsLayout = true
             }
         })
         if row > 15 {
             DispatchQueue.main.async {
                 cell.nameLabel.sizeToFit()
+                cell.needsLayout = true
             }
         } else {
             cell.nameLabel.sizeToFit()
+            cell.needsLayout = true
         }
         
         cell.idLabel.stringValue = account?.acct ?? ""
@@ -1136,5 +1138,108 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         return cell
+    }
+    
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        guard let tableView = notification.object as? NSTableView else { return }
+        let row = tableView.selectedRow
+        var index = row
+        
+        if let timelineView = tableView as? TimeLineView {
+            if timelineView.type == .user {
+                index -= 1
+                if index < 0 {
+                    return
+                }
+            }
+        }
+        
+        if SettingsData.tapDetailMode || self.selectedRow == row {
+            if self.isDetailTimeline { return } // すでに詳細表示画面
+            if TootViewController.isShown { return } // トゥート画面表示中は移動しない
+            
+            /*
+            // 連打防止
+            if self.isAnimating { return }
+            self.isAnimating = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.isAnimating = false
+            }
+            
+            // トゥート詳細画面に移動
+            let (_, data, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
+            let mentionsData = getMentionsData(data: data)
+            let viewController = TimeLineViewController(type: TimeLineViewController.TimeLineType.mentions, option: nil, mentions: (mentionsData, accountList))
+            UIUtils.getFrontViewController()?.addChildViewController(viewController)
+            UIUtils.getFrontViewController()?.view.addSubview(viewController.view)
+            viewController.view.frame = CGRect(x: UIScreen.main.bounds.width,
+                                               y: 0,
+                                               width: UIScreen.main.bounds.width,
+                                               height: UIScreen.main.bounds.height)
+            UIView.animate(withDuration: 0.3) {
+                viewController.view.frame.origin.x = 0
+            }
+            
+            // ステータスの内容を更新する(お気に入りの数とか)
+            let isMerge = data.isMerge
+            guard let url = URL(string: "https://\((tableView as? TimeLineView)?.hostName ?? "")/api/v1/statuses/\(data.id ?? "-")") else { return }
+            try? MastodonRequest.get(url: url, accessToken: (tableView as? TimeLineView)?.accessToken ?? "") { [weak self] (data, response, error) in
+                guard let strongSelf = self else { return }
+                guard let data = data else { return }
+                do {
+                    if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                        var acct = ""
+                        let contentData = AnalyzeJson.analyzeJson(view: tableView as? TimeLineView, model: strongSelf, json: responseJson, acct: &acct, isMerge: isMerge)
+                        let contentList = [contentData]
+                        
+                        // 詳細ビューと元のビューの両方に反映する
+                        strongSelf.change(tableView: tableView as! TimeLineView, addList: contentList, accountList: strongSelf.accountList)
+                        if let tlView = viewController.view as? TimeLineView {
+                            tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
+                        }
+                    }
+                } catch { }
+            }*/
+        } else {
+            // セルを拡大して表示
+            /*
+            var indexPaths: [IndexPath] = [indexPath]
+            if let selectedRow = self.selectedRow, selectedRow < min(self.list.count, self.cellCount) {
+                let oldPath = IndexPath(row: selectedRow, section: 0)
+                indexPaths.append(oldPath)
+                
+                if oldPath.row < row {
+                    // 高さのずれを吸収
+                    let oldHeight = self.tableView(tableView, heightForRowAt: oldPath)
+                    self.selectedRow = indexPath.row
+                    let newHeight = self.tableView(tableView, heightForRowAt: oldPath)
+                    
+                    DispatchQueue.main.async {
+                        tableView.contentOffset.y = max(0, tableView.contentOffset.y + newHeight - oldHeight + 40)
+                    }
+                }
+            }*/
+            
+            self.selectedRow = row
+            
+            //tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
+            tableView.reloadData()
+        }
+    }
+    
+    // 会話部分のデータを取り出す
+    private func getMentionsData(data: AnalyzeJson.ContentData) -> [AnalyzeJson.ContentData] {
+        var mentionContents: [AnalyzeJson.ContentData] = [data]
+        
+        var in_reply_to_id = data.in_reply_to_id
+        for listData in self.list {
+            if listData.id == in_reply_to_id {
+                mentionContents.append(listData)
+                in_reply_to_id = listData.in_reply_to_id
+                if in_reply_to_id == nil { break }
+            }
+        }
+        
+        return mentionContents
     }
 }

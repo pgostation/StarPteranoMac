@@ -13,6 +13,8 @@ final class SubViewController: NSViewController {
         super.init(nibName: nil, bundle: nil)
         
         let scrollView = NSScrollView()
+        scrollView.scrollerStyle = .legacy
+        scrollView.hasVerticalScroller = true
         self.view = scrollView
         
         let timelineVC: TimeLineViewController
@@ -33,9 +35,5 @@ final class SubViewController: NSViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLayout() {
-        self.children.first?.view.frame = self.view.frame
     }
 }

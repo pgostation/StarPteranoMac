@@ -18,7 +18,7 @@ final class TimeLineViewCell: NSView {
     var reblog_id: String? = nil
     
     // 基本ビュー
-    //let lineLayer = CALayer()
+    let lineLayer = CALayer()
     var iconView: NSImageView?
     let nameLabel = NSTextField()
     let idLabel = NSTextField()
@@ -90,11 +90,13 @@ final class TimeLineViewCell: NSView {
         self.nameLabel.textColor = ThemeColor.nameColor
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         self.nameLabel.backgroundColor = ThemeColor.cellBgColor
+        self.nameLabel.isBordered = false
         //self.nameLabel.isOpaque = true
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.idLabel.backgroundColor = ThemeColor.cellBgColor
+        self.idLabel.isBordered = false
         //self.idLabel.isOpaque = true
         
         self.dateLabel.textColor = ThemeColor.dateColor
@@ -103,15 +105,16 @@ final class TimeLineViewCell: NSView {
         self.dateLabel.backgroundColor = ThemeColor.cellBgColor
         //self.dateLabel.adjustsFontSizeToFitWidth = true
         //self.dateLabel.isOpaque = true
+        self.dateLabel.isBordered = false
         
-        //self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
-        //self.lineLayer.isOpaque = true
+        self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
+        self.lineLayer.isOpaque = true
         
         // addする
         self.addSubview(self.idLabel)
         self.addSubview(self.dateLabel)
         self.addSubview(self.nameLabel)
-        //self.layer?.addSublayer(self.lineLayer)
+        self.layer?.addSublayer(self.lineLayer)
         
         if SettingsData.isNameTappable {
             // アカウント名のタップジェスチャー
@@ -196,7 +199,7 @@ final class TimeLineViewCell: NSView {
         self.dateLabel.textColor = ThemeColor.dateColor
         self.dateLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         
-        //self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
+        self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         
         
     }
@@ -596,11 +599,34 @@ final class TimeLineViewCell: NSView {
         else {
             self.dateLabel.stringValue = String(format: I18n.get("DATETIME_%D_YEARS_AGO"), diffTime / 86400 / 365)
         }
+        
+        // タイマーでN秒ごとに時刻を更新
+        let interval: TimeInterval
+        if Date().timeIntervalSince(self.date) < 60 {
+            interval = 5
+        } else if Date().timeIntervalSince(self.date) < 600 {
+            interval = 15
+        } else {
+            interval = 60
+        }
+        
+        self.timer?.invalidate()
+        if #available(OSX 10.12, *) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { [weak self] timer in
+                if self?.superview == nil {
+                    timer.invalidate()
+                    return
+                }
+                
+                self?.refreshDate()
+            })
+        }
     }
     
     // セル内のレイアウト
     override func layout() {
         let screenBounds = self.frame
+        let height = screenBounds.height
         let isDetailMode = !SettingsData.tapDetailMode && self.showDetail
         let isMiniView = isDetailMode ? .normal : self.isMiniView
         let iconSize = isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
@@ -610,21 +636,21 @@ final class TimeLineViewCell: NSView {
             self.idLabel.isHidden = false
         }
         
-        /*self.lineLayer.frame = CGRect(x: 0,
+        self.lineLayer.frame = CGRect(x: 0,
                                       y: 0,
                                       width: screenBounds.width,
-                                      height: 1 / (NSScreen.main?.backingScaleFactor ?? 1))*/
+                                      height: 1 / (NSScreen.main?.backingScaleFactor ?? 1))
         
         self.iconView?.frame = CGRect(x: isMiniView != .normal ? 2 : 4,
-                                      y: isMiniView == .superMini ? 12 - iconSize / 2 : (isMiniView != .normal ? 6 : 10),
+                                      y: height - (isMiniView == .superMini ? 12 - iconSize / 2 : (isMiniView != .normal ? 6 : 10)) - iconSize,
                                       width: iconSize,
                                       height: iconSize)
         
         let nameLeft = iconSize + 7
         self.nameLabel.frame = CGRect(x: nameLeft,
-                                      y: isMiniView != .normal ? 2 : 6,
+                                      y: height - (isMiniView != .normal ? 2 : 6) - (SettingsData.fontSize + 5),
                                       width: min(self.nameLabel.frame.width, screenBounds.width - nameLeft - 50),
-                                      height: SettingsData.fontSize + 3)
+                                      height: SettingsData.fontSize + 5)
         
         let idWidth: CGFloat
         if self.detailDateLabel != nil {
@@ -633,22 +659,22 @@ final class TimeLineViewCell: NSView {
             idWidth = screenBounds.width - (self.nameLabel.frame.width + nameLeft + 45 + 5)
         }
         self.idLabel.frame = CGRect(x: nameLeft + self.nameLabel.frame.width + 5,
-                                    y: isMiniView != .normal ? 3 : 6,
+                                    y: height - (isMiniView != .normal ? 3 : 6) - (SettingsData.fontSize + 2),
                                     width: idWidth,
-                                    height: SettingsData.fontSize)
+                                    height: SettingsData.fontSize + 2)
         
         self.dateLabel.frame = CGRect(x: screenBounds.width - 50,
-                                      y: isMiniView != .normal ? 3 : 6,
+                                      y: height - (isMiniView != .normal ? 3 : 6) - (SettingsData.fontSize + 2),
                                       width: 45,
-                                      height: SettingsData.fontSize)
+                                      height: SettingsData.fontSize + 2)
         
         self.detailDateLabel?.frame = CGRect(x: 50,
-                                             y: 22,
+                                             y: height - 22 - 18,
                                              width: screenBounds.width - 55,
                                              height: 18)
         
         self.spolerTextLabel?.frame = CGRect(x: nameLeft,
-                                             y: isMiniView == .superMini ? 2 : self.detailDateLabel?.frame.maxY ?? SettingsData.fontSize + 8,
+                                             y: height - (isMiniView == .superMini ? 2 : self.detailDateLabel?.frame.minY ?? SettingsData.fontSize + 8) - (self.spolerTextLabel?.frame.height ?? 0),
                                              width: self.spolerTextLabel?.frame.width ?? 0,
                                              height: self.spolerTextLabel?.frame.height ?? 0)
         
@@ -657,12 +683,12 @@ final class TimeLineViewCell: NSView {
             if isMiniView == .superMini {
                 y = 0
             } else if let spolerTextLabel = self.spolerTextLabel {
-                y = spolerTextLabel.frame.maxY + 20
+                y = spolerTextLabel.frame.minY + 20
             } else {
-                y = self.detailDateLabel?.frame.maxY ?? ((isMiniView != .normal ? 1 : 8) + SettingsData.fontSize)
+                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? 1 : 8) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
-                                       y: y,
+                                       y: height - y - messageView.frame.height,
                                        width: messageView.frame.width,
                                        height: messageView.frame.height)
         } else if let messageView = self.messageView as? NSTextView {
@@ -670,31 +696,31 @@ final class TimeLineViewCell: NSView {
             if isMiniView == .superMini {
                 y = -9
             } else if let spolerTextLabel = self.spolerTextLabel {
-                y = spolerTextLabel.frame.maxY + 20
+                y = spolerTextLabel.frame.minY + 20
             } else {
-                y = self.detailDateLabel?.frame.maxY ?? ((isMiniView != .normal ? -9 : 8) + SettingsData.fontSize)
+                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? -9 : 8) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
-                                       y: y,
+                                       y: height - y - messageView.frame.height,
                                        width: messageView.frame.width,
                                        height: messageView.frame.height)
         }
         
         self.continueView?.frame = CGRect(x: screenBounds.width / 2 - 40 / 2,
-                                          y: (self.messageView?.frame.maxY ?? 0) - 6,
+                                          y: height - ((self.messageView?.frame.minY ?? 0) - 6) - 18,
                                           width: 40,
                                           height: 18)
         
         let imageHeight = isDetailMode ? (self.frame.width - 80 + 10) : 90
         let imagesOffset = CGFloat(self.imageViews.count) * imageHeight
         self.boostView?.frame = CGRect(x: nameLeft - 12,
-                                       y: (self.messageView?.frame.maxY ?? 0) + 8 + imagesOffset,
+                                       y: height - ((self.messageView?.frame.minY ?? 0) + 8 + imagesOffset) - 20,
                                        width: screenBounds.width - 56,
                                        height: 20)
         
         if let showMoreButton = self.showMoreButton {
             showMoreButton.frame = CGRect(x: 100,
-                                          y: self.spolerTextLabel?.frame.maxY ?? self.messageView?.frame.maxY ?? 20,
+                                          y: height - (self.spolerTextLabel?.frame.minY ?? self.messageView?.frame.minY ?? 20) - 20,
                                           width: screenBounds.width - 160,
                                           height: 20)
         }
@@ -703,10 +729,9 @@ final class TimeLineViewCell: NSView {
         
         self.DMBarRight?.frame = CGRect(x: screenBounds.width - 5, y: 0, width: 5, height: 300)
         
-        var imageTop: CGFloat = (self.messageView?.frame.maxY ?? self.showMoreButton?.frame.maxY ?? 20) + 10
+        var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? 20) + 10
         for imageView in self.imageViews {
             if isDetailMode, let image = imageView.image {
-                imageView.layer?.contentsGravity = CALayerContentsGravity.center
                 var imageWidth: CGFloat = 0
                 var imageHeight: CGFloat = isDetailMode ? self.frame.width - 80 : 80
                 let size = image.size
@@ -718,69 +743,70 @@ final class TimeLineViewCell: NSView {
                     imageHeight = size.height * newRate
                 }
                 imageView.frame = CGRect(x: nameLeft,
-                                         y: imageTop,
+                                         y: height - (imageTop) - imageHeight,
                                          width: imageWidth,
                                          height: imageHeight)
-                imageTop = imageView.frame.maxY + 10
+                imageTop = imageView.frame.minY + 10
             } else {
                 let imageWidth: CGFloat = screenBounds.width - 80
                 let imageHeight: CGFloat = 80
-                imageView.layer?.contentsGravity = CALayerContentsGravity.center
+                imageView.imageScaling = .scaleProportionallyUpOrDown
+                imageView.layer?.contentsGravity = CALayerContentsGravity.resizeAspectFill
                 imageView.frame = CGRect(x: nameLeft,
-                                         y: imageTop,
+                                         y: height - (imageTop) - imageHeight,
                                          width: imageWidth,
                                          height: imageHeight)
-                imageTop = imageView.frame.maxY + 8
+                imageTop = imageView.frame.minY + 8
             }
         }
         
         if self.replyButton != nil {
-            var top: CGFloat = self.boostView?.frame.maxY ?? self.imageViews.last?.frame.maxY ?? ((self.messageView?.frame.maxY ?? 0) + 8 + imagesOffset)
+            var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) + 8 + imagesOffset)
             
             self.replyButton?.frame = CGRect(x: 50,
-                                             y: top,
+                                             y: height - (top) - 40,
                                              width: 40,
                                              height: 40)
             
             self.repliedLabel?.frame = CGRect(x: 85,
-                                              y: top + 10,
+                                              y: height - (top + 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.boostButton?.frame = CGRect(x: 110,
-                                             y: top + 3,
+                                             y: height - (top + 3) - 34,
                                              width: 40,
                                              height: 34)
             
             self.boostedLabel?.frame = CGRect(x: 145,
-                                              y: top + 10,
+                                              y: height - (top + 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.favoriteButton?.frame = CGRect(x: 170,
-                                                y: top + 3,
+                                                y: height - (top + 3) - 34,
                                                 width: 40,
                                                 height: 34)
             
             self.favoritedLabel?.frame = CGRect(x: 205,
-                                                y: top + 10,
+                                                y: height - (top + 10) - 20,
                                                 width: 20,
                                                 height: 20)
             
             self.detailButton?.frame = CGRect(x: 230,
-                                              y: top,
+                                              y: height - top - 40,
                                               width: 40,
                                               height: 40)
             
             self.applicationLabel?.frame = CGRect(x: 50,
-                                                  y: top - 5,
+                                                  y: height - (top - 5) - 20,
                                                   width: screenBounds.width - 52,
                                                   height: 20)
             
             top += 48
             for label in self.rebologerLabels {
                 label.frame = CGRect(x: 50,
-                                     y: top,
+                                     y: height - top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
                                      height: SettingsData.fontSize)
                 
@@ -789,7 +815,7 @@ final class TimeLineViewCell: NSView {
             
             for label in self.favoriterLabels {
                 label.frame = CGRect(x: 50,
-                                     y: top,
+                                     y: height - top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
                                      height: SettingsData.fontSize)
                 
