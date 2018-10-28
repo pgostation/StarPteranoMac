@@ -387,7 +387,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         let reblogOffset: CGFloat
         if data.reblog_acct != nil || data.visibility == "direct" {
-            reblogOffset = 20
+            reblogOffset = 24
         } else {
             reblogOffset = 0
         }
@@ -823,10 +823,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 // アイコンの長押しジェスチャー
                 //let pressGesture = UILongPressGestureRecognizer(target: cell, action: #selector(cell.pressAccountAction(_:)))
                 //cell.iconView?.addGestureRecognizer(pressGesture)
-                let iconSize = SettingsData.iconSize
+                let iconSize = cell.isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
                 
-                cell.iconView?.frame = CGRect(x: cell.isMiniView != .normal ? 4 : 8,
-                                              y: cell.isMiniView == .superMini ? 12 - iconSize / 2 : (cell.isMiniView != .normal ? 6 : 10),
+                let height = cell.frame.height
+                cell.iconView?.frame = CGRect(x: cell.isMiniView != .normal ? 2 : 4,
+                                              y: height - (cell.isMiniView == .superMini ? 12 - iconSize / 2 : (cell.isMiniView != .normal ? 6 : 10)) - iconSize,
                                               width: iconSize,
                                               height: iconSize)
             }

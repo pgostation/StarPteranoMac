@@ -83,7 +83,7 @@ final class ThemeColor {
             
             messageColor = NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
             nameColor = NSColor(red: 0.3, green: 0.7, blue: 0.1, alpha: 1)
-            idColor = NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+            idColor = NSColor(red: 0.35, green: 0.35, blue: 0.35, alpha: 1)
             dateColor = NSColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
             linkTextColor = NSColor.blue
             

@@ -714,13 +714,13 @@ final class TimeLineViewCell: NSView {
         let imageHeight = isDetailMode ? (self.frame.width - 80 + 10) : 90
         let imagesOffset = CGFloat(self.imageViews.count) * imageHeight
         self.boostView?.frame = CGRect(x: nameLeft - 12,
-                                       y: height - ((self.messageView?.frame.minY ?? 0) + 8 + imagesOffset) - 20,
+                                       y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 24,
                                        width: screenBounds.width - 56,
-                                       height: 20)
+                                       height: 24)
         
         if let showMoreButton = self.showMoreButton {
             showMoreButton.frame = CGRect(x: 100,
-                                          y: height - (self.spolerTextLabel?.frame.minY ?? self.messageView?.frame.minY ?? 20) - 20,
+                                          y: (self.spolerTextLabel?.frame.minY ?? self.messageView?.frame.minY ?? height - 20) - 20,
                                           width: screenBounds.width - 160,
                                           height: 20)
         }

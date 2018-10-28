@@ -39,7 +39,8 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem1.target = menuTarget
                 appMenu.addItem(menuItem1)
                 
-                let menuItem2 = NSMenuItem(title: I18n.get("Hide Others"), action: #selector(doAppMenu(_:)), keyEquivalent: "^h")
+                let menuItem2 = NSMenuItem(title: I18n.get("Hide Others"), action: #selector(doAppMenu(_:)), keyEquivalent: "h")
+                menuItem2.keyEquivalentModifierMask = NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
                 menuItem2.target = menuTarget
                 appMenu.addItem(menuItem2)
                 
@@ -109,11 +110,84 @@ final class Menu: NSObject, NSMenuDelegate {
             editMenuItem.submenu = editMenu
         }
         
+        // View Menu
+        let viewMenuItem = NSMenuItem(title: "View", action: nil, keyEquivalent: "")
+        viewMenuItem.target = menuTarget
+        do {
+            let viewMenu = NSMenu(title: I18n.get("View"))
+            
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Mini View"), action: #selector(doViewMenu(_:)), keyEquivalent: "m")
+                menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
+                menuItem1.target = menuTarget
+                viewMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Compact View"), action: #selector(doViewMenu(_:)), keyEquivalent: "c")
+                menuItem2.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
+                menuItem2.target = menuTarget
+                viewMenu.addItem(menuItem2)
+                
+                let menuItem3 = NSMenuItem(title: I18n.get("Standard View"), action: #selector(doViewMenu(_:)), keyEquivalent: "s")
+                menuItem3.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
+                menuItem3.target = menuTarget
+                viewMenu.addItem(menuItem3)
+            }
+            viewMenu.addItem(NSMenuItem.separator())
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Larger"), action: #selector(doViewMenu(_:)), keyEquivalent: "+")
+                menuItem1.target = menuTarget
+                viewMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Smaller"), action: #selector(doViewMenu(_:)), keyEquivalent: "-")
+                menuItem2.target = menuTarget
+                viewMenu.addItem(menuItem2)
+            }
+            viewMenu.addItem(NSMenuItem.separator())
+            
+            viewMenuItem.submenu = viewMenu
+        }
+        
+        // Toot Menu
+        let tootMenuItem = NSMenuItem(title: "Toot", action: nil, keyEquivalent: "")
+        tootMenuItem.target = menuTarget
+        do {
+            let tootMenu = NSMenu(title: I18n.get("Toot"))
+            
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("New Toot"), action: #selector(doTootMenu(_:)), keyEquivalent: "n")
+                menuItem1.target = menuTarget
+                tootMenu.addItem(menuItem1)
+            }
+            tootMenu.addItem(NSMenuItem.separator())
+            
+            tootMenuItem.submenu = tootMenu
+        }
+        
+        // Tool Menu
+        let toolMenuItem = NSMenuItem(title: "Tool", action: nil, keyEquivalent: "")
+        toolMenuItem.target = menuTarget
+        do {
+            let toolMenu = NSMenu(title: I18n.get("Tool"))
+            
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Edit Profile…"), action: #selector(doToolMenu(_:)), keyEquivalent: "p")
+                menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
+                menuItem1.target = menuTarget
+                toolMenu.addItem(menuItem1)
+            }
+            toolMenu.addItem(NSMenuItem.separator())
+            
+            toolMenuItem.submenu = toolMenu
+        }
+        
         // Set Menus to App
         let mainMenu = NSMenu(title: "Main")
         mainMenu.addItem(appMenuItem)
         mainMenu.addItem(fileMenuItem)
         mainMenu.addItem(editMenuItem)
+        mainMenu.addItem(viewMenuItem)
+        mainMenu.addItem(tootMenuItem)
+        mainMenu.addItem(toolMenuItem)
         NSApplication.shared.mainMenu = mainMenu
     }
     
@@ -161,6 +235,29 @@ final class Menu: NSObject, NSMenuDelegate {
         }
         else if item.title == I18n.get("Select All") {
             activeField.selectAll(nil)
+        }
+    }
+    
+    @objc func doViewMenu(_ item: NSMenuItem) {
+        if item.title == I18n.get("Mini View") {
+        }
+        else if item.title == I18n.get("Compact View") {
+        }
+        else if item.title == I18n.get("Standard View") {
+        }
+        else if item.title == I18n.get("Larger") {
+        }
+        else if item.title == I18n.get("Smaller") {
+        }
+    }
+    
+    @objc func doTootMenu(_ item: NSMenuItem) {
+        if item.title == I18n.get("New Toot") {
+        }
+    }
+    
+    @objc func doToolMenu(_ item: NSMenuItem) {
+        if item.title == I18n.get("Edit Profile") {
         }
     }
     

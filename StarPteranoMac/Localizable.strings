@@ -27,6 +27,28 @@
 "Paste" = "ペースト";
 "Select All" = "すべてを選択";
 
+// View Menu
+"View" = "表示";
+"Mini View" = "ミニビュー";
+"Compact View" = "コンパクトビュー";
+"Standard View" = "標準ビュー";
+"Larger" = "拡大";
+"Smaller" = "縮小";
+
+// Toot Menu
+"Toot" = "トゥート";
+"New Toot" = "新規トゥート";
+
+// Tool Menu
+"Tool" = "ツール";
+"Edit Profile…" = "プロフィール編集…";
+
+// Window Menu
+"Window" = "ウインドウ";
+
+// Help Menu
+"Help" = "ヘルプ";
+
 // 設定画面
 "TITLE_PREFERENCES" = "環境設定";
 "SETTINGS_ACCOUNT" = "アカウント";
@@ -68,3 +90,17 @@
 "DATETIME_%D_HOURS_HALF_AGO" = "%d時間半";
 "DATETIME_%D_DAYS_AGO" = "%d日";
 "DATETIME_%D_YEARS_AGO" = "%d年";
+
+// タイムライン変更
+"ACTION_HOME" = "ホーム";
+"ACTION_LOCAL" = "ローカル";
+"ACTION_LOCAL_HOME" = "ローカル + ホーム";
+"ACTION_FEDERATION" = "連合";
+"ACTION_LIST" = "リスト";
+"ACTION_NOTIFICATIONS" = "通知";
+"ACTION_MENTIONS" = "返信";
+"ACTION_DM" = "DM";
+"ACTION_FAVORITES" = "お気に入り";
+"ACTION_SEARCH" = "検索";
+"ACTION_USERS" = "ユーザー指定…";
+

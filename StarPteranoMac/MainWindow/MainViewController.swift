@@ -41,7 +41,7 @@ final class MainViewController: NSViewController {
             subVC.view.frame = NSRect(x: size.width * CGFloat(index) / CGFloat(self.subVCList.count),
                                       y: 0,
                                       width: size.width / CGFloat(self.subVCList.count),
-                                      height: size.height)
+                                      height: size.height - 20)
         }
     }
 }
