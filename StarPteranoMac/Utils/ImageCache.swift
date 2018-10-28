@@ -10,7 +10,7 @@ import Cocoa
 import APNGKit
 
 final class ImageCache {
-    private static let scale = NSScreen.main?.backingScaleFactor ?? 0.5
+    private static let scale = NSScreen.main?.backingScaleFactor ?? 1
     private static var memCache: [String: NSImage] = [:]
     private static var oldMemCache: [String: NSImage] = [:]
     private static var waitingDict: [String: [(NSImage)->Void]] = [:]
@@ -54,7 +54,12 @@ final class ImageCache {
                 let url = URL(fileURLWithPath: filePath)
                 if let data = try? Data(contentsOf: url) {
                     if let image = EmojiImage(data: data) {
-                        let smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
+                        let smallImage: EmojiImage
+                        if filePath.hasSuffix(".gif") {
+                            smallImage = image
+                        } else {
+                            smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
+                        }
                         smallImage.shortcode = shortcode
                         DispatchQueue.main.async {
                             memCache.updateValue(smallImage, forKey: urlStr)

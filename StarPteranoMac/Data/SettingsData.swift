@@ -152,6 +152,23 @@ final class SettingsData {
         defaults.set(dateStr, forKey: "newestNotifyDate_\(accessToken)")
     }
     
+    // タップで詳細に移動
+    static var tapDetailMode: Bool {
+        get {
+            if let string = defaults.string(forKey: "tapDetailMode") {
+                return (string == "ON")
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "tapDetailMode")
+            } else {
+                defaults.removeObject(forKey: "tapDetailMode")
+            }
+        }
+    }
+    
     // ミニビューかどうか
     enum MiniView: String {
         case superMini = "superMini"

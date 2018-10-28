@@ -10,7 +10,6 @@ import Cocoa
 
 final class MainWindow: NSWindow {
     static weak var window: MainWindow?
-    static let contentRect = NSRect(x: 0, y: 0, width: 640, height: 480)
     
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
         super.init(contentRect: contentRect, styleMask: style, backing: backingStoreType, defer: flag)
@@ -25,7 +24,9 @@ final class MainWindow: NSWindow {
             return
         }
         
-        let window = MainWindow(contentRect: contentRect,
+        ThemeColor.change()
+        
+        let window = MainWindow(contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
                                     styleMask: NSWindow.StyleMask.closable,
                                     backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)

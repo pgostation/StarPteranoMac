@@ -10,8 +10,9 @@ import Cocoa
 import AVFoundation
 
 final class TimeLineView: NSTableView {
-    private let hostName: String
-    private let accessToken: String
+    weak var vc: NSViewController?
+    let hostName: String
+    let accessToken: String
     let type: TimeLineViewController.TimeLineType
     let option: String?
     let model = TimeLineViewModel()
@@ -31,6 +32,10 @@ final class TimeLineView: NSTableView {
         
         self.delegate = model
         self.dataSource = model
+        
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
+        column.width = 400;
+        self.addTableColumn(column)
         
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
@@ -408,6 +413,155 @@ final class TimeLineView: NSTableView {
                 }
             }
             update()
+        }
+    }
+    
+    // タイムラインに古いトゥートを追加
+    func refreshOld(id: String?) {
+        guard let id = id else { return }
+        
+        let maxIdStr = "&max_id=\(id)"
+        
+        let url: URL?
+        switch self.type {
+        case .home:
+            url = URL(string: "https://\(hostName)/api/v1/timelines/home?limit=50\(maxIdStr)")
+        case .local:
+            url = URL(string: "https://\(hostName)/api/v1/timelines/public?local=1&limit=50\(maxIdStr)")
+        case .federation:
+            url = URL(string: "https://\(hostName)/api/v1/timelines/public?limit=50\(maxIdStr)")
+        case .user:
+            guard let option = option else { return }
+            let mediaOnlyStr = mediaOnly ? "&only_media=1" : ""
+            url = URL(string: "https://\(hostName)/api/v1/accounts/\(option)/statuses?limit=50\(maxIdStr)\(mediaOnlyStr)")
+        case .favorites:
+            url = URL(string: "https://\(hostName)/api/v1/favourites?limit=50\(maxIdStr)")
+        case .localTag:
+            guard let option = option else { return }
+            guard let encodedOption = option.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else { return }
+            url = URL(string: "https://\(hostName)/api/v1/timelines/tag/\(encodedOption)?local=1&limit=50\(maxIdStr)")
+        case .federationTag:
+            guard let option = option else { return }
+            guard let encodedOption = option.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else { return }
+            url = URL(string: "https://\(hostName)/api/v1/timelines/tag/\(encodedOption)?&limit=50\(maxIdStr)")
+        case .mentions:
+            return
+        case .direct:
+            url = URL(string: "https://\(hostName)/api/v1/timelines/direct?limit=50\(maxIdStr)")
+        case .list:
+            guard let listId = SettingsData.selectedListId(accessToken: accessToken) else {
+                return
+            }
+            url = URL(string: "https://\(hostName)/api/v1/timelines/list/\(listId)?limit=50\(maxIdStr)")
+        }
+        
+        guard let requestUrl = url else { return }
+        
+        try? MastodonRequest.get(url: requestUrl, accessToken: accessToken) { [weak self] (data, response, error) in
+            guard let strongSelf = self else { return }
+            
+            if let data = data {
+                do {
+                    let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Array<AnyObject>
+                    
+                    if let responseJson = responseJson {
+                        TimeLineView.tableDispatchQueue.async {
+                            // ループ防止
+                            if responseJson.count == 0 {
+                                strongSelf.model.showAutoPagerizeCell = false
+                            }
+                            
+                            AnalyzeJson.analyzeJsonArray(view: strongSelf, model: strongSelf.model, jsonList: responseJson, isNew: false)
+                            
+                            // ローカルにホームを統合する場合
+                            if SettingsData.mergeLocalTL && self?.type == .home {
+                                let localKey = "\(strongSelf.hostName)_\(strongSelf.accessToken)_\(SettingsData.TLMode.local.rawValue)"
+                                if let localTlVc = MainViewController.instance?.timelineList[localKey] {
+                                    if let localTlView = localTlVc.view as? TimeLineView {
+                                        AnalyzeJson.analyzeJsonArray(view: localTlView, model: localTlView.model, jsonList: responseJson, isNew: false, isMerge: true)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch {
+                }
+            } else if let error = error {
+                print(error)
+            }
+        }
+        
+        // ホーム/ローカル統合時は、ローカル側を手動更新した時にホームも手動更新しないと
+        if SettingsData.mergeLocalTL && self.type == .local {
+            let homeKey = "\(hostName)_\(accessToken)_\(SettingsData.TLMode.home.rawValue)"
+            if let homeTlVc = MainViewController.instance?.timelineList[homeKey] {
+                if let homeTlView = homeTlVc.view as? TimeLineView {
+                    guard let homeId = homeTlView.model.getLastTootId() else { return }
+                    if homeId > id {
+                        homeTlView.refreshOld(id: homeId)
+                    }
+                }
+            }
+        }
+    }
+    
+    // お気に入りにする/解除する
+    func favoriteAction(id: String, isFaved: Bool) {
+        let url: URL
+        if isFaved {
+            url = URL(string: "https://\(hostName)/api/v1/statuses/\(id)/unfavourite")!
+        } else {
+            url = URL(string: "https://\(hostName)/api/v1/statuses/\(id)/favourite")!
+        }
+        
+        try? MastodonRequest.post(url: url, accessToken: accessToken, body: [:]) { [weak self] (data, response, error) in
+            guard let strongSelf = self else { return }
+            
+            if let data = data {
+                do {
+                    if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                        var acct = ""
+                        let contentData = AnalyzeJson.analyzeJson(view: strongSelf, model: strongSelf.model, json: responseJson, acct: &acct)
+                        let contentList = [contentData]
+                        
+                        DispatchQueue.main.async {
+                            strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: [:])
+                        }
+                    }
+                } catch {
+                    
+                }
+            }
+        }
+    }
+    
+    // ブーストする/解除する
+    func boostAction(id: String, isBoosted: Bool) {
+        let url: URL
+        if isBoosted {
+            url = URL(string: "https://\(hostName)/api/v1/statuses/\(id)/unreblog")!
+        } else {
+            url = URL(string: "https://\(hostName)/api/v1/statuses/\(id)/reblog")!
+        }
+        
+        try? MastodonRequest.post(url: url, accessToken: accessToken, body: [:]) { [weak self] (data, response, error) in
+            guard let strongSelf = self else { return }
+            
+            if let data = data {
+                do {
+                    if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                        var acct = ""
+                        let contentData = AnalyzeJson.analyzeJson(view: strongSelf, model: strongSelf.model, json: responseJson, acct: &acct)
+                        let contentList = [contentData]
+                        
+                        DispatchQueue.main.async {
+                            strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: [:], isBoosted: true)
+                        }
+                    }
+                } catch {
+                    
+                }
+            }
         }
     }
 }

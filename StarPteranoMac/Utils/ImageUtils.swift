@@ -9,7 +9,7 @@
 import Cocoa
 
 final class ImageUtils {
-    private static let scale = NSScreen.main?.backingScaleFactor ?? 0.5
+    private static let scale = NSScreen.main?.backingScaleFactor ?? 1
     
     // 正方形の画像を縮小する
     // アイコンは36pt, 絵文字は40ptくらいにしたい
