@@ -32,12 +32,16 @@
 "Mini View" = "ミニビュー";
 "Compact View" = "コンパクトビュー";
 "Standard View" = "標準ビュー";
+"Full View" = "フルビュー";
 "Larger" = "拡大";
 "Smaller" = "縮小";
 
 // Toot Menu
 "Toot" = "トゥート";
 "New Toot" = "新規トゥート";
+"Now Playing" = "iTunesの曲名を挿入";
+"Now Browsing" = "Safariの情報を挿入";
+"Add Image…" = "画像を追加…";
 
 // Tool Menu
 "Tool" = "ツール";

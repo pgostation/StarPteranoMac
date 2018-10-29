@@ -794,9 +794,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.addSubview(cell.applicationLabel!)
                 cell.applicationLabel?.stringValue = name
                 cell.applicationLabel?.textColor = ThemeColor.dateColor
+                cell.applicationLabel?.isBordered = false
                 //cell.applicationLabel?.textAlignment = .right
                 //cell.applicationLabel?.adjustsFontSizeToFitWidth = true
                 cell.applicationLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
+                cell.applicationLabel?.sizeToFit()
             }
         } else {
             setCellColor(cell: cell)
@@ -1223,9 +1225,18 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }*/
             
             self.selectedRow = row
+            if index < list.count {
+                let data = list[index]
+                let account = accountList[data.accountId]
+                self.selectedAccountId = account?.id
+            } else {
+                self.selectedAccountId = nil
+            }
             
             //tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
             tableView.reloadData()
+            
+            tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
         }
     }
     

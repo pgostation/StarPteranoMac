@@ -799,10 +799,12 @@ final class TimeLineViewCell: NSView {
                                               width: 40,
                                               height: 40)
             
-            self.applicationLabel?.frame = CGRect(x: 50,
+            if let applicationLabel = self.applicationLabel {
+                applicationLabel.frame = CGRect(x: screenBounds.width - applicationLabel.frame.width - 2,
                                                   y: (top - 5) - 20,
-                                                  width: screenBounds.width - 52,
+                                                  width: applicationLabel.frame.width,
                                                   height: 20)
+            }
             
             top -= 48
             for label in self.rebologerLabels {

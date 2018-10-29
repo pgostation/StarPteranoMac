@@ -131,6 +131,11 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem3.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
                 menuItem3.target = menuTarget
                 viewMenu.addItem(menuItem3)
+                
+                let menuItem4 = NSMenuItem(title: I18n.get("Full View"), action: #selector(doViewMenu(_:)), keyEquivalent: "f")
+                menuItem4.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
+                menuItem4.target = menuTarget
+                viewMenu.addItem(menuItem4)
             }
             viewMenu.addItem(NSMenuItem.separator())
             do {
@@ -159,6 +164,21 @@ final class Menu: NSObject, NSMenuDelegate {
                 tootMenu.addItem(menuItem1)
             }
             tootMenu.addItem(NSMenuItem.separator())
+            do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
+                menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
+                menuItem1.target = menuTarget
+                tootMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Now Browsing"), action: #selector(doTootMenu(_:)), keyEquivalent: "s")
+                menuItem2.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
+                menuItem2.target = menuTarget
+                tootMenu.addItem(menuItem2)
+                
+                let menuItem3 = NSMenuItem(title: I18n.get("Add Image…"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
+                menuItem3.target = menuTarget
+                tootMenu.addItem(menuItem3)
+            }
             
             tootMenuItem.submenu = tootMenu
         }
