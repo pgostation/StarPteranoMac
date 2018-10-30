@@ -14,6 +14,9 @@ final class SettingsWindow: NSWindow {
     
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
         super.init(contentRect: contentRect, styleMask: style, backing: backingStoreType, defer: flag)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.moved),
+                                               name: NSWindow.didMoveNotification, object: nil)
     }
     
     static func show() {
@@ -51,5 +54,9 @@ final class SettingsWindow: NSWindow {
     
     override func close() {
         self.orderOut(self)
+    }
+    
+    @objc func moved() {
+        SettingsData.settingsWindowOrigin = self.frame.origin
     }
 }

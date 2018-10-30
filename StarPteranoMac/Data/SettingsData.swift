@@ -84,25 +84,49 @@ final class SettingsData {
     // メインウィンドウの位置、大きさ
     static var mainWindowFrame: NSRect? {
         get {
-            let rect = defaults.object(forKey: "mainWindowFrame") as? NSRect
-            return rect
+            let str = defaults.object(forKey: "mainWindowFrame") as? String
+            let array = str?.split(separator: ",")
+            if let array = array, array.count == 4 {
+                let x = NumberFormatter().number(from: String(array[0])) as? CGFloat ?? 0
+                let y = NumberFormatter().number(from: String(array[1])) as? CGFloat ?? 0
+                let width = NumberFormatter().number(from: String(array[2])) as? CGFloat ?? 100
+                let height = NumberFormatter().number(from: String(array[3])) as? CGFloat ?? 100
+                return NSRect(x: x, y: y, width: width, height: height)
+            }
+            return nil
         }
         set(newValue) {
             if let newValue = newValue {
-                defaults.set(newValue, forKey: "mainWindowFrame")
+                let str = "\(newValue.origin.x),\(newValue.origin.y),\(newValue.width),\(newValue.height)"
+                defaults.set(str, forKey: "mainWindowFrame")
             }
         }
+    }
+    
+    // 各アカウント別のビューの幅
+    static func viewWidth(accessToken: String) -> Float? {
+        return defaults.float(forKey: "viewWidth_\(accessToken)")
+    }
+    static func setViewWidth(accessToken: String, width: Float) {
+        defaults.set(width, forKey: "viewWidth_\(accessToken)")
     }
     
     // 設定ウィンドウの位置
     static var settingsWindowOrigin: CGPoint? {
         get {
-            let point = defaults.object(forKey: "settingsWindowOrigin") as? CGPoint
-            return point
+            let str = defaults.object(forKey: "settingsWindowOrigin") as? String
+            let array = str?.split(separator: ",")
+            if let array = array, array.count == 2 {
+                let x = NumberFormatter().number(from: String(array[0])) as? CGFloat ?? 0
+                let y = NumberFormatter().number(from: String(array[1])) as? CGFloat ?? 0
+                return CGPoint(x: x, y: y)
+            }
+            return nil
         }
         set(newValue) {
             if let newValue = newValue {
-                defaults.set(newValue, forKey: "settingsWindowOrigin")
+                let str = "\(newValue.x),\(newValue.y)"
+                defaults.set(str, forKey: "settingsWindowOrigin")
             }
         }
     }

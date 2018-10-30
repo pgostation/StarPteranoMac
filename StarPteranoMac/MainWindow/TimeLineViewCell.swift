@@ -765,38 +765,38 @@ final class TimeLineViewCell: NSView {
             var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
             
             self.replyButton?.frame = CGRect(x: 50,
-                                             y: (top) - 40,
-                                             width: 40,
-                                             height: 40)
+                                             y: (top - 3) - 30,
+                                             width: 30,
+                                             height: 30)
             
-            self.repliedLabel?.frame = CGRect(x: 85,
+            self.repliedLabel?.frame = CGRect(x: 80,
                                               y: (top - 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.boostButton?.frame = CGRect(x: 110,
-                                             y: (top - 3) - 34,
-                                             width: 40,
-                                             height: 34)
+                                             y: (top - 3) - 30,
+                                             width: 30,
+                                             height: 30)
             
-            self.boostedLabel?.frame = CGRect(x: 145,
+            self.boostedLabel?.frame = CGRect(x: 140,
                                               y: (top - 10) - 20,
                                               width: 20,
                                               height: 20)
             
             self.favoriteButton?.frame = CGRect(x: 170,
-                                                y: (top - 3) - 34,
-                                                width: 40,
-                                                height: 34)
+                                                y: (top - 3) - 30,
+                                                width: 30,
+                                                height: 30)
             
-            self.favoritedLabel?.frame = CGRect(x: 205,
+            self.favoritedLabel?.frame = CGRect(x: 200,
                                                 y: (top - 10) - 20,
                                                 width: 20,
                                                 height: 20)
             
             self.detailButton?.frame = CGRect(x: 230,
                                               y: top - 40,
-                                              width: 40,
+                                              width: 80,
                                               height: 40)
             
             if let applicationLabel = self.applicationLabel {

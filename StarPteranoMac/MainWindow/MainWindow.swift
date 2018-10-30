@@ -15,6 +15,9 @@ final class MainWindow: NSWindow {
         super.init(contentRect: contentRect, styleMask: style, backing: backingStoreType, defer: flag)
         
         AccountSettingsViewController.getAccountData(view: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.moved),
+                                               name: NSWindow.didMoveNotification, object: nil)
     }
     
     static func show() {
@@ -54,5 +57,9 @@ final class MainWindow: NSWindow {
     
     override func close() {
         self.orderOut(self)
+    }
+    
+    @objc func moved() {
+        SettingsData.mainWindowFrame = self.frame
     }
 }
