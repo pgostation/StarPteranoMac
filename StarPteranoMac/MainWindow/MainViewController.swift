@@ -74,12 +74,12 @@ final class MainViewController: NSViewController {
                 x += 3
             }
             subVCList[index].view.frame = NSRect(x: x,
-                                                 y: 50,
+                                                 y: 0,
                                                  width: widthList[index],
                                                  height: size.height - 50 - 20)
             
             barList[index].frame = NSRect(x: subVCList[index].view.frame.maxX,
-                                          y: 50,
+                                          y: 0,
                                           width: 3,
                                           height: size.height - 50 - 20)
         }

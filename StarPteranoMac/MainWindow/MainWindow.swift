@@ -18,6 +18,8 @@ final class MainWindow: NSWindow {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.moved),
                                                name: NSWindow.didMoveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.moved),
+                                               name: NSWindow.didResizeNotification, object: nil)
     }
     
     static func show() {
@@ -60,6 +62,8 @@ final class MainWindow: NSWindow {
     }
     
     @objc func moved() {
-        SettingsData.mainWindowFrame = self.frame
+        if self.frame.width > 0 {
+            SettingsData.mainWindowFrame = self.frame
+        }
     }
 }

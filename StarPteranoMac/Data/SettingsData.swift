@@ -86,17 +86,19 @@ final class SettingsData {
         get {
             let str = defaults.object(forKey: "mainWindowFrame") as? String
             let array = str?.split(separator: ",")
+            print(array)
             if let array = array, array.count == 4 {
                 let x = NumberFormatter().number(from: String(array[0])) as? CGFloat ?? 0
                 let y = NumberFormatter().number(from: String(array[1])) as? CGFloat ?? 0
                 let width = NumberFormatter().number(from: String(array[2])) as? CGFloat ?? 100
                 let height = NumberFormatter().number(from: String(array[3])) as? CGFloat ?? 100
-                return NSRect(x: x, y: y, width: width, height: height)
+                return NSRect(x: x, y: y, width: max(100, width), height: max(100, height))
             }
             return nil
         }
         set(newValue) {
             if let newValue = newValue {
+                print(newValue)
                 let str = "\(newValue.origin.x),\(newValue.origin.y),\(newValue.width),\(newValue.height)"
                 defaults.set(str, forKey: "mainWindowFrame")
             }

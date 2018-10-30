@@ -9,10 +9,15 @@
 import Cocoa
 
 final class SubViewController: NSViewController {
+    private let hostName: String
+    private let accessToken: String
     private let popUp = NSPopUpButton()
     private let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {
+        self.hostName = hostName
+        self.accessToken = accessToken
+        
         super.init(nibName: nil, bundle: nil)
         
         self.view = NSView()
@@ -75,8 +80,16 @@ final class SubViewController: NSViewController {
                                       keyEquivalent: "")
             menu.addItem(menuItem)
             
-            let subMenu = NSMenu(title: I18n.get("ACTION_LIST"))
-            menuItem.submenu = subMenu
+            do {
+                let subMenu = NSMenu(title: I18n.get("ACTION_LIST"))
+                menuItem.submenu = subMenu
+                
+                subMenu.addItem(NSMenuItem.separator())
+                let menuItem = NSMenuItem(title: I18n.get("ACTION_REFRESH_LIST"),
+                                          action: #selector(menuAction(_:)),
+                                          keyEquivalent: "")
+                subMenu.addItem(menuItem)
+            }
         }
         
         menu.addItem(NSMenuItem.separator())
@@ -94,7 +107,15 @@ final class SubViewController: NSViewController {
     }
     
     @objc func menuAction(_ menuItem: NSMenuItem) {
-        
+        if menuItem.title == I18n.get("ACTION_HOME") {
+            let timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .home)
+            scrollView.documentView = timelineVC.view
+            self.addChild(timelineVC)
+        } else if menuItem.title == I18n.get("ACTION_LOCAL") {
+            let timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .local)
+            scrollView.documentView = timelineVC.view
+            self.addChild(timelineVC)
+        }
     }
     
     override func viewDidLayout() {
