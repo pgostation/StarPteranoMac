@@ -54,6 +54,7 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
     }
     
     func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        print("#### websocketDidReceiveMessage")
         self.callback(text)
     }
     

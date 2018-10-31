@@ -1145,16 +1145,20 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     func tableViewSelectionDidChange(_ notification: Notification) {
-        guard let tableView = notification.object as? NSTableView else { return }
-        let row = tableView.selectedRow
+        guard let timelineView = notification.object as? TimeLineView else { return }
+        let row = timelineView.selectedRow
         var index = row
         
-        if let timelineView = tableView as? TimeLineView {
-            if timelineView.type == .user {
-                index -= 1
-                if index < 0 {
-                    return
-                }
+        timelineView.selectedDate = Date()
+        if timelineView.frame.width < 320 {
+            SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
+            MainViewController.instance?.view.needsLayout = true
+        }
+        
+        if timelineView.type == .user {
+            index -= 1
+            if index < 0 {
+                return
             }
         }
         
@@ -1233,10 +1237,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 self.selectedAccountId = nil
             }
             
-            //tableView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
-            tableView.reloadData()
+            //timelineView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
+            timelineView.reloadData()
             
-            tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+            timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
         }
     }
     

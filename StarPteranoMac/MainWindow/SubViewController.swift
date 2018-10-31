@@ -12,7 +12,7 @@ final class SubViewController: NSViewController {
     private let hostName: String
     private let accessToken: String
     private let popUp = NSPopUpButton()
-    private let scrollView = NSScrollView()
+    let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {
         self.hostName = hostName
@@ -56,6 +56,10 @@ final class SubViewController: NSViewController {
                 popUp.selectItem(at: 11)
             case .users:
                 popUp.selectItem(at: 12)
+            }
+            
+            if let title = popUp.selectedItem?.title {
+                self.doMenu(title: title)
             }
             
             //if scrollView.documentView == nil {
@@ -133,6 +137,10 @@ final class SubViewController: NSViewController {
     }
     
     @objc func menuAction(_ menuItem: NSMenuItem) {
+        doMenu(title: menuItem.title)
+    }
+    
+    private func doMenu(title: String) {
         func setTimeLineViewController(mode: SettingsData.TLMode) {
             let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
             
@@ -151,21 +159,42 @@ final class SubViewController: NSViewController {
             TimeLineViewManager.set(key: key, vc: vc)
         }
         
-        if menuItem.title == I18n.get("ACTION_HOME") {
+        func setTimeLineViewController(vc: TimeLineViewController) {
+            scrollView.documentView = vc.view
+            
+            self.children.first?.removeFromParent()
+            self.addChild(vc)
+        }
+        
+        if title == I18n.get("ACTION_HOME") {
             setTimeLineViewController(mode: .home)
-        } else if menuItem.title == I18n.get("ACTION_LOCAL") {
+        } else if title == I18n.get("ACTION_LOCAL") {
             setTimeLineViewController(mode: .local)
-        } else if menuItem.title == I18n.get("ACTION_LOCAL_HOME") {
+        } else if title == I18n.get("ACTION_LOCAL_HOME") {
             setTimeLineViewController(mode: .homeLocal)
-        } else if menuItem.title == I18n.get("ACTION_FEDERATION") {
+        } else if title == I18n.get("ACTION_FEDERATION") {
             setTimeLineViewController(mode: .federation)
+        } else if title == I18n.get("ACTION_NOTIFICATIONS") {
+            //
+        } else if title == I18n.get("ACTION_MENTIONS") {
+            //
+        } else if title == I18n.get("ACTION_DM") {
+            let vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .direct)
+            setTimeLineViewController(vc: vc)
+        } else if title == I18n.get("ACTION_FAVORITES") {
+            let vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .favorites)
+            setTimeLineViewController(vc: vc)
+        } else if title == I18n.get("ACTION_SEARCH") {
+            //
+        } else if title == I18n.get("ACTION_USERS") {
+            //
         }
     }
     
     override func viewDidLayout() {
         popUp.frame = NSRect(x: 0,
                              y: self.view.frame.height - 32,
-                             width: min(300, self.view.frame.width),
+                             width: min(150, self.view.frame.width),
                              height: 32)
         
         scrollView.frame = NSRect(x: 0,

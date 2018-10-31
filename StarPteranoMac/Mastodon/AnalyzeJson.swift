@@ -11,6 +11,7 @@ import Foundation
 final class AnalyzeJson {
     // タイムラインのJSONデータを解析して、リストに格納
     static func analyzeJsonArray(view: TimeLineView, model: TimeLineViewModel, jsonList: [AnyObject], isNew: Bool, isNewRefresh: Bool = false, isMerge: Bool = false) {
+        print("#### analyzeJsonArray")
         var contentList: [ContentData] = []
         
         var acct: String = ""
@@ -38,6 +39,7 @@ final class AnalyzeJson {
     }
     
     static func analyzeJson(view: TimeLineView?, model: TimeLineViewModel?, json: [String: Any], acct: inout String, isMerge: Bool = false) -> ContentData {
+        print("#### analyzeJson")
         if let account = json["account"] as? [String: Any] {
             acct = account["acct"] as? String ?? ""
             let data = analyzeAccountJson(account: account)

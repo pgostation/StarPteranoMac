@@ -11,6 +11,7 @@ import Cocoa
 final class DecodeToot {
     // 自前でHTML解析
     static func decodeContentFast(content: String?, emojis: [[String: Any]]?, callback: (()->Void)?) -> (NSMutableAttributedString, Bool) {
+        print("#### decodeContentFast")
         var text = content ?? ""
         
         // 先頭と最後の<p></p>を取り除く

@@ -20,6 +20,7 @@ final class TimeLineView: NSTableView {
     var mediaOnly: Bool = false
     private static var audioPlayer: AVAudioPlayer? = nil
     var mergeLocalTL = false
+    var selectedDate = Date()
     
     var accountList: [String: AnalyzeJson.AccountData] = [:]
     
