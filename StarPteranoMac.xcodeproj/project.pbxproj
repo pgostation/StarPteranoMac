@@ -28,6 +28,7 @@
 		128751CF2184BE6500BC8828 /* MyPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751CE2184BE6500BC8828 /* MyPlayerViewController.swift */; };
 		128751D12185445A00BC8828 /* TootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751D02185445A00BC8828 /* TootView.swift */; };
 		128751D32185497600BC8828 /* ImageCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751D22185497600BC8828 /* ImageCheckView.swift */; };
+		128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128D4E542189AE51003BDEF4 /* TimeLineViewManager.swift */; };
 		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC452181FD8B009B8788 /* SettingsViewController.swift */; };
 		1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4721834628009B8788 /* AccountSettingsViewController.swift */; };
@@ -68,6 +69,7 @@
 		128751CE2184BE6500BC8828 /* MyPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPlayerViewController.swift; sourceTree = "<group>"; };
 		128751D02185445A00BC8828 /* TootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TootView.swift; sourceTree = "<group>"; };
 		128751D22185497600BC8828 /* ImageCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCheckView.swift; sourceTree = "<group>"; };
+		128D4E542189AE51003BDEF4 /* TimeLineViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineViewManager.swift; sourceTree = "<group>"; };
 		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		1291FC452181FD8B009B8788 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1291FC4721834628009B8788 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
@@ -156,6 +158,7 @@
 				1291FC522183EE3B009B8788 /* MainWindow.swift */,
 				128751A92184340E00BC8828 /* MainViewController.swift */,
 				128751AF21847D9C00BC8828 /* SubViewController.swift */,
+				128D4E542189AE51003BDEF4 /* TimeLineViewManager.swift */,
 				128751B32184816700BC8828 /* TimeLineViewController.swift */,
 				128751B52184817000BC8828 /* TimeLineView.swift */,
 				128751B72184817D00BC8828 /* TimeLineViewModel.swift */,
@@ -390,6 +393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
+				128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */,
 				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,

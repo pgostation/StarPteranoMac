@@ -86,7 +86,6 @@ final class SettingsData {
         get {
             let str = defaults.object(forKey: "mainWindowFrame") as? String
             let array = str?.split(separator: ",")
-            print(array)
             if let array = array, array.count == 4 {
                 let x = NumberFormatter().number(from: String(array[0])) as? CGFloat ?? 0
                 let y = NumberFormatter().number(from: String(array[1])) as? CGFloat ?? 0
@@ -98,7 +97,6 @@ final class SettingsData {
         }
         set(newValue) {
             if let newValue = newValue {
-                print(newValue)
                 let str = "\(newValue.origin.x),\(newValue.origin.y),\(newValue.width),\(newValue.height)"
                 defaults.set(str, forKey: "mainWindowFrame")
             }
@@ -137,29 +135,49 @@ final class SettingsData {
     enum TLMode: String {
         case home = "Home"
         case local = "Local"
+        case homeLocal = "HomeLocal"
         case federation = "Federation" // 連合TL
         case list = "List"
+        case notifications = "Notifications"
+        case dm = "DM"
+        case favorites = "Favorites"
+        case mentions = "Mentions"
+        case users = "Users"
+        case search = "Search"
     }
-    static func tlMode(key: String) -> TLMode {
+    static func tlMode(key: String) -> [TLMode] {
         if let string = defaults.string(forKey: "tlMode_\(key)") {
-            return TLMode(rawValue: string) ?? .home
+            let array = string.split(separator: ",")
+            
+            var list: [TLMode] = []
+            for str in array {
+                list.append(TLMode(rawValue: String(str)) ?? .home)
+            }
+            return list
         }
-        return .home
+        return [.home]
     }
-    static func setTlMode(key: String, mode: TLMode) {
-        defaults.set(mode.rawValue, forKey: "tlMode_\(key)")
+    static func setTlMode(key: String, modes: [TLMode]) {
+        var string = ""
+        for mode in modes {
+            if string != "" {
+                string += ","
+            }
+            string += mode.rawValue
+        }
+        defaults.set(string, forKey: "tlMode_\(key)")
     }
     
     // 各アカウントで優先表示するリストIDを保持
-    static func selectedListId(accessToken: String?) -> String? {
+    static func selectedListId(accessToken: String?, index: Int) -> String? {
         guard let accessToken = accessToken else { return nil }
-        return defaults.string(forKey: "selectedListId_\(accessToken)")
+        return defaults.string(forKey: "selectedListId_\(accessToken)_\(index)")
     }
-    static func selectListId(accessToken: String?, listId: String?) {
+    static func selectListId(accessToken: String?, index: Int, listId: String?) {
         guard let accessToken = accessToken else { return }
         guard let listId = listId else { return }
         
-        defaults.set(listId, forKey: "selectedListId_\(accessToken)")
+        defaults.set(listId, forKey: "selectedListId_\(accessToken)_\(index)")
     }
     
     // 各アカウントでの最新の既読通知日時を保持
@@ -200,6 +218,7 @@ final class SettingsData {
         case superMini = "superMini"
         case miniView = "miniView"
         case normal = "normal"
+        case full = "full"
     }
     private static var _isMiniView: MiniView?
     static var isMiniView: MiniView {
@@ -438,23 +457,6 @@ final class SettingsData {
         }
         set(newValue) {
             defaults.set(newValue, forKey: "emojiKeyboardHeight")
-        }
-    }
-    
-    // ローカルにホームを統合表示
-    static var mergeLocalTL: Bool {
-        get {
-            if let string = defaults.string(forKey: "mergeLocalTL") {
-                return (string == "ON")
-            }
-            return false
-        }
-        set(newValue) {
-            if newValue {
-                defaults.set("ON", forKey: "mergeLocalTL")
-            } else {
-                defaults.removeObject(forKey: "mergeLocalTL")
-            }
         }
     }
 }

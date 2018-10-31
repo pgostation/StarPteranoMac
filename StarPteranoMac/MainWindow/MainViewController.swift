@@ -30,11 +30,10 @@ final class MainViewController: NSViewController {
             subVC.view.needsLayout = true
             
             // 仕切り
-            let bar = NSView()
+            let bar = SlideBar()
+            bar.accessToken = account.1
             bar.wantsLayer = true
             bar.layer?.backgroundColor = NSColor.gray.cgColor
-            bar.addCursorRect(NSRect(x: 0, y: 0, width: 3, height: MainWindow.window?.frame.size.height ?? 0),
-                              cursor: NSCursor.resizeLeftRight)
             barList.append(bar)
             self.view.addSubview(bar)
         }
@@ -52,7 +51,7 @@ final class MainViewController: NSViewController {
         var maxIndex = -1
         var maxWidth: CGFloat = -1
         for (index, account) in SettingsData.accountList.enumerated() {
-            let width = CGFloat(SettingsData.viewWidth(accessToken: account.1) ?? 32)
+            let width = max(48, CGFloat(SettingsData.viewWidth(accessToken: account.1) ?? 0))
             widthList.append(width)
             sum += width
             if width > maxWidth {
@@ -63,37 +62,57 @@ final class MainViewController: NSViewController {
         
         // 最も大きい幅の項目の幅を変化させる
         if maxIndex != -1 {
-            widthList[maxIndex] = max(32, widthList[maxIndex] + (size.width - sum))
+            widthList[maxIndex] = max(48, widthList[maxIndex] + (size.width - sum))
         }
         
+        for (index, account) in SettingsData.accountList.enumerated() {
+            SettingsData.setViewWidth(accessToken: account.1, width: Float(widthList[index]))
+        }
+        
+        var right: CGFloat = 0
         for index in 0..<self.subVCList.count {
             if index >= widthList.count { continue }
             
-            var x = size.width * CGFloat(index) / CGFloat(self.subVCList.count)
-            if index > 0 {
-                x += 3
-            }
-            subVCList[index].view.frame = NSRect(x: x,
+            subVCList[index].view.frame = NSRect(x: right,
                                                  y: 0,
-                                                 width: widthList[index],
+                                                 width: widthList[index] - ((index == self.subVCList.count - 1) ? 0 : 3),
                                                  height: size.height - 50 - 20)
             
             barList[index].frame = NSRect(x: subVCList[index].view.frame.maxX,
                                           y: 0,
                                           width: 3,
                                           height: size.height - 50 - 20)
+            
+            right = barList[index].frame.maxX
         }
     }
 }
 
 private final class SlideBar: NSView {
     var index = -1
-    
-    override func mouseDown(with event: NSEvent) {
-        print("mouseDown")
-    }
+    var accessToken = ""
     
     override func mouseDragged(with event: NSEvent) {
-        print("mouseDragged")
+        let width = SettingsData.viewWidth(accessToken: accessToken) ?? 0
+        SettingsData.setViewWidth(accessToken: accessToken, width: width + Float(event.deltaX))
+        
+        var flag = false
+        for account in SettingsData.accountList {
+            if flag {
+                let width = SettingsData.viewWidth(accessToken: account.1) ?? 0
+                SettingsData.setViewWidth(accessToken: account.1, width: width - Float(event.deltaX))
+                break
+            }
+            if account.1 == accessToken {
+                flag = true
+            }
+        }
+        
+        self.superview?.needsLayout = true
+    }
+    
+    override func resetCursorRects() {
+        discardCursorRects()
+        addCursorRect(self.bounds, cursor: NSCursor.resizeLeftRight)
     }
 }

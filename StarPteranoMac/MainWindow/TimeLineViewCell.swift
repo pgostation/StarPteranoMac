@@ -366,6 +366,7 @@ final class TimeLineViewCell: NSView {
         let deselectItem = NSMenuItem(title: I18n.get("ACTION_DESELECT"),
                                       action: #selector(deselectAction),
                                       keyEquivalent: "")
+        deselectItem.target = self
         menu.addItem(deselectItem)
         
         if self.accountId == SettingsData.accountNumberID(accessToken: tableView?.accessToken ?? "") {
@@ -373,6 +374,7 @@ final class TimeLineViewCell: NSView {
             let deleteItem = NSMenuItem(title: I18n.get("ACTION_DELETE_TOOT"),
                                           action: #selector(deleteAction),
                                           keyEquivalent: "")
+            deleteItem.target = self
             menu.addItem(deleteItem)
         }
         
@@ -383,18 +385,21 @@ final class TimeLineViewCell: NSView {
         let reportItem = NSMenuItem(title: I18n.get("ACTION_REPORT_TOOT"),
                                       action: #selector(reportAction),
                                       keyEquivalent: "")
+        reportItem.target = self
         menu.addItem(reportItem)
         
         // ペーストボードにコピー
         let copyItem = NSMenuItem(title: I18n.get("ACTION_COPY_TOOT"),
                                     action: #selector(copyAction),
                                     keyEquivalent: "")
+        copyItem.target = self
         menu.addItem(copyItem)
         
         // ブラウザで開く
         let browserItem = NSMenuItem(title: I18n.get("ACTION_OPEN_WITH_BROWSER"),
                                   action: #selector(browserAction),
                                   keyEquivalent: "")
+        browserItem.target = self
         menu.addItem(browserItem)
         
         /*

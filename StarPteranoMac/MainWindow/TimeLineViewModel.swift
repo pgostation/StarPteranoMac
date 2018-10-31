@@ -21,7 +21,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     private var inReplyToAccountId: String?
     var isDetailTimeline = false
     private var cellCount = 0 // 現在のセル数
-    private var animationCellsCount = 0
+    //private var animationCellsCount = 0
     var inAnimating = false
     
     override init() {
@@ -151,7 +151,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     }
                     
                     if isStreaming {
-                        self.animationCellsCount = addList2.count
+                        //self.animationCellsCount = addList2.count
                     }
                     
                     if isNewRefresh && addList.count >= 40 {
@@ -184,7 +184,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     if isStreaming {
                         tableView.reloadData()
                         
-                        self.inAnimating = true
+                        /*self.inAnimating = true
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             self.animationCellsCount = 0
@@ -197,7 +197,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                                 self.inAnimating = false
                             }
-                        }
+                        }*/
                     }
                 } else {
                     // すでにあるデータを更新する
@@ -328,9 +328,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             return 300
         }
         
-        if index < self.animationCellsCount {
+        /*if index < self.animationCellsCount {
             return 1
-        }
+        }*/
         
         let isSelected = !SettingsData.tapDetailMode && row == self.selectedRow
         
@@ -501,7 +501,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
-        if row < self.animationCellsCount {
+        /*if row < self.animationCellsCount {
             let screenCellCount: Int
             if SettingsData.isMiniView == .superMini {
                 screenCellCount = Int(tableView.frame.height / (10 + SettingsData.fontSize))
@@ -511,7 +511,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if row > screenCellCount {
                 return NSView()
             }
-        }
+        }*/
         
         if index >= list.count {
             if self.showAutoPagerizeCell, let timelineView = tableView as? TimeLineView {

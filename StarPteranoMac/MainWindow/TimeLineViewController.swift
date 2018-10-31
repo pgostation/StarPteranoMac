@@ -12,6 +12,7 @@ final class TimeLineViewController: NSViewController {
     enum TimeLineType {
         case home // ホーム
         case local // ローカルタイムライン
+        case homeLocal // ホームローカル統合TL
         case federation // 連合タイムライン
         case user // 指定ユーザータイムライン
         case favorites // お気に入り
@@ -27,6 +28,7 @@ final class TimeLineViewController: NSViewController {
     let type: TimeLineType
     private let option: String? // user指定時はユーザID、タグ指定時はタグ
     private let mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? // typeに.mentions指定時のみ有効
+    private let closeButton = NSButton()
     
     init(hostName: String, accessToken: String, type: TimeLineType, option: String? = nil, mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? = nil) {
         self.hostName = hostName
@@ -49,7 +51,6 @@ final class TimeLineViewController: NSViewController {
             self.view = view
             
             // 閉じるボタンを追加
-            let closeButton = NSButton()
             closeButton.title = "×"
             //closeButton.titleLabel?.font = NSFont.boldSystemFont(ofSize: 32)
             //closeButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
@@ -57,10 +58,6 @@ final class TimeLineViewController: NSViewController {
             closeButton.layer?.backgroundColor = ThemeColor.mainButtonsBgColor.cgColor
             closeButton.layer?.borderColor = ThemeColor.buttonBorderColor.cgColor
             closeButton.layer?.borderWidth = 1
-            closeButton.frame = CGRect(x: 0,
-                                       y: 0,
-                                       width: 60,
-                                       height: 60)
             closeButton.action = #selector(self.closeAction)
             self.view.addSubview(closeButton)
         } else {
@@ -86,6 +83,11 @@ final class TimeLineViewController: NSViewController {
             }
             
             view.frame = NSRect(x: 0, y: 0, width: frame.width, height: sumHeight)
+            
+            self.closeButton.frame = CGRect(x: 0,
+                                            y: sumHeight - 20,
+                                            width: 20,
+                                            height: 20)
         }
     }
 }

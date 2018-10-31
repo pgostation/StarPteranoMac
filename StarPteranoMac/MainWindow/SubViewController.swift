@@ -27,20 +27,42 @@ final class SubViewController: NSViewController {
         
         setProperties()
         
-        let timelineVC: TimeLineViewController
-        switch SettingsData.tlMode(key: hostName + "," + accessToken) {
-        case .home:
-            timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .home)
-        case .local:
-            timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .local)
-        case .federation:
-            timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .federation)
-        case .list:
-            timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .list)
+        for (index, mode) in SettingsData.tlMode(key: hostName + "," + accessToken).enumerated() {
+            //let vc: NSViewController
+            switch mode {
+            case .home:
+                popUp.selectItem(at: 0)
+            case .local:
+                popUp.selectItem(at: 1)
+            case .homeLocal:
+                popUp.selectItem(at: 2)
+            case .federation:
+                popUp.selectItem(at: 3)
+            case .list:
+                popUp.selectItem(at: 5)
+                let listOption = SettingsData.selectedListId(accessToken: accessToken, index: index)
+                let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
+                let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
+                TimeLineViewManager.set(key: key, vc: vc)
+            case .notifications:
+                popUp.selectItem(at: 7)
+            case .mentions:
+                popUp.selectItem(at: 8)
+            case .dm:
+                popUp.selectItem(at: 9)
+            case .favorites:
+                popUp.selectItem(at: 10)
+            case .search:
+                popUp.selectItem(at: 11)
+            case .users:
+                popUp.selectItem(at: 12)
+            }
+            
+            //if scrollView.documentView == nil {
+            //    scrollView.documentView = vc.view
+            //    self.addChild(vc)
+            //}
         }
-        
-        scrollView.documentView = timelineVC.view
-        self.addChild(timelineVC)
         
         self.view.needsLayout = true
     }
@@ -67,6 +89,7 @@ final class SubViewController: NSViewController {
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
                                           keyEquivalent: "")
+                menuItem.target = self
                 menu.addItem(menuItem)
             }
         }
@@ -78,6 +101,7 @@ final class SubViewController: NSViewController {
             let menuItem = NSMenuItem(title: I18n.get("ACTION_LIST"),
                                       action: #selector(menuAction(_:)),
                                       keyEquivalent: "")
+            menuItem.target = self
             menu.addItem(menuItem)
             
             do {
@@ -88,6 +112,7 @@ final class SubViewController: NSViewController {
                 let menuItem = NSMenuItem(title: I18n.get("ACTION_REFRESH_LIST"),
                                           action: #selector(menuAction(_:)),
                                           keyEquivalent: "")
+                menuItem.target = self
                 subMenu.addItem(menuItem)
             }
         }
@@ -101,20 +126,39 @@ final class SubViewController: NSViewController {
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
                                           keyEquivalent: "")
+                menuItem.target = self
                 menu.addItem(menuItem)
             }
         }
     }
     
     @objc func menuAction(_ menuItem: NSMenuItem) {
+        func setTimeLineViewController(mode: SettingsData.TLMode) {
+            let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+            
+            let type: TimeLineViewController.TimeLineType
+            if mode == .local { type = .local }
+            else if mode == .homeLocal { type = .homeLocal }
+            else if mode == .federation { type = .federation }
+            else { type = .home }
+            
+            let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
+            scrollView.documentView = vc.view
+            
+            self.children.first?.removeFromParent()
+            self.addChild(vc)
+            
+            TimeLineViewManager.set(key: key, vc: vc)
+        }
+        
         if menuItem.title == I18n.get("ACTION_HOME") {
-            let timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .home)
-            scrollView.documentView = timelineVC.view
-            self.addChild(timelineVC)
+            setTimeLineViewController(mode: .home)
         } else if menuItem.title == I18n.get("ACTION_LOCAL") {
-            let timelineVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .local)
-            scrollView.documentView = timelineVC.view
-            self.addChild(timelineVC)
+            setTimeLineViewController(mode: .local)
+        } else if menuItem.title == I18n.get("ACTION_LOCAL_HOME") {
+            setTimeLineViewController(mode: .homeLocal)
+        } else if menuItem.title == I18n.get("ACTION_FEDERATION") {
+            setTimeLineViewController(mode: .federation)
         }
     }
     
