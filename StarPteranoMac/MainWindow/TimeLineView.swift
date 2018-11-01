@@ -377,10 +377,11 @@ final class TimeLineView: NSTableView {
                     
                     // 効果音を出す
                     if TimeLineView.audioPlayer == nil {
-                        let soundFilePath = Bundle.main.path(forResource: "decision21", ofType: "mp3")!
-                        let sound = URL(fileURLWithPath: soundFilePath)
-                        TimeLineView.audioPlayer = try? AVAudioPlayer(contentsOf: sound, fileTypeHint:nil)
-                        TimeLineView.audioPlayer?.prepareToPlay()
+                        if let soundFilePath = Bundle.main.path(forResource: "decision21", ofType: "mp3") {
+                            let sound = URL(fileURLWithPath: soundFilePath)
+                            TimeLineView.audioPlayer = try? AVAudioPlayer(contentsOf: sound, fileTypeHint:nil)
+                            TimeLineView.audioPlayer?.prepareToPlay()
+                        }
                     }
                     TimeLineView.audioPlayer?.currentTime = 0
                     TimeLineView.audioPlayer?.play()

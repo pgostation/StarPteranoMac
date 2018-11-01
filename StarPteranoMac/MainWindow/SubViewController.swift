@@ -28,7 +28,6 @@ final class SubViewController: NSViewController {
         setProperties()
         
         for (index, mode) in SettingsData.tlMode(key: hostName + "," + accessToken).enumerated() {
-            //let vc: NSViewController
             switch mode {
             case .home:
                 popUp.selectItem(at: 0)
@@ -61,11 +60,6 @@ final class SubViewController: NSViewController {
             if let title = popUp.selectedItem?.title {
                 self.doMenu(title: title)
             }
-            
-            //if scrollView.documentView == nil {
-            //    scrollView.documentView = vc.view
-            //    self.addChild(vc)
-            //}
         }
         
         self.view.needsLayout = true

@@ -1127,9 +1127,28 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     // セルを使い回す
+    private static var usingList: [TimeLineViewCell] = []
+    private static var recycleList: [TimeLineViewCell] = []
+    private static var timeDate = Date()
     private func getCell(view: NSTableView, height: CGFloat) -> TimeLineViewCell {
-        let reuseIdentifier = "TimeLineViewModel"
-        let cell = TimeLineViewCell(reuseIdentifier: reuseIdentifier)
+        if Date().timeIntervalSince(TimeLineViewModel.timeDate) >= 1 {
+            for (index, cell) in TimeLineViewModel.usingList.enumerated().reversed() {
+                if cell.superview == nil {
+                    TimeLineViewModel.recycleList.append(cell)
+                    TimeLineViewModel.usingList.remove(at: index)
+                }
+            }
+            TimeLineViewModel.timeDate = Date()
+        }
+        
+        let cell: TimeLineViewCell
+        if let tmpCell = TimeLineViewModel.recycleList.popLast() {
+            tmpCell.prepareForReuse()
+            cell = tmpCell
+        } else {
+            cell = TimeLineViewCell()
+        }
+        TimeLineViewModel.usingList.append(cell)
         
         if SettingsData.isMiniView == .superMini {
             cell.nameLabel.isHidden = true

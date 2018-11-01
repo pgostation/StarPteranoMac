@@ -74,7 +74,7 @@ final class TimeLineViewCell: NSView {
     var isBoosted = false
     
     // セルの初期化
-    init(reuseIdentifier: String?) {
+    init() {
         self.date = Date()
         
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
@@ -623,7 +623,9 @@ final class TimeLineViewCell: NSView {
                     return
                 }
                 
-                self?.refreshDate()
+                DispatchQueue.main.async { [weak self] in
+                    self?.refreshDate()
+                }
             })
         }
     }
