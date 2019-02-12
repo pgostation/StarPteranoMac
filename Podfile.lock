@@ -1,20 +1,21 @@
 PODS:
-  - APNGKit (1.0.3)
-  - FirebaseAuth (5.0.4):
+  - APNGKit (1.1.0)
+  - FirebaseAuth (5.3.0):
     - FirebaseAuthInterop (~> 1.0)
-    - FirebaseCore (~> 5.1)
+    - FirebaseCore (~> 5.2)
     - GoogleUtilities/Environment (~> 5.2)
     - GTMSessionFetcher/Core (~> 1.1)
   - FirebaseAuthInterop (1.0.0)
-  - FirebaseCore (5.1.6):
+  - FirebaseCore (5.2.0):
     - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseDatabase (5.0.3):
-    - FirebaseCore (~> 5.0)
+  - FirebaseDatabase (5.1.0):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.2)
     - leveldb-library (~> 1.18)
-  - GoogleUtilities/Environment (5.3.4)
-  - GoogleUtilities/Logger (5.3.4):
+  - GoogleUtilities/Environment (5.3.7)
+  - GoogleUtilities/Logger (5.3.7):
     - GoogleUtilities/Environment
-  - GTMSessionFetcher/Core (1.2.0)
+  - GTMSessionFetcher/Core (1.2.1)
   - leveldb-library (1.20)
   - Starscream (3.0.6)
 
@@ -47,26 +48,26 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   FirebaseAuth:
-    :commit: f54b981b7fc03e389b7eab519bc60280d5f88a34
+    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
     :git: https://github.com/firebase/firebase-ios-sdk.git
   FirebaseCore:
-    :commit: f54b981b7fc03e389b7eab519bc60280d5f88a34
+    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
     :git: https://github.com/firebase/firebase-ios-sdk.git
   FirebaseDatabase:
-    :commit: f54b981b7fc03e389b7eab519bc60280d5f88a34
+    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
     :git: https://github.com/firebase/firebase-ios-sdk.git
 
 SPEC CHECKSUMS:
-  APNGKit: 3e5aae83d323c566e77e4bb29f727b1b7302899d
-  FirebaseAuth: cfa5aba3d249cabea887030e8ea7c90f32254027
+  APNGKit: 8fcf50c4004d6d01473707412d162e90d1fa599a
+  FirebaseAuth: c9b3ff063c223d2841d97240af547ce511bce19a
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
-  FirebaseCore: 567f80b714378190305596b51a98cebcf6fda1e7
-  FirebaseDatabase: 90d16237ef2d281b0c086ac2c2f644338361d1cf
-  GoogleUtilities: abb092d2c12e817fa3e0e7b274987dd72fb86ec3
-  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  FirebaseCore: ea2d1816723ef21492b8e9113303e1350db5e08c
+  FirebaseDatabase: 23acb0c53cd4d4070a427b60100b2e4aaa97c45d
+  GoogleUtilities: 111a012f4c3a29c9e7c954c082fafd6ee3c999c0
+  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
 
-PODFILE CHECKSUM: b5c4484fb4be5487d2859f8c294226be685758de
+PODFILE CHECKSUM: ae6fe4d531719f8d4957ea405acbedfd52b3335d
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0

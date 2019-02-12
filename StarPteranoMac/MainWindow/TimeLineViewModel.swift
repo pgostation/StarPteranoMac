@@ -307,6 +307,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         return list.count + 1 // オートページャライズ用のセル
     }
     
+    // 行の高さを返す
+    private var heightCacheWidth: CGFloat = 0
+    private var heightCache: [Int: CGFloat] = [:]
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         var index = row
         
@@ -339,6 +342,20 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         if SettingsData.isMiniView == .superMini && !isSelected {
             return 10 + SettingsData.fontSize
+        }
+        
+        // キャッシュを使う
+        if heightCacheWidth != tableView.frame.width {
+            heightCache = [:]
+            heightCacheWidth = tableView.frame.width
+        }
+        if heightCache.count > 0 {
+            let data = list[index]
+            if let idStr = data.id, let id = Int(idStr) {
+                if let height = heightCache[id] {
+                    return height
+                }
+            }
         }
         
         // メッセージのビューを一度作り、高さを求める
@@ -392,7 +409,13 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             reblogOffset = 0
         }
         
-        return max(55, messageView.frame.height + 36 + reblogOffset + imagesOffset + detailOffset)
+        let height = max(55, messageView.frame.height + 36 + reblogOffset + imagesOffset + detailOffset)
+        
+        if let idStr = data.id, let id = Int(idStr) {
+            heightCache[id] = height
+        }
+        
+        return height
     }
     
     // メッセージのビューとデータを返す
@@ -449,17 +472,18 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
+        /*
         if let id = data.id, row != selectedRow {
             if self.oldCacheDict[id] != nil {
-                /*if let textView = self.oldCacheDict[id]?.0 as? MyTextView {
+                if let textView = self.oldCacheDict[id]?.0 as? MyTextView {
                     textView.cachingFlag = false
-                }*/
+                }
                 self.oldCacheDict[id] = nil
             }
             if self.cacheDict[id] != nil {
-                /*if let textView = self.cacheDict[id]?.0 as? MyTextView {
+                if let textView = self.cacheDict[id]?.0 as? MyTextView {
                     textView.cachingFlag = false
-                }*/
+                }
                 self.cacheDict[id] = nil
             }
             self.cacheDict[id] = (messageView, data, isContinue)
@@ -468,18 +492,91 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if self.cacheDict.count > 10 {
                 // キャッシュ中フラグを倒す
                 for data in self.oldCacheDict {
-                    /*if let textView = data.value.0 as? MyTextView {
+                    if let textView = data.value.0 as? MyTextView {
                         textView.cachingFlag = false
-                    }*/
+                    }
                 }
                 
                 self.oldCacheDict = self.cacheDict
                 self.cacheDict = [:]
             }
-        }
+        }*/
         
         return (messageView, data, isContinue)
     }
+    
+    /*
+    // NSTextViewをリサイクル
+    private var cacheTextView: [MyTextView] = []
+    private func dequeueReusableTextView() -> MyTextView {
+        for view in self.cacheTextView {
+            if view.cachingFlag == false {
+                if let index = self.cacheTextView.firstIndex(of: view) {
+                    self.cacheTextView.remove(at: index)
+                }
+                view.isHidden = false
+                return view
+            }
+        }
+        
+        let msgView = MyTextView()
+        msgView.model = self
+        msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
+        msgView.textContainer?.lineBreakMode = .byCharWrapping
+        //msgView.isOpaque = true
+        //msgView.isScrollEnabled = false
+        msgView.isEditable = false
+        msgView.delegate = self // URLタップ用
+        
+        // URL以外の場所タップ用
+        let tapGensture = NSClickGestureRecognizer(target: self, action: #selector(tapTextViewAction(_:)))
+        msgView.addGestureRecognizer(tapGensture)
+        
+        return msgView
+    }
+    
+    // キャッシュの色を再設定する
+    func recolorCache() {
+        for view in self.cacheTextView {
+            view.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
+        }
+        
+        for data in self.cacheDict {
+            if let textView = data.value.0 as? MyTextView {
+                textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                textView.textColor = ThemeColor.messageColor
+                textView.backgroundColor = ThemeColor.cellBgColor
+            }
+        }
+        for data in self.oldCacheDict {
+            if let textView = data.value.0 as? MyTextView {
+                textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                textView.textColor = ThemeColor.messageColor
+                textView.backgroundColor = ThemeColor.cellBgColor
+            }
+        }
+    }
+    
+    class MyTextView: NSTextView {
+        weak var model: TimeLineViewModel?
+        var cachingFlag = false
+        
+        override func removeFromSuperview() {
+            super.removeFromSuperview()
+            
+            if model?.cacheTextView.contains(self) == false {
+                model?.cacheTextView.append(self)
+            }
+        }
+        
+        override func addSubview(_ view: NSView) {
+            super.addSubview(view)
+            
+            if let index = model?.cacheTextView.firstIndex(of: self) {
+                model?.cacheTextView.remove(at: index)
+            }
+        }
+    }*/
     
     // セルを返す
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -1166,6 +1263,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     func tableViewSelectionDidChange(_ notification: Notification) {
         guard let timelineView = notification.object as? TimeLineView else { return }
         let row = timelineView.selectedRow
+        
+        selectRow(timelineView: timelineView, row: row)
+    }
+    
+    private func selectRow(timelineView: TimeLineView, row: Int) {
         var index = row
         
         timelineView.selectedDate = Date()
@@ -1277,5 +1379,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         return mentionContents
+    }
+    
+    // NSTextViewのリンク以外タップ時の処理
+    @objc func tapTextViewAction(_ gesture: NSGestureRecognizer) {
+        guard let msgView = gesture.view else { return }
+        guard let cell = msgView.superview as? TimeLineViewCell else { return }
+        
+        if let tableView = cell.tableView, let indexPath = cell.indexPath {
+            // セル選択時の処理を実行
+            selectRow(timelineView: tableView, row: indexPath)
+        }
     }
 }

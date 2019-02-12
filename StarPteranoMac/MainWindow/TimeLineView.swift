@@ -150,10 +150,10 @@ final class TimeLineView: NSTableView {
                             
                             strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: strongSelf.accountList)
                             
-                            DispatchQueue.main.sync {
+                            //DispatchQueue.main.sync {
                                 // テーブルビューを更新
                                 strongSelf.reloadData()
-                            }
+                            //}
                             
                             // ローカルにホームを統合する場合
                             if strongSelf.mergeLocalTL && strongSelf.type == .home {
@@ -164,10 +164,10 @@ final class TimeLineView: NSTableView {
                                         let contentList = [contentData]
                                         localTlView.model.change(tableView: localTlView, addList: contentList, accountList: strongSelf.accountList)
                                         
-                                        DispatchQueue.main.sync {
+                                        //DispatchQueue.main.sync {
                                             // テーブルビューを更新
                                             localTlView.reloadData()
-                                        }
+                                        //}
                                     }
                                 }
                             }
@@ -222,9 +222,9 @@ final class TimeLineView: NSTableView {
                                 strongSelf.model.change(tableView: strongSelf, addList: [contentData], accountList: strongSelf.accountList)
                             }
                         }
-                        DispatchQueue.main.sync {
+                        //DispatchQueue.main.sync {
                             strongSelf.reloadData()
-                        }
+                        //}
                     }
                 } catch {
                 }
@@ -347,11 +347,11 @@ final class TimeLineView: NSTableView {
                             
                             var offsetY: CGFloat = 0
                             var returnFlag = false
-                            DispatchQueue.main.sync {
+                            //DispatchQueue.main.sync {
                                 //offsetY = self.contentOffset.y
                                 
                                 returnFlag = offsetY > 60 || (self.isManualLoading && self.model.getFirstTootId() != nil)
-                            }
+                            //}
                             
                             if returnFlag {
                                 // スクロール位置が一番上でない場合、テーブルビューには反映せず裏に持っておく
