@@ -6,11 +6,13 @@
 //  Copyright © 2018 pgostation. All rights reserved.
 //
 
+// トゥートのHTML文字列を解析して、リンクや絵文字付き文字列にする
+
 import Cocoa
 
 final class DecodeToot {
     // 自前でHTML解析
-    static func decodeContentFast(content: String?, emojis: [[String: Any]]?, callback: (()->Void)?) -> (NSMutableAttributedString, Bool) {
+    static func decodeContentFast(content: String?, emojis: [[String: Any]]?, callback: (()->Void)?) -> (NSMutableAttributedString, Bool, Bool) {
         var text = content ?? ""
         
         // 先頭と最後の<p></p>を取り除く
@@ -61,8 +63,16 @@ final class DecodeToot {
                 linkStr = String(tmpHrefStr2.suffix(tmpHrefStr2.count - linkStartIndex.encodedOffset).prefix(endIndex.encodedOffset - linkStartIndex.encodedOffset - 4))
             }
             
+            var offset = 0
+            do {
+                let beforeString = text.prefix(startIndex.encodedOffset)
+                let beforeCount = beforeString.count
+                let afterCount = beforeString.replacingOccurrences(of: "&lt;", with: "<").replacingOccurrences(of: "&gt;", with: ">").replacingOccurrences(of: "&quot;", with: "\"").replacingOccurrences(of: "&apos;", with: "'").replacingOccurrences(of: "&amp;", with: "&").count
+                offset = afterCount - beforeCount
+            }
+            
             // リストに追加
-            linkList.append((startIndex, String(urlStr), linkStr))
+            linkList.append((text.index(startIndex, offsetBy: offset) , String(urlStr), linkStr))
             text = String(text.prefix(upTo: startIndex)) + linkStr + String(text.suffix(from: endIndex))
             
             loopCount += 1
@@ -75,7 +85,11 @@ final class DecodeToot {
         
         // リンクを追加
         for link in linkList {
-            if link.0.encodedOffset + link.2.count > attributedText.length { continue }
+            var textLength = link.2.count
+            if link.0.encodedOffset + textLength > attributedText.length {
+                textLength = attributedText.length - link.0.encodedOffset
+                if textLength <= 0 { continue }
+            }
             attributedText.addAttribute(NSAttributedString.Key.link,
                                         value: link.1,
                                         range: NSRange(location: link.0.encodedOffset, length: link.2.count))
@@ -88,18 +102,22 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
+                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
+                
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
                     if execCallback {
                         callback?()
                     } else {
                         attachment.image = ImageUtils.flipped(image)
+                        if image.size.width > 0 {
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                        }
                     }
                 }
                 if attachment.image == nil {
                     execCallback = true
                 }
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
                 
                 let attrStr = NSAttributedString(attachment: attachment)
                 
@@ -112,7 +130,18 @@ final class DecodeToot {
             }
         }
         
-        return (attributedText, linkList.count > 0)
+        var hasCard = false
+        if linkList.count > 0 {
+            for link in linkList {
+                if link.2.hasPrefix("#") { continue }
+                if link.2.hasPrefix("@") { continue }
+                hasCard = true
+            }
+        } else if text.contains("http://") && text.contains(" href=\"") {
+            hasCard = true
+        }
+        
+        return (attributedText, linkList.count > 0, hasCard)
     }
     
     // https://qiita.com/kumetter/items/91b433cd4d30abe507c5
@@ -176,18 +205,21 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
+                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
                     if execCallback {
                         callback?()
                     } else {
                         attachment.image = ImageUtils.flipped(image)
+                        if image.size.width > 0 {
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                        }
                     }
                 }
                 if attachment.image == nil {
                     execCallback = true
                 }
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
                 
                 let attrStr = NSAttributedString(attachment: attachment)
                 
@@ -219,12 +251,16 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
+                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
                     if execCallback {
                         callback?()
                     } else {
                         attachment.image = ImageUtils.flipped(image)
+                        if image.size.width > 0 {
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                        }
                     }
                 }
                 if attachment.image == nil {
@@ -234,7 +270,6 @@ final class DecodeToot {
                     attachment.image = dummyImage
                     
                 }
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
                 
                 let attrStr = NSAttributedString(attachment: attachment)
                 
@@ -264,7 +299,7 @@ final class DecodeToot {
     
     // 絵文字から元の文字列に戻す
     // https://stackoverflow.com/questions/36465761/can-nsattributedstring-which-contains-nstextattachment-be-storedor-restored
-    static func encodeEmoji(attributedText: NSAttributedString, textStorage: NSTextStorage) -> String {
+    static func encodeEmoji(attributedText: NSAttributedString, textStorage: NSTextStorage, isToot: Bool = false) -> String {
         // 絵文字のある場所をリストにする
         var list: [(NSRange, String)] = []
         let range = NSRange(location: 0, length: attributedText.length)
@@ -285,10 +320,18 @@ final class DecodeToot {
         // 絵文字から元のコードに置き換える
         let attributedStr = NSMutableAttributedString(attributedString: attributedText)
         for data in list.reversed() {
-            attributedStr.replaceCharacters(in: data.0, with: ":" + data.1 + ":")
+            if isToot {
+                attributedStr.replaceCharacters(in: data.0, with: "\u{200b}:" + data.1 + ":\u{200b}")
+            } else {
+                attributedStr.replaceCharacters(in: data.0, with: ":" + data.1 + ":")
+            }
         }
         
-        return attributedStr.string
+        // 連続するゼロ幅スペースを1つにする
+        var str = attributedStr.string
+        str = str.replacingOccurrences(of: "\u{200b}\u{200b}", with: "\u{200b}")
+        
+        return str
     }
     
     // NSAttributedStringから絵文字のshortcodeの配列を返す

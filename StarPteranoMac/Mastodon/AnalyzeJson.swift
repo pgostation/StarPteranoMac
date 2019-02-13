@@ -10,14 +10,14 @@ import Foundation
 
 final class AnalyzeJson {
     // タイムラインのJSONデータを解析して、リストに格納
-    static func analyzeJsonArray(view: TimeLineView, model: TimeLineViewModel, jsonList: [AnyObject], isNew: Bool, isNewRefresh: Bool = false, isMerge: Bool = false) {
+    static func analyzeJsonArray(view: TimeLineView, model: TimeLineViewModel, jsonList: [AnyObject], isNew: Bool, isNewRefresh: Bool = false, isMerge: Bool = false, isPinned: Bool? = nil) {
         var contentList: [ContentData] = []
         
         var acct: String = ""
         for json in jsonList {
             guard let json = json as? [String: Any] else { continue }
             
-            let data = analyzeJson(view: view, model: model, json: json, acct: &acct, isMerge: isMerge)
+            let data = analyzeJson(view: view, model: model, json: json, acct: &acct, isMerge: isMerge, isPinned: isPinned)
             
             contentList.append(data)
         }
@@ -37,7 +37,7 @@ final class AnalyzeJson {
         model.change(tableView: view, addList: contentList, accountList: view.accountList, isNewRefresh: isNewRefresh)
     }
     
-    static func analyzeJson(view: TimeLineView?, model: TimeLineViewModel?, json: [String: Any], acct: inout String, isMerge: Bool = false) -> ContentData {
+    static func analyzeJson(view: TimeLineView?, model: TimeLineViewModel?, json: [String: Any], acct: inout String, isMerge: Bool = false, isPinned: Bool? = nil) -> ContentData {
         if let account = json["account"] as? [String: Any] {
             acct = account["acct"] as? String ?? ""
             let data = analyzeAccountJson(account: account)
@@ -170,7 +170,18 @@ final class AnalyzeJson {
             in_reply_to_id = reblog?["in_reply_to_id"] as? String
         }
         
-        let language = json["language"] as? String
+        //let language = json["language"] as? String
+        
+        let pinned: Int?
+        if reblog_acct == nil {
+            if isPinned == true {
+                pinned = 1
+            } else {
+                pinned = json["pinned"] as? Int
+            }
+        } else {
+            pinned = reblog?["pinned"] as? Int
+        }
         
         var muted: Int? = nil
         if reblog_acct == nil {
@@ -217,7 +228,18 @@ final class AnalyzeJson {
             spoiler_text = reblog?["spoiler_text"] as? String
         }
         
-        //let tags = json["tags"] as? [String]
+        let tags: [[String: String]]?
+        if reblog_acct == nil {
+            let tmp = json["tags"] as? [[String: String]]
+            if tmp != nil && tmp!.count > 0 {
+                tags = tmp
+            } else {
+                tags = nil
+            }
+        } else {
+            tags = reblog?["tags"] as? [[String: String]]
+        }
+        
         //let uri = json["uri"] as? String
         
         let url: String?
@@ -234,8 +256,24 @@ final class AnalyzeJson {
             visibility = reblog?["visibility"] as? String
         }
         
+        let card: CardData?
+        if reblog_acct == nil {
+            if let cardJson = json["card"] as? [String: Any] {
+                card = analyzeCard(json: cardJson)
+            } else {
+                card = nil
+            }
+        } else {
+            if let cardJson = reblog?["card"] as? [String: Any] {
+                card = analyzeCard(json: cardJson)
+            } else {
+                card = nil
+            }
+        }
+        
         let data = ContentData(accountId: acct,
                                application: application,
+                               card: card,
                                content: content,
                                created_at: created_at,
                                emojis: emojis,
@@ -244,10 +282,10 @@ final class AnalyzeJson {
                                id: id,
                                in_reply_to_account_id: in_reply_to_account_id,
                                in_reply_to_id: in_reply_to_id,
-                               language: language,
                                mediaData: mediaData,
                                mentions: mentions,
                                muted: muted,
+                               pinned: pinned,
                                reblog_acct: reblog_acct,
                                reblog_created_at: reblog_created_at,
                                reblog_id: reblog_id,
@@ -256,11 +294,10 @@ final class AnalyzeJson {
                                replies_count: replies_count,
                                sensitive: sensitive,
                                spoiler_text: spoiler_text,
-                               //tags: tags,
-            //uri: uri,
-            url: url,
-            visibility: visibility,
-            isMerge: isMerge)
+                               tags: tags,
+                               url: url,
+                               visibility: visibility,
+                               isMerge: isMerge)
         return data
     }
     
@@ -330,9 +367,35 @@ final class AnalyzeJson {
         return data
     }
     
+    // インスタンス情報 (バージョンとか)
+    static func analyzeInstanceJson(json: [String: Any]) -> InstanceData {
+        let versionStr = json["version"] as? String
+        let versionStr2 = versionStr?.replacingOccurrences(of: ".", with: "").replacingOccurrences(of: "rc", with: ".")
+        let version = Double(versionStr2 ?? "0")
+        
+        let data = InstanceData(version: version)
+        return data
+    }
+    
+    static func analyzeCard(json: [String: Any]) -> CardData {
+        let url = json["url"] as? String
+        let title = json["title"] as? String
+        let description = json["description"] as? String
+        let image = json["image"] as? String
+        let type = json["type"] as? String
+        
+        let data = CardData(url: url,
+                            title: title,
+                            description: description,
+                            image: image,
+                            type: type)
+        return data
+    }
+    
     static func emptyContentData() -> ContentData {
         return ContentData(accountId: "",
                            application: nil,
+                           card: nil,
                            content: nil,
                            created_at: nil,
                            emojis: nil,
@@ -341,10 +404,10 @@ final class AnalyzeJson {
                            id: nil,
                            in_reply_to_account_id: nil,
                            in_reply_to_id: nil,
-                           language: nil,
                            mediaData: nil,
                            mentions: nil,
                            muted: nil,
+                           pinned: nil,
                            reblog_acct: nil,
                            reblog_created_at: nil,
                            reblog_id: nil,
@@ -353,6 +416,7 @@ final class AnalyzeJson {
                            replies_count: nil,
                            sensitive: nil,
                            spoiler_text: nil,
+                           tags: nil,
                            url: nil,
                            visibility: nil,
                            isMerge: false)
@@ -384,6 +448,7 @@ final class AnalyzeJson {
     struct ContentData {
         let accountId: String
         let application: [String: Any]?
+        let card: CardData?
         let content: String?
         let created_at: String?
         let emojis: [[String: Any]]?
@@ -392,10 +457,11 @@ final class AnalyzeJson {
         let id: String? // 数値のID
         let in_reply_to_account_id: String?
         let in_reply_to_id: String?
-        let language: String?
+        //let language: String?
         let mediaData: [MediaData]?
         let mentions: [MentionData]?
         let muted: Int?
+        let pinned: Int?
         let reblog_acct: String?
         let reblog_created_at: String?
         let reblog_id: String?
@@ -404,7 +470,7 @@ final class AnalyzeJson {
         let replies_count: Int?
         let sensitive: Int?
         let spoiler_text: String?
-        //let tags: [String]?
+        let tags: [[String: String]]?
         //let uri: String?
         let url: String?
         let visibility: String?
@@ -455,5 +521,17 @@ final class AnalyzeJson {
         let domain_blocking: Int?
         let showing_reblogs: Int?
         let endorsed: Int?
+    }
+    
+    struct InstanceData {
+        let version: Double?
+    }
+    
+    struct CardData {
+        let url: String?
+        let title: String?
+        let description: String?
+        let image: String?
+        let type: String? // "link", "photo", "video", or "rich"
     }
 }

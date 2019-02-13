@@ -35,6 +35,7 @@
 		1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4A21835D5A009B8788 /* Dialog.swift */; };
 		1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4D21835F08009B8788 /* MastodonRequest.swift */; };
 		1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC522183EE3B009B8788 /* MainWindow.swift */; };
+		129E89D622145DC300D3D13B /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129E89D522145DC300D3D13B /* CardView.swift */; };
 		129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4335217E1CD3008E856D /* AppDelegate.swift */; };
 		129F4338217E1CD4008E856D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 129F4337217E1CD4008E856D /* Assets.xcassets */; };
 		129F433B217E1CD4008E856D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129F4339217E1CD4008E856D /* MainMenu.xib */; };
@@ -76,6 +77,7 @@
 		1291FC4A21835D5A009B8788 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		1291FC4D21835F08009B8788 /* MastodonRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MastodonRequest.swift; sourceTree = "<group>"; };
 		1291FC522183EE3B009B8788 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		129E89D522145DC300D3D13B /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		129F4332217E1CD3008E856D /* StarPteranoMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarPteranoMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129F4335217E1CD3008E856D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		129F4337217E1CD4008E856D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				128751B52184817000BC8828 /* TimeLineView.swift */,
 				128751B72184817D00BC8828 /* TimeLineViewModel.swift */,
 				128751C52184A37300BC8828 /* TimeLineViewCell.swift */,
+				129E89D522145DC300D3D13B /* CardView.swift */,
 			);
 			path = MainWindow;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				128751C421849F1400BC8828 /* DecodeToot.swift in Sources */,
 				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
 				128751D12185445A00BC8828 /* TootView.swift in Sources */,
+				129E89D622145DC300D3D13B /* CardView.swift in Sources */,
 				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

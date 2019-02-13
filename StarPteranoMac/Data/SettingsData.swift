@@ -81,6 +81,14 @@ final class SettingsData {
         }
     }
     
+    // インスタンスのversionを保持
+    static func instanceVersion(hostName: String) -> Double {
+        return defaults.double(forKey: "instanceVersion_\(hostName)")
+    }
+    static func setInstanceVersion(hostName: String, value: Double) {
+        defaults.set(value, forKey: "instanceVersion_\(hostName)")
+    }
+    
     // メインウィンドウの位置、大きさ
     static var mainWindowFrame: NSRect? {
         get {
@@ -319,6 +327,23 @@ final class SettingsData {
         }
     }
     
+    // プレビュー画像を読み込むかどうか
+    static var isLoadPreviewImage: Bool {
+        get {
+            if let string = defaults.string(forKey: "isLoadPreviewImage") {
+                return (string == "ON")
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "isLoadPreviewImage")
+            } else {
+                defaults.set("OFF", forKey: "isLoadPreviewImage")
+            }
+        }
+    }
+    
     // アカウント名タップでアイコンタップと同じ処理をするかどうか
     static var isNameTappable: Bool {
         get {
@@ -445,6 +470,24 @@ final class SettingsData {
         }
     }
     
+    // お気に入りの確認を行うかどうか
+    static var showFavDialog: Bool {
+        get {
+            if let string = defaults.string(forKey: "showFavDialog") {
+                let value = (string == "ON")
+                return value
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "showFavDialog")
+            } else {
+                defaults.set("OFF", forKey: "showFavDialog")
+            }
+        }
+    }
+    
     // 絵文字キーボードサイズ
     static var emojiKeyboardHeight: CGFloat {
         get {
@@ -458,5 +501,229 @@ final class SettingsData {
         set(newValue) {
             defaults.set(newValue, forKey: "emojiKeyboardHeight")
         }
+    }
+    
+    // 絶対時間表示
+    static var useAbsoluteTime: Bool {
+        get {
+            if let string = defaults.string(forKey: "useAbsoluteTime") {
+                return (string == "ON")
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "useAbsoluteTime")
+            } else {
+                defaults.removeObject(forKey: "useAbsoluteTime")
+            }
+        }
+    }
+    
+    // 最近使った絵文字に追加
+    static func addRecentEmoji(key: String, accessToken: String) {
+        var list = recentEmojiList(accessToken: accessToken)
+        if list.count > 0 && list[0] == key { return }
+        if let index = list.firstIndex(of: key) {
+            list.remove(at: index)
+        }
+        list.insert(key, at: 0)
+        
+        // 16を超えたら削除
+        if list.count > 16 {
+            list.remove(at: 16)
+        }
+        
+        let str = list.joined(separator: "\n")
+        
+        defaults.set(str, forKey: "recentEmojiList_" + (accessToken))
+    }
+    
+    // 最近使った絵文字を取得
+    static func recentEmojiList(accessToken: String) -> [String] {
+        let str = defaults.string(forKey: "recentEmojiList_" + (accessToken))
+        
+        let tmpArray = (str ?? "").split(separator: "\n")
+        var array: [String] = []
+        for substr in tmpArray {
+            array.append(String(substr))
+        }
+        
+        return array
+    }
+    
+    // 最近使ったハッシュタグに追加
+    static func addRecentHashtag(key: String, accessToken: String) {
+        var list = recentHashtagList(accessToken: accessToken)
+        if list.count > 0 && list[0] == key { return }
+        if let index = list.firstIndex(of: key) {
+            list.remove(at: index)
+        }
+        list.insert(key, at: 0)
+        
+        if list.count > 16 {
+            list.remove(at: 16)
+        }
+        
+        let str = list.joined(separator: "\n")
+        
+        defaults.set(str, forKey: "recentHashtagList_" + (accessToken))
+    }
+    
+    // 最近使ったハッシュタグを取得
+    static func recentHashtagList(accessToken: String) -> [String] {
+        let str = defaults.string(forKey: "recentHashtagList_" + (accessToken))
+        
+        let tmpArray = (str ?? "").split(separator: "\n")
+        var array: [String] = []
+        for substr in tmpArray {
+            array.append(String(substr))
+        }
+        
+        return array
+    }
+    
+    // 最近メンションしたアカウントに追加
+    static func addRecentMention(key: String, accessToken: String) {
+        var list = recentMentionList(accessToken: accessToken)
+        if list.count > 0 && list[0] == key { return }
+        if let index = list.firstIndex(of: key) {
+            list.remove(at: index)
+        }
+        list.insert(key, at: 0)
+        
+        if list.count > 16 {
+            list.remove(at: 16)
+        }
+        
+        let str = list.joined(separator: "\n")
+        
+        defaults.set(str, forKey: "recentMentionList_" + (accessToken))
+    }
+    
+    // 最近メンションしたアカウントを取得
+    static func recentMentionList(accessToken: String) -> [String] {
+        let str = defaults.string(forKey: "recentMentionList_" + (accessToken))
+        
+        let tmpArray = (str ?? "").split(separator: "\n")
+        var array: [String] = []
+        for substr in tmpArray {
+            array.append(String(substr))
+        }
+        
+        return array
+    }
+    
+    // ひらがな変換するかどうか
+    static var hiraganaMode: Bool {
+        get {
+            if let string = defaults.string(forKey: "hiraganaMode") {
+                return (string == "ON")
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "hiraganaMode")
+            } else {
+                defaults.removeObject(forKey: "hiraganaMode")
+            }
+        }
+    }
+    
+    // フォロー、フォロワーの情報をたまにチェックする
+    static func checkFFAccounts(hostName: String, accessToken: String) {
+        // 1週間以内にチェックしていたら、何もしない
+        do {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+            
+            if let lastDateStr = defaults.string(forKey: "checkFFDate_\(accessToken)") {
+                if let date = dateFormatter.date(from: lastDateStr), date.timeIntervalSinceNow >= -7 * 86400 {
+                    return
+                }
+            }
+            
+            defaults.set(dateFormatter.string(from: Date()), forKey: "checkFFDate_\(accessToken)")
+        }
+        
+        // フォローイングの情報をチェック
+        checkFollowing(hostName: hostName, accessToken: accessToken, sinceId: nil)
+    }
+    
+    // フォローイングの情報をチェック
+    private static func checkFollowing(hostName: String, accessToken: String, sinceId: String?) {
+        var sinceIdStr = ""
+        if let sinceId = sinceId {
+            sinceIdStr = "?since_id=\(sinceId)"
+        }
+        
+        guard let url = URL(string: "https://\(hostName)/api/v1/accounts/\(SettingsData.accountNumberID(accessToken: accessToken) ?? "")/following" + sinceIdStr) else { return }
+        
+        try? MastodonRequest.get(url: url, accessToken: accessToken) { (data, response, error) in
+            guard let data = data else { return }
+            
+            do {
+                guard let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? Array<AnyObject> else { return }
+                
+                DispatchQueue.global().async {
+                    var lastId: Int? = nil
+                    
+                    for json in responseJson {
+                        if let accountJson = json as? [String: Any] {
+                            let accountData = AnalyzeJson.analyzeAccountJson(account: accountJson)
+                            SettingsData.addFollowingList(accessToken: accessToken, id: accountData.acct)
+                            
+                            if let numId = Int(accountData.id ?? "") {
+                                if let lastNumId = lastId {
+                                    if numId > lastNumId {
+                                        lastId = numId
+                                    }
+                                } else {
+                                    lastId = numId
+                                }
+                            }
+                        }
+                    }
+                    
+                    if let lastId = lastId {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            checkFollowing(hostName: hostName, accessToken: accessToken, sinceId: "\(lastId)")
+                        }
+                    }
+                }
+                
+            } catch { }
+        }
+    }
+    
+    // フォロー中リストデータに追加
+    private static let followingDefaults = UserDefaults(suiteName: "FollowingList")!
+    static func addFollowingList(accessToken: String, id: String?) {
+        guard let id = id else { return }
+        
+        var list = followingList(accessToken: accessToken)
+        if list.count > 0 && list[0] == id { return }
+        if let index = list.firstIndex(of: id) {
+            list.remove(at: index)
+        }
+        list.insert(id, at: 0)
+        
+        let str = list.joined(separator: "\n")
+        
+        followingDefaults.set(str, forKey: "followingList_\(accessToken)")
+    }
+    
+    // フォロー中リストデータを取得
+    static func followingList(accessToken: String) -> [String] {
+        let str = followingDefaults.string(forKey: "followingList_" + (accessToken))
+        
+        let tmpArray = (str ?? "").split(separator: "\n")
+        var array: [String] = []
+        for substr in tmpArray {
+            array.append(String(substr))
+        }
+        
+        return array
     }
 }

@@ -359,7 +359,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         // メッセージのビューを一度作り、高さを求める
-        let (messageView, data, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: false, callback: nil)
+        let (messageView, data, _, hasCard) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: false, callback: nil)
         
         // セルを拡大表示するかどうか
         var detailOffset: CGFloat = isSelected ? 40 : 0
@@ -373,6 +373,18 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             // お気に入りした人の名前を表示
             if let favourites_count = data.favourites_count, favourites_count > 0 {
                 detailOffset += (SettingsData.fontSize + 4) * CGFloat(min(10, favourites_count)) + 4
+            }
+        }
+        
+        if hasCard {
+            if SettingsData.instanceVersion(hostName: (tableView as? TimeLineView)?.hostName ?? "") >= 2.6 {
+                if data.card != nil || CardView.hasCard(id: data.id ?? "") == true {
+                    // card表示用
+                    detailOffset += 200
+                }
+            } else {
+                // card表示用
+                detailOffset += 200
             }
         }
         
@@ -419,9 +431,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     // メッセージのビューとデータを返す
-    private var cacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool)] = [:]
-    private var oldCacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool)] = [:]
-    private func getMessageViewAndData(tableView: NSTableView, index: Int, row: Int, add: Bool, callback: (()->Void)?) -> (NSView, AnalyzeJson.ContentData, Bool) {
+    private var cacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
+    private var oldCacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
+    private func getMessageViewAndData(tableView: NSTableView, index: Int, row: Int, add: Bool, callback: (()->Void)?) -> (NSView, AnalyzeJson.ContentData, Bool, Bool) {
         let data = list[index]
         
         if data.emojis == nil, let id = data.id, let cache = self.cacheDict[id] ?? self.oldCacheDict[id] {
@@ -432,7 +444,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         // content解析
-        let (attributedText, hasLink) = DecodeToot.decodeContentFast(content: data.content, emojis: data.emojis, callback: callback)
+        let (attributedText, hasLink, hasCard) = DecodeToot.decodeContentFast(content: data.content, emojis: data.emojis, callback: callback)
         
         // 行間を広げる
         let paragrahStyle = NSMutableParagraphStyle()
@@ -502,7 +514,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }*/
         
-        return (messageView, data, isContinue)
+        let trueHasCard = hasCard && (data.spoiler_text == nil || data.spoiler_text == "") && (data.card != nil || CardView.hasCard(id: data.id ?? "") == true)
+        
+        return (messageView, data, isContinue, trueHasCard)
     }
     
     /*
@@ -623,11 +637,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         var id: String = ""
         
         // 表示用のデータを取得
-        let (messageView, data, isContinue) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: { [weak self] in
+        let (messageView, data, isContinue, hasCard) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: { [weak self] in
             guard let strongSelf = self else { return }
             // あとから絵文字が読み込めた場合の更新処理
             if cell.id != id { return }
-            let (messageView, _, _) = strongSelf.getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
+            let (messageView, _, _, _) = strongSelf.getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
             let isHidden = cell?.messageView?.isHidden ?? false
             messageView.isHidden = isHidden
             if let oldMessageView = cell?.messageView {
@@ -911,6 +925,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.addSubview(iconView)
                 cell.iconView?.image = image
                 cell.iconView?.layer?.cornerRadius = 5
+                cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
                 //cell.iconView?.clipsToBounds = true
                 //cell.iconView?.insets = UIEdgeInsetsMake(5, 5, 5, 5)
                 
@@ -1296,7 +1311,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
             
             // トゥート詳細画面に移動
-            let (_, data, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
+            let (_, data, _, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
             let mentionsData = getMentionsData(data: data)
             let viewController = TimeLineViewController(type: TimeLineViewController.TimeLineType.mentions, option: nil, mentions: (mentionsData, accountList))
             UIUtils.getFrontViewController()?.addChildViewController(viewController)
