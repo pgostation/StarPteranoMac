@@ -399,6 +399,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 //spolerTextLabel.numberOfLines = 0
                 spolerTextLabel.lineBreakMode = .byCharWrapping
                 spolerTextLabel.frame.size.width = tableView.frame.width - 70
+                spolerTextLabel.drawsBackground = false
                 spolerTextLabel.sizeToFit()
                 detailOffset += 20 + spolerTextLabel.frame.height
             } else {
@@ -464,7 +465,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         msgView.textStorage?.append(attributedText)
         msgView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         msgView.textColor = ThemeColor.messageColor
-        msgView.backgroundColor = ThemeColor.cellBgColor
+        msgView.drawsBackground = false
+        msgView.isSelectable = false
         //msgView.cachingFlag = true
         
         let messageView = msgView
@@ -915,6 +917,22 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             setCellColor(cell: cell)
         }
         
+        if hasCard {
+            if let card = data.card {
+                // card表示
+                let cardView = CardView(card: card, hostName: timelineView.hostName, accessToken: timelineView.accessToken)
+                cardView.isHidden = messageView.isHidden
+                cell.cardView = cardView
+                cell.addSubview(cardView)
+            } else {
+                // card表示
+                let cardView = CardView(id: data.reblog_id ?? data.id, dateStr: data.created_at, hostName: timelineView.hostName, accessToken: timelineView.accessToken)
+                cardView.isHidden = messageView.isHidden
+                cell.cardView = cardView
+                cell.addSubview(cardView)
+            }
+        }
+        
         ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { image in
             if cell.id == id {
                 cell.iconView?.removeFromSuperview()
@@ -1004,6 +1022,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     //imageView.clipsToBounds = true
                     imageView.layer?.borderColor = NSColor.gray.withAlphaComponent(0.2).cgColor
                     imageView.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
+                    imageView.imageScaling = .scaleProportionallyUpOrDown
                     
                     /*
                     // タップで全画面表示

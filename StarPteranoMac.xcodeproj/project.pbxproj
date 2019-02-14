@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
 		128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751AB218478CA00BC8828 /* ImageUtils.swift */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
+		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		128751AB218478CA00BC8828 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				1291FC4A21835D5A009B8788 /* Dialog.swift */,
 				128751AD2184792500BC8828 /* EmojiImage.swift */,
 				128751B92184830200BC8828 /* ThemeColor.swift */,
+				121A823F2214E652008D3176 /* ClickableTextField.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
+				121A82402214E652008D3176 /* ClickableTextField.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
 				128751AE2184792500BC8828 /* EmojiImage.swift in Sources */,
 				128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */,

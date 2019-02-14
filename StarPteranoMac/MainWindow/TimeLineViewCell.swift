@@ -36,6 +36,7 @@ final class TimeLineViewCell: NSView {
     var detailDateLabel: NSTextField?
     var DMBarLeft: NSView?
     var DMBarRight: NSView?
+    var cardView: CardView?
     
     // 詳細ビュー
     var showDetail = false
@@ -91,12 +92,14 @@ final class TimeLineViewCell: NSView {
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         self.nameLabel.backgroundColor = ThemeColor.cellBgColor
         self.nameLabel.isBordered = false
+        self.nameLabel.isEditable = false
         //self.nameLabel.isOpaque = true
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.idLabel.backgroundColor = ThemeColor.cellBgColor
         self.idLabel.isBordered = false
+        self.idLabel.isEditable = false
         //self.idLabel.isOpaque = true
         
         self.dateLabel.textColor = ThemeColor.dateColor
@@ -106,6 +109,7 @@ final class TimeLineViewCell: NSView {
         //self.dateLabel.adjustsFontSizeToFitWidth = true
         //self.dateLabel.isOpaque = true
         self.dateLabel.isBordered = false
+        self.dateLabel.isEditable = false
         
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         self.lineLayer.isOpaque = true
@@ -188,6 +192,9 @@ final class TimeLineViewCell: NSView {
             self.iconView?.removeGestureRecognizer(gesture)
         }
         self.iconView = nil
+        
+        self.cardView?.removeFromSuperview()
+        self.cardView = nil
         
         // フォントサイズと色を指定
         self.nameLabel.textColor = ThemeColor.nameColor
@@ -771,6 +778,15 @@ final class TimeLineViewCell: NSView {
         if self.replyButton != nil {
             var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
             
+            if let cardView = self.cardView, !cardView.isHidden {
+                cardView.frame.origin.y = top - 200
+                cardView.frame.origin.x = 10
+                cardView.frame.size.width =  self.frame.width - 20
+                cardView.layout()
+                
+                top = cardView.frame.minY - 5
+            }
+            
             self.replyButton?.frame = CGRect(x: 50,
                                              y: (top - 3) - 30,
                                              width: 30,
@@ -830,6 +846,14 @@ final class TimeLineViewCell: NSView {
                                      height: SettingsData.fontSize)
                 
                 top -= SettingsData.fontSize + 4
+            }
+        } else {
+            if let cardView = self.cardView {
+                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8 + imagesOffset)
+                cardView.frame.origin.y = top - 200
+                cardView.frame.origin.x = 10
+                cardView.frame.size.width =  self.frame.width - 20
+                cardView.layout()
             }
         }
     }

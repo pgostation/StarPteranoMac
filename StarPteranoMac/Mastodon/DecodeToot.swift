@@ -92,7 +92,7 @@ final class DecodeToot {
             }
             attributedText.addAttribute(NSAttributedString.Key.link,
                                         value: link.1,
-                                        range: NSRange(location: link.0.encodedOffset, length: link.2.count))
+                                        range: NSRange(location: link.0.encodedOffset, length: textLength))
         }
         
         // 絵文字に変える

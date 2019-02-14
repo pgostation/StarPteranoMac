@@ -22,4 +22,41 @@ final class Dialog {
             }
         }
     }
+    
+    // 2ボタンのダイアログを表示
+    static func show(message: String, window: NSWindow? = nil, okName: String, cancelName: String, callback: @escaping (Bool)->Void) {
+        let alert = NSAlert()
+        alert.messageText = message
+        
+        alert.addButton(withTitle: okName)
+        alert.addButton(withTitle: cancelName)
+        
+        if let window = window {
+            alert.beginSheetModal(for: window, completionHandler: { result in
+                callback(result == .alertFirstButtonReturn)
+            })
+        } else {
+            let result = alert.runModal()
+            callback(result == .alertFirstButtonReturn)
+        }
+    }
+    
+    // 入力欄付きのダイアログを表示
+    static func showWithTextInput(message: String, window: NSWindow? = nil, okName: String, cancelName: String, defaultText: String?, isAlphabet: Bool = false, callback: @escaping (NSTextField, Bool)->Void) {
+        let alert = NSAlert()
+        alert.messageText = message
+        
+        let textField = NSTextField()
+        textField.stringValue = defaultText ?? ""
+        alert.accessoryView = textField
+        
+        if let window = window {
+            alert.beginSheetModal(for: window, completionHandler: { result in
+                callback(textField, result == .alertFirstButtonReturn)
+            })
+        } else {
+            let result = alert.runModal()
+            callback(textField, result == .alertFirstButtonReturn)
+        }
+    }
 }

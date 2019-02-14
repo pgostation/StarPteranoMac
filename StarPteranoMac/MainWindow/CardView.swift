@@ -29,7 +29,7 @@ final class CardView: NSView {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        let rect = CGRect(x: 10, y: 0, width: 200, height: 195)
+        let rect = CGRect(x: -200, y: 0, width: 200, height: 195)
         super.init(frame: rect)
         
         self.addSubview(imageView)
@@ -59,7 +59,7 @@ final class CardView: NSView {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        let rect = CGRect(x: 10, y: 0, width: 200, height: 195)
+        let rect = CGRect(x: -200, y: 0, width: 200, height: 195)
         super.init(frame: rect)
         
         self.addSubview(imageView)
@@ -97,6 +97,10 @@ final class CardView: NSView {
         titleLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         titleLabel.layer?.shadowOpacity = 1.0
         titleLabel.layer?.shadowRadius = 1.0
+        titleLabel.isEditable = false
+        titleLabel.isSelectable = false
+        titleLabel.isBezeled = false
+        titleLabel.drawsBackground = false
         
         //bodyLabel.numberOfLines = 0
         bodyLabel.lineBreakMode = .byCharWrapping
@@ -106,6 +110,10 @@ final class CardView: NSView {
         bodyLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         bodyLabel.layer?.shadowOpacity = 1.0
         bodyLabel.layer?.shadowRadius = 1.0
+        bodyLabel.isEditable = false
+        bodyLabel.isSelectable = false
+        bodyLabel.isBezeled = false
+        bodyLabel.drawsBackground = false
         
         //domainLabel.textAlignment = .center
         domainLabel.textColor = ThemeColor.messageColor
@@ -114,6 +122,11 @@ final class CardView: NSView {
         domainLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         domainLabel.layer?.shadowOpacity = 1.0
         domainLabel.layer?.shadowRadius = 1.0
+        domainLabel.alignment = .center
+        domainLabel.isEditable = false
+        domainLabel.isSelectable = false
+        domainLabel.isBezeled = false
+        domainLabel.drawsBackground = false
     }
     
     private func request(id: String) {
@@ -172,8 +185,6 @@ final class CardView: NSView {
         // タップ時のリンク先
         let url = URL(string: card.url ?? "")
         self.url = url
-        //let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapAction))
-        //self.addGestureRecognizer(tapGesture)
         
         self.domainLabel.stringValue = url?.host ?? ""
         
@@ -181,10 +192,10 @@ final class CardView: NSView {
         self.superview?.layout()
     }
     
-    @objc func tapAction() {
+    
+    override func mouseUp(with event: NSEvent) {
         if let url = self.url {
-            //let controller = SFSafariViewController(url: url)
-            //UIUtils.getFrontViewController()?.present(controller, animated: true)
+            NSWorkspace.shared.open(url)
         }
     }
     
@@ -213,24 +224,30 @@ final class CardView: NSView {
     }
     
     override func layout() {
+        let bottom = self.frame.height
+        
         imageView.frame = CGRect(x: 0,
                                  y: 0,
                                  width: self.frame.width,
                                  height: self.frame.height)
         
         titleLabel.frame = CGRect(x: 10,
-                                  y: 10,
+                                  y: bottom - 70,
                                   width: self.frame.width - 20,
                                   height: 60)
         titleLabel.sizeToFit()
+        titleLabel.frame = CGRect(x: 10,
+                                  y: bottom - titleLabel.frame.height - 10,
+                                  width: self.frame.width - 20,
+                                  height: titleLabel.frame.height)
         
         bodyLabel.frame = CGRect(x: 10,
-                                 y: titleLabel.frame.maxY + 10,
+                                 y: 20,
                                  width: self.frame.width - 20,
-                                 height: self.frame.height - (titleLabel.frame.maxY + 10) - 20)
+                                 height: self.frame.height - (titleLabel.frame.height + 30))
         
         domainLabel.frame = CGRect(x: 10,
-                                   y: self.frame.height - 20,
+                                   y: 0,
                                    width: self.frame.width - 20,
                                    height: 20)
     }
