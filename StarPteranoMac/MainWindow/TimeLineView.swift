@@ -19,7 +19,7 @@ final class TimeLineView: NSTableView {
     private static let tableDispatchQueue = DispatchQueue(label: "TimeLineView")
     var mediaOnly: Bool = false
     private static var audioPlayer: AVAudioPlayer? = nil
-    var mergeLocalTL = false
+    var mergeLocalTL = true
     var selectedDate = Date()
     
     var accountList: [String: AnalyzeJson.AccountData] = [:]
@@ -132,11 +132,11 @@ final class TimeLineView: NSTableView {
                         AnalyzeJson.analyzeJsonArray(view: strongSelf, model: strongSelf.model, jsonList: responseJson, isNew: true, isNewRefresh: isNewRefresh)
                         
                         // ローカルにホームを統合する場合
-                        if strongSelf.mergeLocalTL && strongSelf.type == .home {
-                            let localKey = "\(strongSelf.hostName)_\(strongSelf.accessToken)_\(SettingsData.TLMode.local.rawValue)"
-                            if let localTlVc = MainViewController.instance?.timelineList[localKey] {
-                                if let localTlView = localTlVc.view as? TimeLineView {
-                                    AnalyzeJson.analyzeJsonArray(view: localTlView, model: localTlView.model, jsonList: responseJson, isNew: true, isNewRefresh: isNewRefresh, isMerge: true)
+                        if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
+                            let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
+                            if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                                if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                                    AnalyzeJson.analyzeJsonArray(view: homeLocalTlView, model: homeLocalTlView.model, jsonList: responseJson, isNew: true, isNewRefresh: isNewRefresh, isMerge: true)
                                 }
                             }
                         }
@@ -156,17 +156,17 @@ final class TimeLineView: NSTableView {
                             //}
                             
                             // ローカルにホームを統合する場合
-                            if strongSelf.mergeLocalTL && strongSelf.type == .home {
-                                let localKey = "\(strongSelf.hostName)_\(strongSelf.accessToken)_\(SettingsData.TLMode.local.rawValue)"
-                                if let localTlVc = MainViewController.instance?.timelineList[localKey] {
-                                    if let localTlView = localTlVc.view as? TimeLineView {
+                            if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
+                                let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
+                                if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                                    if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
                                         let contentData = AnalyzeJson.analyzeJson(view: strongSelf, model: strongSelf.model, json: responseJson, acct: &acct, isMerge: true)
                                         let contentList = [contentData]
-                                        localTlView.model.change(tableView: localTlView, addList: contentList, accountList: strongSelf.accountList)
+                                        homeLocalTlView.model.change(tableView: homeLocalTlView, addList: contentList, accountList: strongSelf.accountList)
                                         
                                         //DispatchQueue.main.sync {
                                             // テーブルビューを更新
-                                            localTlView.reloadData()
+                                            homeLocalTlView.reloadData()
                                         //}
                                     }
                                 }
@@ -181,11 +181,11 @@ final class TimeLineView: NSTableView {
         }
         
         // ホーム/ローカル統合時は、ローカル側を手動更新した時にホームも手動更新しないと
-        if self.mergeLocalTL && self.type == .local {
-            let homeKey = "\(hostName)_\(accessToken)_\(SettingsData.TLMode.home.rawValue)"
-            if let homeTlVc = MainViewController.instance?.timelineList[homeKey] {
-                if let homeTlView = homeTlVc.view as? TimeLineView {
-                    homeTlView.refresh()
+        if self.mergeLocalTL && (self.type == .home || self.type == .local) {
+            let homeLocalKey = TimeLineViewManager.makeKey(hostName: self.hostName, accessToken: self.accessToken, type: .homeLocal, option: nil)
+            if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                    homeLocalTlView.refresh()
                 }
             }
         }
@@ -253,7 +253,7 @@ final class TimeLineView: NSTableView {
                     // viewを参照することで、loadViewさせる
                 }*/
             }
-            else if self.type == .local {
+            else if (self.type == .local || self.type == .homeLocal) {
                 self.streaming(streamingType: "public:local")
             }
             else if self.type == .federation {
@@ -276,14 +276,12 @@ final class TimeLineView: NSTableView {
         if TimeLineView.inChecking { return }
         TimeLineView.inChecking = true
         
-        guard let timelineList = MainViewController.instance?.timelineList else { return }
-        
-        let key = "\(self.hostName)_\(self.accessToken)_Home"
-        if let homeTimelineViewController = timelineList[key] {
+        let homeKey = TimeLineViewManager.makeKey(hostName: self.hostName, accessToken: self.accessToken, type: .home, option: nil)
+        if let homeTimelineViewController = TimeLineViewManager.get(key: homeKey) {
             (homeTimelineViewController.view as? TimeLineView)?.startStreaming()
         } else {
             let homeTimelineViewController = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .home)
-            MainViewController.instance?.timelineList.updateValue(homeTimelineViewController, forKey: key)
+            TimeLineViewManager.set(key: homeKey, vc: homeTimelineViewController)
             (homeTimelineViewController.view as? TimeLineView)?.startStreaming()
         }
         
@@ -304,11 +302,11 @@ final class TimeLineView: NSTableView {
             strongSelf.analyzeStreamingData(string: string)
             
             // ローカルにホームを統合する場合
-            if strongSelf.mergeLocalTL && strongSelf.type == .home {
-                let localKey = "\(strongSelf.hostName)_\(strongSelf.accessToken)_\(SettingsData.TLMode.local.rawValue)"
-                if let localTlVc = MainViewController.instance?.timelineList[localKey] {
-                    if let localTlView = localTlVc.view as? TimeLineView {
-                        localTlView.analyzeStreamingData(string: string, isMerge: true)
+            if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
+                let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
+                if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                    if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                        homeLocalTlView.analyzeStreamingData(string: string, isMerge: true)
                     }
                 }
             }
@@ -473,10 +471,10 @@ final class TimeLineView: NSTableView {
                             
                             // ローカルにホームを統合する場合
                             if strongSelf.mergeLocalTL && strongSelf.type == .home {
-                                let localKey = "\(strongSelf.hostName)_\(strongSelf.accessToken)_\(SettingsData.TLMode.local.rawValue)"
-                                if let localTlVc = MainViewController.instance?.timelineList[localKey] {
-                                    if let localTlView = localTlVc.view as? TimeLineView {
-                                        AnalyzeJson.analyzeJsonArray(view: localTlView, model: localTlView.model, jsonList: responseJson, isNew: false, isMerge: true)
+                                let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
+                                if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                                    if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                                        AnalyzeJson.analyzeJsonArray(view: homeLocalTlView, model: homeLocalTlView.model, jsonList: responseJson, isNew: false, isMerge: true)
                                     }
                                 }
                             }
@@ -490,13 +488,13 @@ final class TimeLineView: NSTableView {
         }
         
         // ホーム/ローカル統合時は、ローカル側を手動更新した時にホームも手動更新しないと
-        if self.mergeLocalTL && self.type == .local {
-            let homeKey = "\(hostName)_\(accessToken)_\(SettingsData.TLMode.home.rawValue)"
-            if let homeTlVc = MainViewController.instance?.timelineList[homeKey] {
-                if let homeTlView = homeTlVc.view as? TimeLineView {
-                    guard let homeId = homeTlView.model.getLastTootId() else { return }
-                    if homeId > id {
-                        homeTlView.refreshOld(id: homeId)
+        if self.mergeLocalTL && (self.type == .home || self.type == .local) {
+            let homeLocalKey = TimeLineViewManager.makeKey(hostName: self.hostName, accessToken: self.accessToken, type: .homeLocal, option: nil)
+            if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
+                if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                    guard let homeLocalId = homeLocalTlView.model.getLastTootId() else { return }
+                    if homeLocalId > id {
+                        homeLocalTlView.refreshOld(id: homeLocalId)
                     }
                 }
             }

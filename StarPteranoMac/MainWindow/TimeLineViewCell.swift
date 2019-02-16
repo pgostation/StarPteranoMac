@@ -104,7 +104,7 @@ final class TimeLineViewCell: NSView {
         
         self.dateLabel.textColor = ThemeColor.dateColor
         self.dateLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
-        //self.dateLabel.textAlignment = .right
+        self.dateLabel.alignment = .right
         self.dateLabel.backgroundColor = ThemeColor.cellBgColor
         //self.dateLabel.adjustsFontSizeToFitWidth = true
         //self.dateLabel.isOpaque = true

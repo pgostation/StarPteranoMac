@@ -77,7 +77,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         // ミュートフラグの立っているものは削除しておく
         var addList2 = addList
-        if tableView.type == .home || tableView.type == .local || tableView.type == .federation {
+        if tableView.type == .home || tableView.type == .local || tableView.type == .homeLocal || tableView.type == .federation {
             for (index, data) in addList2.enumerated().reversed() {
                 if data.muted == 1 {
                     addList2.remove(at: index)
@@ -349,7 +349,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             heightCache = [:]
             heightCacheWidth = tableView.frame.width
         }
-        if heightCache.count > 0 {
+        if !isSelected && heightCache.count > 0 {
             let data = list[index]
             if let idStr = data.id, let id = Int(idStr) {
                 if let height = heightCache[id] {
@@ -449,13 +449,13 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         // 行間を広げる
         let paragrahStyle = NSMutableParagraphStyle()
-        paragrahStyle.minimumLineHeight = SettingsData.fontSize + 10
-        paragrahStyle.maximumLineHeight = SettingsData.fontSize + 10
+        paragrahStyle.minimumLineHeight = SettingsData.fontSize + 2
+        paragrahStyle.maximumLineHeight = SettingsData.fontSize + 2
         attributedText.addAttributes([NSAttributedString.Key.paragraphStyle : paragrahStyle],
                                      range: NSMakeRange(0, attributedText.length))
         
         // プロパティ設定
-        let msgView = NSTextView()
+        let msgView = MyTextView()
         msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
         msgView.textContainer?.lineBreakMode = .byCharWrapping
         //msgView.isOpaque = true
@@ -466,7 +466,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         msgView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         msgView.textColor = ThemeColor.messageColor
         msgView.drawsBackground = false
-        msgView.isSelectable = false
+        msgView.isSelectable = true
         //msgView.cachingFlag = true
         
         let messageView = msgView
@@ -789,7 +789,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         } else if data.visibility == "private" {
             // プライベートメッセージはオレンジ
             barColor(color: ThemeColor.privateBar)
-        } else if timelineView.type == .local && data.isMerge {
+        } else if timelineView.type == .homeLocal && data.isMerge {
             // ローカルのトゥートがこれ以上なければ、過去のトゥートを取得してTLはこれ以上表示しない
             var isHomeOnly = true
             for i in row..<list.count {
@@ -1393,9 +1393,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
             
             //timelineView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
-            timelineView.reloadData()
             
             timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+            
+            timelineView.reloadData()
         }
     }
     
@@ -1415,14 +1416,15 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         return mentionContents
     }
     
-    // NSTextViewのリンク以外タップ時の処理
-    @objc func tapTextViewAction(_ gesture: NSGestureRecognizer) {
-        guard let msgView = gesture.view else { return }
-        guard let cell = msgView.superview as? TimeLineViewCell else { return }
-        
-        if let tableView = cell.tableView, let indexPath = cell.indexPath {
-            // セル選択時の処理を実行
-            selectRow(timelineView: tableView, row: indexPath)
+    final class MyTextView: NSTextView {
+        // NSTextViewのリンク以外タップ時の処理
+        override func mouseDown(with event: NSEvent) {
+            guard let cell = self.superview as? TimeLineViewCell else { return }
+            
+            if let tableView = cell.tableView, let indexPath = cell.indexPath {
+                // セル選択時の処理を実行
+                tableView.model.selectRow(timelineView: tableView, row: indexPath)
+            }
         }
     }
 }

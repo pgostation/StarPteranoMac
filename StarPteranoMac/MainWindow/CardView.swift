@@ -15,6 +15,7 @@ final class CardView: NSView {
     private let titleLabel = NSTextField()
     private let bodyLabel = NSTextField()
     private let domainLabel = NSTextField()
+    private let coverButton = NSButton()
     private var url: URL?
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -36,6 +37,7 @@ final class CardView: NSView {
         self.addSubview(titleLabel)
         self.addSubview(bodyLabel)
         self.addSubview(domainLabel)
+        self.addSubview(coverButton)
         
         setProperties()
         
@@ -66,6 +68,7 @@ final class CardView: NSView {
         self.addSubview(titleLabel)
         self.addSubview(bodyLabel)
         self.addSubview(domainLabel)
+        self.addSubview(coverButton)
         
         setProperties()
         
@@ -127,6 +130,10 @@ final class CardView: NSView {
         domainLabel.isSelectable = false
         domainLabel.isBezeled = false
         domainLabel.drawsBackground = false
+        
+        coverButton.isTransparent = true
+        coverButton.target = self
+        coverButton.action = #selector(tapAction)
     }
     
     private func request(id: String) {
@@ -192,8 +199,7 @@ final class CardView: NSView {
         self.superview?.layout()
     }
     
-    
-    override func mouseUp(with event: NSEvent) {
+    @objc func tapAction() {
         if let url = self.url {
             NSWorkspace.shared.open(url)
         }
@@ -250,5 +256,10 @@ final class CardView: NSView {
                                    y: 0,
                                    width: self.frame.width - 20,
                                    height: 20)
+        
+        coverButton.frame = CGRect(x: 0,
+                                   y: 0,
+                                   width: self.frame.width,
+                                   height: self.frame.height)
     }
 }

@@ -10,7 +10,6 @@ import Cocoa
 
 final class MainViewController: NSViewController {
     static weak var instance: MainViewController?
-    var timelineList: [String: TimeLineViewController] = [:]
     private var subVCList: [SubViewController] = []
     private var barList: [NSView] = []
     

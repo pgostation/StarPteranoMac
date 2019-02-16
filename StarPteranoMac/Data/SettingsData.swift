@@ -282,8 +282,8 @@ final class SettingsData {
                 self._fontSize = CGFloat(value)
                 return CGFloat(value)
             }
-            self._fontSize = 16
-            return 16
+            self._fontSize = 14
+            return 14
         }
         set(newValue) {
             self._fontSize = newValue
