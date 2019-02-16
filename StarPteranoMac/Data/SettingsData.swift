@@ -373,7 +373,7 @@ final class SettingsData {
                 self._iconSize = CGFloat(value)
                 return CGFloat(value)
             }
-            let defaultSize: CGFloat = 38
+            let defaultSize: CGFloat = 42
             self._iconSize = defaultSize
             return defaultSize
         }

@@ -841,12 +841,15 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             // 返信ボタンを追加
             cell.replyButton = NSButton()
             cell.replyButton?.title = "↩︎"
+            cell.replyButton?.isBordered = false
             //cell.replyButton?.setTitleColor(ThemeColor.detailButtonsColor, for: .normal)
             cell.replyButton?.action = #selector(cell.replyAction)
             cell.addSubview(cell.replyButton!)
             
             // 返信された数
             cell.repliedLabel = NSTextField()
+            cell.repliedLabel?.isBordered = false
+            cell.repliedLabel?.drawsBackground = false
             cell.addSubview(cell.repliedLabel!)
             if let replies_count = data.replies_count, replies_count > 0 {
                 cell.repliedLabel?.stringValue = "\(replies_count)"
@@ -856,6 +859,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // ブーストボタン
             cell.boostButton = NSButton()
+            cell.boostButton?.isBordered = false
             if data.visibility == "direct" || data.visibility == "private" {
                 cell.boostButton?.title = "🔐"
             } else {
@@ -871,6 +875,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // ブーストされた数
             cell.boostedLabel = NSTextField()
+            cell.boostedLabel?.isBordered = false
+            cell.boostedLabel?.drawsBackground = false
             cell.addSubview(cell.boostedLabel!)
             if let reblogs_count = data.reblogs_count, reblogs_count > 0 {
                 cell.boostedLabel?.stringValue = "\(reblogs_count)"
@@ -881,6 +887,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             // お気に入りボタン
             cell.favoriteButton = NSButton()
             cell.favoriteButton?.title = "★"
+            cell.favoriteButton?.isBordered = false
             if data.favourited == 1 {
                 //cell.favoriteButton?.setTitleColor(ThemeColor.detailButtonsHiliteColor, for: .normal)
             } else {
@@ -891,6 +898,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // お気に入りされた数
             cell.favoritedLabel = NSTextField()
+            cell.favoritedLabel?.isBordered = false
+            cell.favoritedLabel?.drawsBackground = false
             cell.addSubview(cell.favoritedLabel!)
             if let favourites_count = data.favourites_count, favourites_count > 0 {
                 cell.favoritedLabel?.stringValue = "\(favourites_count)"
@@ -910,6 +919,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.applicationLabel?.stringValue = name
                 cell.applicationLabel?.textColor = ThemeColor.dateColor
                 cell.applicationLabel?.isBordered = false
+                cell.applicationLabel?.drawsBackground = false
                 //cell.applicationLabel?.textAlignment = .right
                 //cell.applicationLabel?.adjustsFontSizeToFitWidth = true
                 cell.applicationLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
@@ -944,6 +954,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.iconView = iconView
                 cell.addSubview(iconView)
                 cell.iconView?.image = image
+                cell.iconView?.wantsLayer = true
                 cell.iconView?.layer?.cornerRadius = 5
                 cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
                 //cell.iconView?.clipsToBounds = true
@@ -1039,8 +1050,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         imageView.layer?.backgroundColor = nil
                         cell.needsLayout = true
                     }
-                    cell.addSubview(imageView)
                     cell.imageViews.append(imageView)
+                    
+                    let imageParentView = NSView()
+                    imageParentView.addSubview(imageView)
+                    cell.addSubview(imageParentView)
+                    cell.imageParentViews.append(imageParentView)
                     
                     if data.sensitive == 1 || data.spoiler_text != "" {
                         imageView.isHidden = true
@@ -1323,7 +1338,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         if SettingsData.tapDetailMode || self.selectedRow == row {
             if self.isDetailTimeline { return } // すでに詳細表示画面
-            if TootViewController.isShown { return } // トゥート画面表示中は移動しない
             
             /*
             // 連打防止

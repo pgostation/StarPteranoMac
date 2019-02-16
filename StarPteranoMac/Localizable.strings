@@ -111,3 +111,5 @@
 "ACTION_SEARCH" = "検索";
 "ACTION_USERS" = "ユーザー指定…";
 
+// タイムライン画面
+"BUTTON_SHOW_MORE" = "もっと見る";

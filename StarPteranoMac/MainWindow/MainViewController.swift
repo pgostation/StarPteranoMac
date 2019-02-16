@@ -44,6 +44,14 @@ final class MainViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    static func refreshAllTimeLineViews() {
+        for subVC in instance?.subVCList ?? [] {
+            if let view = subVC.scrollView.documentView as? TimeLineView {
+                view.reloadData()
+            }
+        }
+    }
+    
     override func viewDidLayout() {
         guard let size = MainWindow.window?.frame.size else { return }
         
@@ -124,12 +132,12 @@ final class MainViewController: NSViewController {
             subVCList[index].view.frame = NSRect(x: right,
                                                  y: 0,
                                                  width: widthList[index] - ((index == self.subVCList.count - 1) ? 0 : 3),
-                                                 height: size.height - 50 - 20)
+                                                 height: size.height)
             
             barList[index].frame = NSRect(x: subVCList[index].view.frame.maxX,
                                           y: 0,
                                           width: 3,
-                                          height: size.height - 50 - 20)
+                                          height: size.height)
             
             right = barList[index].frame.maxX
         }

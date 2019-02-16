@@ -163,7 +163,8 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem1.target = menuTarget
                 tootMenu.addItem(menuItem1)
             }
-            tootMenu.addItem(NSMenuItem.separator())
+            
+            /*tootMenu.addItem(NSMenuItem.separator())
             do {
                 let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
@@ -178,7 +179,7 @@ final class Menu: NSObject, NSMenuDelegate {
                 let menuItem3 = NSMenuItem(title: I18n.get("Add Image…"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem3.target = menuTarget
                 tootMenu.addItem(menuItem3)
-            }
+            }*/
             
             tootMenuItem.submenu = tootMenu
         }
@@ -266,8 +267,12 @@ final class Menu: NSObject, NSMenuDelegate {
         else if item.title == I18n.get("Standard View") {
         }
         else if item.title == I18n.get("Larger") {
+            SettingsData.fontSize += 1
+            MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Smaller") {
+            SettingsData.fontSize -= 1
+            MainViewController.refreshAllTimeLineViews()
         }
     }
     

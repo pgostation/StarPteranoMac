@@ -29,6 +29,7 @@ final class TimeLineViewCell: NSView {
     var continueView: NSTextField? // 長すぎるトゥートで、続きがあることを表示
     var boostView: NSTextField? // 誰がboostしたかを表示
     var imageViews: [NSImageView] = [] // 添付画像を表示
+    var imageParentViews: [NSView] = []
     var movieLayers: [AVPlayerLayer] = []
     var looper: Any? //AVPlayerLooper?
     var showMoreButton: NSButton? // もっと見る
@@ -170,6 +171,10 @@ final class TimeLineViewCell: NSView {
             imageView.removeFromSuperview()
         }
         self.imageViews = []
+        for imageParentView in self.imageParentViews {
+            imageParentView.removeFromSuperview()
+        }
+        self.imageParentViews = []
         for playerLayer in self.movieLayers {
             playerLayer.player?.pause()
             playerLayer.removeFromSuperlayer()
@@ -260,8 +265,8 @@ final class TimeLineViewCell: NSView {
         if let gesture = gesture, gesture.state != .began { return }
         
         // @IDを入力する
-        DispatchQueue.main.asyncAfter(deadline: .now() + (TootViewController.isShown ? 0.0 : 0.2)) {
-            if let vc = TootViewController.instance, let view = vc.view as? TootView {
+        DispatchQueue.main.async {
+            if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
                 let text = view.textField.string
                 if text.count > 0 {
                     let spaceString = text.last == " " ? "" : " "
@@ -275,7 +280,7 @@ final class TimeLineViewCell: NSView {
     
     // リプライボタンをタップした時の処理
     @objc func replyAction() {
-        if TootViewController.isShown, let vc = TootViewController.instance, let view = vc.view as? TootView, let text = view.textField.textStorage?.string, text.count > 0 {
+        if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {
             Dialog.show(message: I18n.get("ALERT_TEXT_EXISTS"))
         } else {
             // 返信先を設定
@@ -285,7 +290,7 @@ final class TimeLineViewCell: NSView {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 // 公開範囲設定を変更
                 if let visibility = self.visibility {
-                    guard let view = TootViewController.instance?.view as? TootView else { return }
+                    guard let view = TootViewController.get(accessToken: self.tableView?.accessToken)?.view as? TootView else { return }
                     
                     var mode = self.lowerVisibility(m1: SettingsData.ProtectMode(rawValue: visibility),
                                                     m2: SettingsData.protectMode)
@@ -298,8 +303,8 @@ final class TimeLineViewCell: NSView {
             }
             
             // @IDを入力する
-            DispatchQueue.main.asyncAfter(deadline: .now() + (TootViewController.isShown ? 0.0 : 0.2)) {
-                if let vc = TootViewController.instance, let view = vc.view as? TootView {
+            DispatchQueue.main.async {
+                if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
                     view.textField.string = "@\(self.idLabel.stringValue ?? "") "
                 }
             }
@@ -706,7 +711,7 @@ final class TimeLineViewCell: NSView {
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: height - y - messageView.frame.height,
-                                       width: messageView.frame.width,
+                                       width: min(screenBounds.width - SettingsData.iconSize - 10, messageView.frame.width),
                                        height: messageView.frame.height)
         } else if let messageView = self.messageView as? NSTextView {
             let y: CGFloat
@@ -719,7 +724,7 @@ final class TimeLineViewCell: NSView {
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: height - y - messageView.frame.height,
-                                       width: messageView.frame.width,
+                                       width: min(screenBounds.width - SettingsData.iconSize - 10, messageView.frame.width),
                                        height: messageView.frame.height)
         }
         
@@ -742,12 +747,13 @@ final class TimeLineViewCell: NSView {
                                           height: 20)
         }
         
-        self.DMBarLeft?.frame = CGRect(x: 0, y: 0, width: 5, height: 300)
+        self.DMBarLeft?.frame = CGRect(x: 0, y: 0, width: 5, height: 800)
         
-        self.DMBarRight?.frame = CGRect(x: screenBounds.width - 5, y: 0, width: 5, height: 300)
+        self.DMBarRight?.frame = CGRect(x: screenBounds.width - 5, y: 0, width: 5, height: 800)
         
         var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? height - 20) - 10
-        for imageView in self.imageViews {
+        for imageParentView in self.imageParentViews {
+            guard let imageView = imageParentView.subviews.first as? NSImageView else { continue }
             if isDetailMode, let image = imageView.image {
                 let maxSize: CGFloat = min(400, self.frame.width - 80)
                 var imageWidth: CGFloat = 0
@@ -760,18 +766,47 @@ final class TimeLineViewCell: NSView {
                     let newRate = imageWidth / max(1, size.width)
                     imageHeight = size.height * newRate
                 }
-                imageView.frame = CGRect(x: nameLeft,
-                                         y: (imageTop) - imageHeight,
+                imageParentView.frame = CGRect(x: nameLeft,
+                                               y: (imageTop) - imageHeight,
+                                               width: imageWidth,
+                                               height: imageHeight)
+                imageView.imageScaling = .scaleProportionallyUpOrDown
+                imageView.frame = CGRect(x: 0,
+                                         y: 0,
                                          width: imageWidth,
                                          height: imageHeight)
                 imageTop = (imageTop) - imageHeight - 10
+            } else if let image = imageView.image {
+                let imageParentWidth: CGFloat = min(300, screenBounds.width - 80)
+                let imageParentHeight: CGFloat = 80
+                imageParentView.frame = CGRect(x: nameLeft,
+                                         y: (imageTop) - imageParentHeight,
+                                         width: imageParentWidth,
+                                         height: imageParentHeight)
+                
+                let size = image.size
+                let rate1 = imageParentHeight / max(1, size.height)
+                let rate2 = imageParentWidth / max(1, size.width)
+                var rate = max(rate1, rate2)
+                if max(rate * size.width, rate * size.height) > 2000 { // あまりビューのサイズを大きくするとまずかろう
+                    rate *= 2000 / max(rate * size.width, rate * size.height)
+                }
+                imageView.imageScaling = .scaleProportionallyUpOrDown
+                imageView.layer?.contentsGravity = CALayerContentsGravity.resizeAspectFill
+                imageView.frame = CGRect(x: imageParentWidth / 2 - (rate * size.width) / 2,
+                                         y: imageParentHeight / 2 - (rate * size.height) / 2,
+                                         width: rate * size.width,
+                                         height: rate * size.height)
+                imageTop = (imageTop) - imageHeight - 8
             } else {
                 let imageWidth: CGFloat = min(300, screenBounds.width - 80)
                 let imageHeight: CGFloat = 80
-                imageView.imageScaling = .scaleProportionallyUpOrDown
-                imageView.layer?.contentsGravity = CALayerContentsGravity.resizeAspectFill
-                imageView.frame = CGRect(x: nameLeft,
-                                         y: (imageTop) - imageHeight,
+                imageParentView.frame = CGRect(x: nameLeft,
+                                               y: (imageTop) - imageHeight,
+                                               width: imageWidth,
+                                               height: imageHeight)
+                imageView.frame = CGRect(x: 0,
+                                         y: 0,
                                          width: imageWidth,
                                          height: imageHeight)
                 imageTop = (imageTop) - imageHeight - 8
@@ -791,37 +826,37 @@ final class TimeLineViewCell: NSView {
             }
             
             self.replyButton?.frame = CGRect(x: 50,
-                                             y: (top - 3) - 30,
+                                             y: (top - 3) - 40,
                                              width: 30,
                                              height: 30)
             
             self.repliedLabel?.frame = CGRect(x: 80,
-                                              y: (top - 10) - 20,
+                                              y: (top - 10) - 30,
                                               width: 20,
                                               height: 20)
             
             self.boostButton?.frame = CGRect(x: 110,
-                                             y: (top - 3) - 30,
+                                             y: (top - 3) - 40,
                                              width: 30,
                                              height: 30)
             
             self.boostedLabel?.frame = CGRect(x: 140,
-                                              y: (top - 10) - 20,
+                                              y: (top - 10) - 30,
                                               width: 20,
                                               height: 20)
             
             self.favoriteButton?.frame = CGRect(x: 170,
-                                                y: (top - 3) - 30,
+                                                y: (top - 3) - 40,
                                                 width: 30,
                                                 height: 30)
             
             self.favoritedLabel?.frame = CGRect(x: 200,
-                                                y: (top - 10) - 20,
+                                                y: (top - 10) - 30,
                                                 width: 20,
                                                 height: 20)
             
             self.detailButton?.frame = CGRect(x: 230,
-                                              y: top - 40,
+                                              y: top - 50,
                                               width: 80,
                                               height: 40)
             

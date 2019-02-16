@@ -11,18 +11,21 @@ import Cocoa
 final class SubViewController: NSViewController {
     private let hostName: String
     private let accessToken: String
+    private let tootVC: TootViewController
     private let popUp = NSPopUpButton()
     let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {
         self.hostName = hostName
         self.accessToken = accessToken
+        self.tootVC = TootViewController(hostName: hostName, accessToken: accessToken)
         
         super.init(nibName: nil, bundle: nil)
         
         self.view = NSView()
         
         self.view.addSubview(popUp)
+        self.view.addSubview(tootVC.view)
         self.view.addSubview(scrollView)
         
         setProperties()
@@ -188,14 +191,19 @@ final class SubViewController: NSViewController {
     }
     
     override func viewDidLayout() {
+        tootVC.view.frame = NSRect(x: 0,
+                                   y: self.view.frame.height - tootVC.view.frame.height - 20,
+                                   width: self.view.frame.width,
+                                   height: tootVC.view.frame.height)
+        
         popUp.frame = NSRect(x: 0,
-                             y: self.view.frame.height - 32,
+                             y: self.view.frame.height - 30 - tootVC.view.frame.height - 20,
                              width: min(150, self.view.frame.width),
-                             height: 32)
+                             height: 30)
         
         scrollView.frame = NSRect(x: 0,
                                   y: 0,
                                   width: self.view.frame.width,
-                                  height: self.view.frame.height - 32)
+                                  height: self.view.frame.height - 30 - tootVC.view.frame.height - 20)
     }
 }
