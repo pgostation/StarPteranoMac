@@ -38,7 +38,9 @@ final class MainWindow: NSWindow {
         window.styleMask.insert(NSWindow.StyleMask.titled)
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
         window.styleMask.insert(NSWindow.StyleMask.resizable)
-        window.title = ""
+        
+        window.title = I18n.get("APPLICATION_NAME")
+        
         self.window = window
         setFrame()
         window.makeKeyAndOrderFront(window)

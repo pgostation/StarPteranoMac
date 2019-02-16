@@ -712,7 +712,7 @@ final class TimeLineViewCell: NSView {
             } else if let spolerTextLabel = self.spolerTextLabel {
                 y = spolerTextLabel.frame.minY + 20
             } else {
-                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? -9 : 8) + SettingsData.fontSize)
+                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? -9 : 12) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: height - y - messageView.frame.height,
@@ -721,7 +721,7 @@ final class TimeLineViewCell: NSView {
         }
         
         self.continueView?.frame = CGRect(x: screenBounds.width / 2 - 40 / 2,
-                                          y: height - ((self.messageView?.frame.minY ?? 0) - 6) - 18,
+                                          y: ((self.messageView?.frame.minY ?? 0) - 6) - 18,
                                           width: 40,
                                           height: 18)
         

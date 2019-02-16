@@ -6,6 +6,9 @@
   Copyright © 2018 pgostation. All rights reserved.
 */
 
+// Main Window
+"APPLICATION_NAME" = "星プテラノ";
+
 // Application Menu
 "About StarPterano" = "星プテラノについて";
 "Preferences…" = "環境設定…";

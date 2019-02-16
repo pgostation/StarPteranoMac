@@ -424,7 +424,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         let height = max(55, messageView.frame.height + 36 + reblogOffset + imagesOffset + detailOffset)
         
-        if let idStr = data.id, let id = Int(idStr) {
+        if row != selectedRow, let idStr = data.id, let id = Int(idStr) {
             heightCache[id] = height
         }
         
@@ -450,7 +450,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         // 行間を広げる
         let paragrahStyle = NSMutableParagraphStyle()
         paragrahStyle.minimumLineHeight = SettingsData.fontSize + 2
-        paragrahStyle.maximumLineHeight = SettingsData.fontSize + 2
         attributedText.addAttributes([NSAttributedString.Key.paragraphStyle : paragrahStyle],
                                      range: NSMakeRange(0, attributedText.length))
         
@@ -475,6 +474,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         messageView.frame.size.width = tableView.frame.width - (SettingsData.iconSize * 2 + 2)
         if SettingsData.isMiniView == .normal || self.selectedRow == row {
             messageView.sizeToFit()
+            messageView.frame.size.height += 5
         }
         var isContinue = false
         if self.selectedRow == row {

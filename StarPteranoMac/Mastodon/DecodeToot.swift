@@ -102,7 +102,7 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
+                attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
@@ -111,7 +111,7 @@ final class DecodeToot {
                     } else {
                         attachment.image = ImageUtils.flipped(image)
                         if image.size.width > 0 {
-                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 6, height: image.size.height / image.size.width * (SettingsData.fontSize + 6))
                         }
                     }
                 }
@@ -205,7 +205,7 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
+                attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
                     if execCallback {
@@ -213,7 +213,7 @@ final class DecodeToot {
                     } else {
                         attachment.image = ImageUtils.flipped(image)
                         if image.size.width > 0 {
-                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 6, height: image.size.height / image.size.width * (SettingsData.fontSize + 6))
                         }
                     }
                 }
@@ -251,7 +251,7 @@ final class DecodeToot {
                 let url = emoji["url"] as? String
                 
                 let attachment = NSTextAttachment()
-                attachment.bounds = CGRect(x: 0, y: 0, width: SettingsData.fontSize + 4, height: SettingsData.fontSize + 4)
+                attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 var execCallback = false
                 ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
                     if execCallback {
@@ -259,7 +259,7 @@ final class DecodeToot {
                     } else {
                         attachment.image = ImageUtils.flipped(image)
                         if image.size.width > 0 {
-                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 4, height: image.size.height / image.size.width * SettingsData.fontSize + 4)
+                            attachment.bounds.size = CGSize(width: SettingsData.fontSize + 6, height: image.size.height / image.size.width * (SettingsData.fontSize + 6))
                         }
                     }
                 }
