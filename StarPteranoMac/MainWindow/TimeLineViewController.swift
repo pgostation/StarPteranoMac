@@ -90,7 +90,7 @@ final class TimeLineViewController: NSViewController {
                 sumHeight += view.model.tableView(view, heightOfRow: i)
             }
             
-            view.frame = NSRect(x: 0, y: 0, width: max(320, frame.width), height: sumHeight)
+            view.frame = NSRect(x: 0, y: 0, width: max(120, frame.width), height: sumHeight)
             
             self.closeButton.frame = CGRect(x: 0,
                                             y: sumHeight - 20,

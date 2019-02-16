@@ -151,6 +151,8 @@ final class SubViewController: NSViewController {
             self.addChild(vc)
             
             TimeLineViewManager.set(key: key, vc: vc)
+            
+            SettingsData.setTlMode(key: hostName + "," + accessToken, modes: [mode])
         }
         
         func setTimeLineViewController(vc: TimeLineViewController) {

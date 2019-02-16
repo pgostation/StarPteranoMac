@@ -440,7 +440,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         if data.emojis == nil, let id = data.id, let cache = self.cacheDict[id] ?? self.oldCacheDict[id] {
             if row == selectedRow {
             } else if cache.0.superview == nil {
-                return cache
+                if cache.0.frame.width < tableView.frame.width - SettingsData.iconSize - 10 {
+                    return cache
+                }
             }
         }
         
@@ -471,7 +473,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         let messageView = msgView
         
         // ビューの高さを決める
-        messageView.frame.size.width = tableView.frame.width - (SettingsData.iconSize * 2 + 2)
+        messageView.frame.size.width = max(32, tableView.frame.width - (SettingsData.iconSize * 2 + 2))
         if SettingsData.isMiniView == .normal || self.selectedRow == row {
             messageView.sizeToFit()
             messageView.frame.size.height += 5
@@ -1305,10 +1307,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         var index = row
         
         timelineView.selectedDate = Date()
-        if timelineView.frame.width < 320 {
+        
+        // 選択中のカラムの幅を広げる
+        /*if timelineView.frame.width < 320 {
             SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
             MainViewController.instance?.view.needsLayout = true
-        }
+        }*/
         
         if timelineView.type == .user {
             index -= 1

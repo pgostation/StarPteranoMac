@@ -639,6 +639,9 @@ final class TimeLineViewCell: NSView {
     
     // セル内のレイアウト
     override func layout() {
+        if let superview = self.superview, self.frame.width != superview.frame.width {
+            self.frame.size.width = superview.frame.width
+        }
         let screenBounds = self.frame
         let height = screenBounds.height
         let isDetailMode = !SettingsData.tapDetailMode && self.showDetail
@@ -763,7 +766,7 @@ final class TimeLineViewCell: NSView {
                                          height: imageHeight)
                 imageTop = (imageTop) - imageHeight - 10
             } else {
-                let imageWidth: CGFloat = screenBounds.width - 80
+                let imageWidth: CGFloat = min(300, screenBounds.width - 80)
                 let imageHeight: CGFloat = 80
                 imageView.imageScaling = .scaleProportionallyUpOrDown
                 imageView.layer?.contentsGravity = CALayerContentsGravity.resizeAspectFill

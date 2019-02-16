@@ -84,22 +84,25 @@ final class CardView: NSView {
     private func setProperties() {
         self.isHidden = true
         //self.clipsToBounds = true
+        self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         self.layer?.cornerRadius = 8
         self.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
         self.layer?.borderColor = ThemeColor.nameColor.cgColor
         
         imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.wantsLayer = true
         imageView.layer?.opacity = 0.6
         
         //titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byCharWrapping
         titleLabel.textColor = ThemeColor.nameColor
         titleLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
+        titleLabel.wantsLayer = true
         titleLabel.layer?.shadowColor = ThemeColor.viewBgColor.cgColor
         titleLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         titleLabel.layer?.shadowOpacity = 1.0
-        titleLabel.layer?.shadowRadius = 1.0
+        titleLabel.layer?.shadowRadius = 0.5
         titleLabel.isEditable = false
         titleLabel.isSelectable = false
         titleLabel.isBezeled = false
@@ -109,10 +112,11 @@ final class CardView: NSView {
         bodyLabel.lineBreakMode = .byCharWrapping
         bodyLabel.textColor = ThemeColor.contrastColor
         bodyLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+        bodyLabel.wantsLayer = true
         bodyLabel.layer?.shadowColor = ThemeColor.viewBgColor.cgColor
         bodyLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         bodyLabel.layer?.shadowOpacity = 1.0
-        bodyLabel.layer?.shadowRadius = 1.0
+        bodyLabel.layer?.shadowRadius = 0.5
         bodyLabel.isEditable = false
         bodyLabel.isSelectable = false
         bodyLabel.isBezeled = false
@@ -121,10 +125,11 @@ final class CardView: NSView {
         //domainLabel.textAlignment = .center
         domainLabel.textColor = ThemeColor.messageColor
         domainLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
+        domainLabel.wantsLayer = true
         domainLabel.layer?.shadowColor = ThemeColor.viewBgColor.cgColor
         domainLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
         domainLabel.layer?.shadowOpacity = 1.0
-        domainLabel.layer?.shadowRadius = 1.0
+        domainLabel.layer?.shadowRadius = 0.5
         domainLabel.alignment = .center
         domainLabel.isEditable = false
         domainLabel.isSelectable = false
