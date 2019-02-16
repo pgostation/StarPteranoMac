@@ -6,6 +6,10 @@
   Copyright © 2018 pgostation. All rights reserved.
 */
 
+// 基本
+"BUTTON_ADD" = "追加";
+"BUTTON_CANCEL" = "キャンセル";
+
 // Main Window
 "APPLICATION_NAME" = "星プテラノ";
 
@@ -101,7 +105,7 @@
 // タイムライン変更
 "ACTION_HOME" = "ホーム";
 "ACTION_LOCAL" = "ローカル";
-"ACTION_LOCAL_HOME" = "ローカル + ホーム";
+"ACTION_HOMELOCAL" = "ローカル + ホーム";
 "ACTION_FEDERATION" = "連合";
 "ACTION_LIST" = "リスト";
 "ACTION_NOTIFICATIONS" = "通知";
@@ -110,6 +114,7 @@
 "ACTION_FAVORITES" = "お気に入り";
 "ACTION_SEARCH" = "検索";
 "ACTION_USERS" = "ユーザー指定…";
+"ALERT_ADD_TAB" = "タブの追加";
 
 // タイムライン画面
 "BUTTON_SHOW_MORE" = "もっと見る";

@@ -7,12 +7,13 @@
 //
 
 import Cocoa
+import LYTabView
 
-final class SubViewController: NSViewController {
+final class SubViewController: NSViewController, NSTabViewDelegate {
     private let hostName: String
     private let accessToken: String
     private let tootVC: TootViewController
-    private let popUp = NSPopUpButton()
+    private let tabView = LYTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {
@@ -24,45 +25,27 @@ final class SubViewController: NSViewController {
         
         self.view = NSView()
         
-        self.view.addSubview(popUp)
+        self.view.addSubview(tabView)
         self.view.addSubview(tootVC.view)
         self.view.addSubview(scrollView)
         
         setProperties()
         
-        for (index, mode) in SettingsData.tlMode(key: hostName + "," + accessToken).enumerated() {
+        let tlModes = SettingsData.tlMode(key: hostName + "," + accessToken)
+        for (index, mode) in tlModes.enumerated() {
             switch mode {
-            case .home:
-                popUp.selectItem(at: 0)
-            case .local:
-                popUp.selectItem(at: 1)
-            case .homeLocal:
-                popUp.selectItem(at: 2)
-            case .federation:
-                popUp.selectItem(at: 3)
             case .list:
-                popUp.selectItem(at: 5)
                 let listOption = SettingsData.selectedListId(accessToken: accessToken, index: index)
                 let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
                 let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
                 TimeLineViewManager.set(key: key, vc: vc)
-            case .notifications:
-                popUp.selectItem(at: 7)
-            case .mentions:
-                popUp.selectItem(at: 8)
-            case .dm:
-                popUp.selectItem(at: 9)
-            case .favorites:
-                popUp.selectItem(at: 10)
-            case .search:
-                popUp.selectItem(at: 11)
-            case .users:
-                popUp.selectItem(at: 12)
+            default:
+                addTab(mode: mode)
             }
-            
-            if let title = popUp.selectedItem?.title {
-                self.doMenu(title: title)
-            }
+        }
+        
+        if tlModes.count == 0 {
+            addTab(mode: .home)
         }
         
         self.view.needsLayout = true
@@ -73,19 +56,84 @@ final class SubViewController: NSViewController {
     }
     
     private func setProperties() {
-        setPopUp()
+        tabView.autoresizesSubviews = true
+        tabView.delegate = self
+        
+        tabView.tabBarView.hideIfOnlyOneTabExists = false
+        
+        tabView.tabBarView.addNewTabButtonAction = #selector(newTabAction)
+        tabView.tabBarView.addNewTabButtonTarget = self
         
         scrollView.scrollerStyle = .legacy
         scrollView.hasVerticalScroller = true
     }
     
-    private func setPopUp() {
+    private func addTab(mode: SettingsData.TLMode) {
+        let item = NSTabViewItem(identifier: mode.rawValue)
+        item.label = I18n.get("ACTION_" + mode.rawValue.uppercased())
+        item.identifier = mode.rawValue
+        tabView.addTabViewItem(item)
+    }
+    
+    @objc func newTabAction() {
+        let popUp = getPopUp()
+        
+        popUp.frame = NSRect(x: 50, y: 50, width: 200, height: 30)
+            
+        Dialog.showWithView(message: I18n.get("ALERT_ADD_TAB"),
+                            okName: I18n.get("BUTTON_ADD"),
+                            cancelName: I18n.get("BUTTON_CANCEL"),
+                            view: popUp)
+    }
+    
+    func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
+        guard let tabViewItem = tabViewItem else { return }
+        
+        guard let mode = SettingsData.TLMode(rawValue: tabViewItem.identifier as? String ?? "") else { return }
+        
+        let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+        
+        let type: TimeLineViewController.TimeLineType
+        if mode == .home { type = .home }
+        else if mode == .local { type = .local }
+        else if mode == .homeLocal { type = .homeLocal }
+        else if mode == .federation { type = .federation }
+        else if mode == .list { type = .list }
+        else if mode == .favorites { type = .favorites }
+        else if mode == .dm { type = .direct }
+        else { type = .home }
+        
+        let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
+        scrollView.documentView = vc.view
+        
+        self.children.first?.removeFromParent()
+        self.addChild(vc)
+        
+        TimeLineViewManager.set(key: key, vc: vc)
+        
+        var modes = SettingsData.tlMode(key: hostName + "," + accessToken)
+        modes.append(mode)
+    }
+    
+    func tabViewDidChangeNumberOfTabViewItems(_ tabView: NSTabView) {
+        var modes: [SettingsData.TLMode] = []
+        
+        for item in tabView.tabViewItems {
+            guard let mode = SettingsData.TLMode(rawValue: item.identifier as! String) else { continue }
+            modes.append(mode)
+        }
+        
+        SettingsData.setTlMode(key: hostName + "," + accessToken, modes: modes)
+    }
+    
+    private func getPopUp() -> NSPopUpButton {
+        let popUp = NSPopUpButton()
         let menu = NSMenu()
         popUp.menu = menu
         
         // ホーム、ローカル、ローカル + ホーム、連合
         do {
-            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_LOCAL_HOME", "ACTION_FEDERATION"]
+            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION"]
             for str in menuItems {
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
@@ -122,7 +170,7 @@ final class SubViewController: NSViewController {
         
         // 通知、メンション、DM、お気に入り、検索、ユーザー指定
         do {
-            let menuItems = ["ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH", "ACTION_USERS"]
+            let menuItems = ["ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES"]
             for str in menuItems {
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
@@ -131,6 +179,8 @@ final class SubViewController: NSViewController {
                 menu.addItem(menuItem)
             }
         }
+        
+        return popUp
     }
     
     @objc func menuAction(_ menuItem: NSMenuItem) {
@@ -138,6 +188,7 @@ final class SubViewController: NSViewController {
     }
     
     private func doMenu(title: String) {
+        /*
         func setTimeLineViewController(mode: SettingsData.TLMode) {
             let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
             
@@ -163,30 +214,24 @@ final class SubViewController: NSViewController {
             
             self.children.first?.removeFromParent()
             self.addChild(vc)
-        }
+        }*/
         
         if title == I18n.get("ACTION_HOME") {
-            setTimeLineViewController(mode: .home)
+            addTab(mode: .home)
         } else if title == I18n.get("ACTION_LOCAL") {
-            setTimeLineViewController(mode: .local)
-        } else if title == I18n.get("ACTION_LOCAL_HOME") {
-            setTimeLineViewController(mode: .homeLocal)
+            addTab(mode: .local)
+        } else if title == I18n.get("ACTION_HOMELOCAL") {
+            addTab(mode: .homeLocal)
         } else if title == I18n.get("ACTION_FEDERATION") {
-            setTimeLineViewController(mode: .federation)
-        } else if title == I18n.get("ACTION_NOTIFICATIONS") {
-            //
+            addTab(mode: .federation)
         } else if title == I18n.get("ACTION_MENTIONS") {
             //
+        } else if title == I18n.get("ACTION_NOTIFICATIONS") {
+            //
         } else if title == I18n.get("ACTION_DM") {
-            let vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .direct)
-            setTimeLineViewController(vc: vc)
+            addTab(mode: .dm)
         } else if title == I18n.get("ACTION_FAVORITES") {
-            let vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .favorites)
-            setTimeLineViewController(vc: vc)
-        } else if title == I18n.get("ACTION_SEARCH") {
-            //
-        } else if title == I18n.get("ACTION_USERS") {
-            //
+            addTab(mode: .favorites)
         }
     }
     
@@ -196,14 +241,14 @@ final class SubViewController: NSViewController {
                                    width: self.view.frame.width,
                                    height: tootVC.view.frame.height)
         
-        popUp.frame = NSRect(x: 0,
-                             y: self.view.frame.height - 30 - tootVC.view.frame.height - 20,
-                             width: min(150, self.view.frame.width),
-                             height: 30)
+        tabView.frame = NSRect(x: 0,
+                               y: self.view.frame.height - 20 - tootVC.view.frame.height - 20,
+                               width: self.view.frame.width,
+                               height: 20)
         
         scrollView.frame = NSRect(x: 0,
                                   y: 0,
                                   width: self.view.frame.width,
-                                  height: self.view.frame.height - 30 - tootVC.view.frame.height - 20)
+                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 20)
     }
 }

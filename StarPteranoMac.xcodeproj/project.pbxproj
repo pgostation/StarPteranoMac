@@ -45,8 +45,24 @@
 		129F434B217F5B1D008E856D /* I18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434A217F5B1D008E856D /* I18n.swift */; };
 		129F434D217F5C5D008E856D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 129F434C217F5C5D008E856D /* Localizable.strings */; };
 		129F4350217F6F5D008E856D /* SettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434F217F6F5D008E856D /* SettingsData.swift */; };
+		12CFB10D221849560066CC42 /* LYTabView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; };
+		12CFB10E221849560066CC42 /* LYTabView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		731E82750AECD71202C5532D /* Pods_StarPteranoMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43972D36367E7634349279A8 /* Pods_StarPteranoMac.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		12CFB10F221849560066CC42 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				12CFB10E221849560066CC42 /* LYTabView.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
@@ -91,6 +107,8 @@
 		129F434A217F5B1D008E856D /* I18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18n.swift; sourceTree = "<group>"; };
 		129F434C217F5C5D008E856D /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		129F434F217F6F5D008E856D /* SettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsData.swift; sourceTree = "<group>"; };
+		12CFB108221847B70066CC42 /* KPCTabsControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KPCTabsControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		12CFB10C221849560066CC42 /* LYTabView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LYTabView.framework; path = Carthage/Build/Mac/LYTabView.framework; sourceTree = "<group>"; };
 		43972D36367E7634349279A8 /* Pods_StarPteranoMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StarPteranoMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F08368C04FE0E65A158039A7 /* Pods-StarPteranoMac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12CFB10D221849560066CC42 /* LYTabView.framework in Frameworks */,
 				731E82750AECD71202C5532D /* Pods_StarPteranoMac.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -176,6 +195,7 @@
 		129F4329217E1CD3008E856D = {
 			isa = PBXGroup;
 			children = (
+				12CFB10C221849560066CC42 /* LYTabView.framework */,
 				129F4334217E1CD3008E856D /* StarPteranoMac */,
 				129F4333217E1CD3008E856D /* Products */,
 				9C6E2DE7B1C9BA9AD2EAD185 /* Pods */,
@@ -255,6 +275,7 @@
 		4E541D3CFC1930D47F6E880E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				12CFB108221847B70066CC42 /* KPCTabsControl.framework */,
 				43972D36367E7634349279A8 /* Pods_StarPteranoMac.framework */,
 			);
 			name = Frameworks;
@@ -281,6 +302,7 @@
 				129F432F217E1CD3008E856D /* Frameworks */,
 				129F4330217E1CD3008E856D /* Resources */,
 				D9D38266E40DAEF3C534EE03 /* [CP] Embed Pods Frameworks */,
+				12CFB10F221849560066CC42 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -576,6 +598,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = StarPteranoMac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -596,6 +622,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = StarPteranoMac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

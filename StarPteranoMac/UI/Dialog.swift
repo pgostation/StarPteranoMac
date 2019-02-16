@@ -42,7 +42,7 @@ final class Dialog {
     }
     
     // 入力欄付きのダイアログを表示
-    static func showWithTextInput(message: String, window: NSWindow? = nil, okName: String, cancelName: String, defaultText: String?, isAlphabet: Bool = false, callback: @escaping (NSTextField, Bool)->Void) {
+    static func showWithTextInput(message: String, window: NSWindow? = nil, okName: String, cancelName: String, defaultText: String?, callback: @escaping (NSTextField, Bool)->Void) {
         let alert = NSAlert()
         alert.messageText = message
         
@@ -57,6 +57,19 @@ final class Dialog {
         } else {
             let result = alert.runModal()
             callback(textField, result == .alertFirstButtonReturn)
+        }
+    }
+    
+    // View付きのダイアログを表示
+    static func showWithView(message: String, window: NSWindow? = nil, okName: String, cancelName: String, view: NSView) {
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.accessoryView = view
+        
+        if let window = window {
+            alert.beginSheetModal(for: window, completionHandler: nil)
+        } else {
+            alert.runModal()
         }
     }
 }
