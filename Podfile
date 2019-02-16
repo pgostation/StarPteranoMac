@@ -5,6 +5,8 @@ use_frameworks!
 target 'StarPteranoMac' do
 pod 'Starscream'
 pod 'APNGKit'
+pod 'SDWebImage'
+pod 'SDWebImage/WebP'
 pod 'FirebaseCore', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'master'
 pod 'FirebaseAuth', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'master'
 pod 'FirebaseDatabase', :git => 'https://github.com/firebase/firebase-ios-sdk.git', :branch => 'master'

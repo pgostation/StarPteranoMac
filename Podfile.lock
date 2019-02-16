@@ -17,6 +17,36 @@ PODS:
     - GoogleUtilities/Environment
   - GTMSessionFetcher/Core (1.2.1)
   - leveldb-library (1.20)
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
+    - libwebp/webp
+  - libwebp/dec (0.6.1):
+    - libwebp/core
+  - libwebp/demux (0.6.1):
+    - libwebp/core
+  - libwebp/dsp (0.6.1):
+    - libwebp/core
+  - libwebp/enc (0.6.1):
+    - libwebp/core
+  - libwebp/mux (0.6.1):
+    - libwebp/core
+  - libwebp/utils (0.6.1):
+    - libwebp/core
+  - libwebp/webp (0.6.1)
+  - SDWebImage (4.4.5):
+    - SDWebImage/Core (= 4.4.5)
+  - SDWebImage/Core (4.4.5)
+  - SDWebImage/WebP (4.4.5):
+    - libwebp (~> 0.5)
+    - SDWebImage/Core
   - Starscream (3.0.6)
 
 DEPENDENCIES:
@@ -24,6 +54,8 @@ DEPENDENCIES:
   - FirebaseAuth (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
   - FirebaseCore (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
   - FirebaseDatabase (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
+  - SDWebImage
+  - SDWebImage/WebP
   - Starscream
 
 SPEC REPOS:
@@ -33,6 +65,8 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - leveldb-library
+    - libwebp
+    - SDWebImage
     - Starscream
 
 EXTERNAL SOURCES:
@@ -66,8 +100,10 @@ SPEC CHECKSUMS:
   GoogleUtilities: 111a012f4c3a29c9e7c954c082fafd6ee3c999c0
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
+  SDWebImage: ecc03494e973b93b80213649d32175f8d2d17d4d
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
 
-PODFILE CHECKSUM: ae6fe4d531719f8d4957ea405acbedfd52b3335d
+PODFILE CHECKSUM: 49263057ec2cbcdda44efcbb52f5c39ebcde0fba
 
 COCOAPODS: 1.6.0

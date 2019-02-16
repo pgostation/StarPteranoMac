@@ -8,6 +8,7 @@
 
 import Cocoa
 import APNGKit
+import SDWebImage
 
 final class ImageCache {
     private static let scale = NSScreen.main?.backingScaleFactor ?? 1
@@ -17,6 +18,7 @@ final class ImageCache {
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "ImageCache")
     private static let imageGlobalQueue = DispatchQueue.global()
+    private static let webpDecoder = SDWebImageWebPCoder()
     
     // 画像をキャッシュから取得する。なければネットに取りに行く
     static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, callback: @escaping (NSImage)->Void) {
@@ -63,6 +65,16 @@ final class ImageCache {
                         smallImage.shortcode = shortcode
                         DispatchQueue.main.async {
                             memCache.updateValue(smallImage, forKey: urlStr)
+                            callback(image)
+                            
+                            if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                                oldMemCache = memCache
+                                memCache = [:]
+                            }
+                        }
+                    } else if let image = webpDecoder.decodedImage(with: data) {
+                        DispatchQueue.main.async {
+                            memCache.updateValue(image, forKey: urlStr)
                             callback(image)
                             
                             if memCache.count >= 120 { // メモリの使いすぎを防ぐ
@@ -128,6 +140,20 @@ final class ImageCache {
                             }
                         }
                     }
+                } else if let image = webpDecoder.decodedImage(with: data) {
+                    DispatchQueue.main.async {
+                        memCache.updateValue(image, forKey: urlStr)
+                        callback(image)
+                        
+                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                            oldMemCache = memCache
+                            memCache = [:]
+                        }
+                    }
+                    
+                    // ストレージにキャッシュする
+                    let fileUrl = URL(fileURLWithPath: filePath)
+                    try? data.write(to: fileUrl)
                 }
             } else {
                 waitingDict.removeValue(forKey: urlStr)
