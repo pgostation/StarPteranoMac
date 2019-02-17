@@ -136,6 +136,7 @@ final class TimeLineViewCell: NSView {
     // 再利用前に呼ばれる
     override func prepareForReuse() {
         self.id = ""
+        self.tableView = nil
         self.showDetail = false
         while let apngView = self.messageView?.viewWithTag(5555) as? APNGImageView {
             apngView.stopAnimating()
@@ -212,8 +213,6 @@ final class TimeLineViewCell: NSView {
         self.dateLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
-        
-        
     }
     
     // アイコンをタップした時の処理
@@ -641,9 +640,10 @@ final class TimeLineViewCell: NSView {
     
     // セル内のレイアウト
     override func layout() {
-        if let superview = self.superview, self.frame.width != superview.frame.width {
+        if let superview = self.tableView?.superview, self.frame.width != superview.frame.width {
             self.frame.size.width = superview.frame.width
         }
+        print("#### \(self.frame.size.width)")
         let screenBounds = self.frame
         let height = screenBounds.height
         let isDetailMode = !SettingsData.tapDetailMode && self.showDetail

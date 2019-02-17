@@ -725,7 +725,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         let account = accountList[data.accountId]
         
         let height = max(55, messageView.frame.height + 28)
-        cell = getCell(view: tableView, height: height)
+        cell = getCell(view: timelineView, height: height)
         cell.frame = NSRect(x: 0, y: 0, width: tableView.frame.width, height: height)
         cell.id = data.id ?? ""
         cell.reblog_id = data.reblog_id
@@ -1293,7 +1293,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     private static var usingList: [TimeLineViewCell] = []
     private static var recycleList: [TimeLineViewCell] = []
     private static var timeDate = Date()
-    private func getCell(view: NSTableView, height: CGFloat) -> TimeLineViewCell {
+    private func getCell(view: TimeLineView, height: CGFloat) -> TimeLineViewCell {
         if Date().timeIntervalSince(TimeLineViewModel.timeDate) >= 1 {
             for (index, cell) in TimeLineViewModel.usingList.enumerated().reversed() {
                 if cell.superview == nil {
@@ -1311,6 +1311,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         } else {
             cell = TimeLineViewCell()
         }
+        cell.tableView = view
         TimeLineViewModel.usingList.append(cell)
         
         if SettingsData.isMiniView == .superMini {
@@ -1328,9 +1329,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         guard let timelineView = notification.object as? TimeLineView else { return }
-        let row = timelineView.selectedRow
-        
-        selectRow(timelineView: timelineView, row: row)
+        if let row = timelineView.model.selectedRow {
+            timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+            
+            selectRow(timelineView: timelineView, row: row)
+        }
     }
     
     func selectRow(timelineView: TimeLineView, row: Int) {
@@ -1422,7 +1425,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
              }*/
             
             self.selectedRow = row
-            if index < list.count {
+            if index < list.count && index >= 0 {
                 let data = list[index]
                 let account = accountList[data.accountId]
                 self.selectedAccountId = account?.id
@@ -1432,7 +1435,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             //timelineView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
             
-            timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+            //timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
             
             timelineView.reloadData()
             
