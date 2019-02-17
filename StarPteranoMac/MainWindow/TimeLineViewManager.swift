@@ -27,4 +27,21 @@ final class TimeLineViewManager {
             return hostName + "_" + accessToken + "_" + type.rawValue
         }
     }
+    
+    // 選択中のTLを返す
+    static func getLastSelectedTLView() -> TimeLineViewController? {
+        var date: Date? = nil
+        var selected: TimeLineViewController? = nil
+        
+        for vc in list.values {
+            if let view = vc.view as? TimeLineView {
+                if date == nil || view.selectedDate > date! {
+                    date = view.selectedDate
+                    selected = vc
+                }
+            }
+        }
+        
+        return selected
+    }
 }

@@ -68,4 +68,12 @@ final class MainWindow: NSWindow {
             SettingsData.mainWindowFrame = self.frame
         }
     }
+    
+    override func keyDown(with event: NSEvent) {
+        if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+            if let tlView = tlVC.view as? TimeLineView {
+                tlView.myKeyDown(keyCode: event.keyCode)
+            }
+        }
+    }
 }

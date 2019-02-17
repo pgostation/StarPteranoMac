@@ -614,23 +614,6 @@ final class SettingsData {
         return array
     }
     
-    // ひらがな変換するかどうか
-    static var hiraganaMode: Bool {
-        get {
-            if let string = defaults.string(forKey: "hiraganaMode") {
-                return (string == "ON")
-            }
-            return false
-        }
-        set(newValue) {
-            if newValue {
-                defaults.set("ON", forKey: "hiraganaMode")
-            } else {
-                defaults.removeObject(forKey: "hiraganaMode")
-            }
-        }
-    }
-    
     // フォロー、フォロワーの情報をたまにチェックする
     static func checkFFAccounts(hostName: String, accessToken: String) {
         // 1週間以内にチェックしていたら、何もしない

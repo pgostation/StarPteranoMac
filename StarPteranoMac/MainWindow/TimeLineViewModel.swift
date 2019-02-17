@@ -170,34 +170,34 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         // 一番上の場合、ずれさせる
                     } else {
                         /*DispatchQueue.main.async {
-                            // スクロールして、表示していたツイートがあまりずれないようにする
-                            tableView.reloadData()
-                            let oldOffsetY = tableView.contentOffset.y
-                            let indexPath = IndexPath(row: min(self.cellCount, addList2.count), section: 0)
-                            tableView.scrollToRow(at: indexPath,
-                                                  at: UITableViewScrollPosition.top,
-                                                  animated: false)
-                            tableView.contentOffset.y = max(0, tableView.contentOffset.y + oldOffsetY)
-                        }*/
+                         // スクロールして、表示していたツイートがあまりずれないようにする
+                         tableView.reloadData()
+                         let oldOffsetY = tableView.contentOffset.y
+                         let indexPath = IndexPath(row: min(self.cellCount, addList2.count), section: 0)
+                         tableView.scrollToRow(at: indexPath,
+                         at: UITableViewScrollPosition.top,
+                         animated: false)
+                         tableView.contentOffset.y = max(0, tableView.contentOffset.y + oldOffsetY)
+                         }*/
                     }
                     
                     if isStreaming {
                         tableView.reloadData()
                         
                         /*self.inAnimating = true
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                            self.animationCellsCount = 0
-                            var indexPathList: [IndexPath] = []
-                            for i in 0..<self.animationCellsCount {
-                                indexPathList.append(IndexPath(item: i, section: 0))
-                            }
-                            tableView.reloadData()
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                                self.inAnimating = false
-                            }
-                        }*/
+                         
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                         self.animationCellsCount = 0
+                         var indexPathList: [IndexPath] = []
+                         for i in 0..<self.animationCellsCount {
+                         indexPathList.append(IndexPath(item: i, section: 0))
+                         }
+                         tableView.reloadData()
+                         
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                         self.inAnimating = false
+                         }
+                         }*/
                     }
                 } else {
                     // すでにあるデータを更新する
@@ -332,8 +332,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         /*if index < self.animationCellsCount {
-            return 1
-        }*/
+         return 1
+         }*/
         
         let isSelected = SettingsData.isMiniView == .full || (!SettingsData.tapDetailMode && row == self.selectedRow)
         
@@ -489,34 +489,34 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         /*
-        if let id = data.id, row != selectedRow {
-            if self.oldCacheDict[id] != nil {
-                if let textView = self.oldCacheDict[id]?.0 as? MyTextView {
-                    textView.cachingFlag = false
-                }
-                self.oldCacheDict[id] = nil
-            }
-            if self.cacheDict[id] != nil {
-                if let textView = self.cacheDict[id]?.0 as? MyTextView {
-                    textView.cachingFlag = false
-                }
-                self.cacheDict[id] = nil
-            }
-            self.cacheDict[id] = (messageView, data, isContinue)
-            
-            // 破棄候補を破棄して、キャッシュを破棄候補に移す
-            if self.cacheDict.count > 10 {
-                // キャッシュ中フラグを倒す
-                for data in self.oldCacheDict {
-                    if let textView = data.value.0 as? MyTextView {
-                        textView.cachingFlag = false
-                    }
-                }
-                
-                self.oldCacheDict = self.cacheDict
-                self.cacheDict = [:]
-            }
-        }*/
+         if let id = data.id, row != selectedRow {
+         if self.oldCacheDict[id] != nil {
+         if let textView = self.oldCacheDict[id]?.0 as? MyTextView {
+         textView.cachingFlag = false
+         }
+         self.oldCacheDict[id] = nil
+         }
+         if self.cacheDict[id] != nil {
+         if let textView = self.cacheDict[id]?.0 as? MyTextView {
+         textView.cachingFlag = false
+         }
+         self.cacheDict[id] = nil
+         }
+         self.cacheDict[id] = (messageView, data, isContinue)
+         
+         // 破棄候補を破棄して、キャッシュを破棄候補に移す
+         if self.cacheDict.count > 10 {
+         // キャッシュ中フラグを倒す
+         for data in self.oldCacheDict {
+         if let textView = data.value.0 as? MyTextView {
+         textView.cachingFlag = false
+         }
+         }
+         
+         self.oldCacheDict = self.cacheDict
+         self.cacheDict = [:]
+         }
+         }*/
         
         let trueHasCard = hasCard && (data.spoiler_text == nil || data.spoiler_text == "") && (data.card != nil || CardView.hasCard(id: data.id ?? "") == true)
         
@@ -524,77 +524,77 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     /*
-    // NSTextViewをリサイクル
-    private var cacheTextView: [MyTextView] = []
-    private func dequeueReusableTextView() -> MyTextView {
-        for view in self.cacheTextView {
-            if view.cachingFlag == false {
-                if let index = self.cacheTextView.firstIndex(of: view) {
-                    self.cacheTextView.remove(at: index)
-                }
-                view.isHidden = false
-                return view
-            }
-        }
-        
-        let msgView = MyTextView()
-        msgView.model = self
-        msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
-        msgView.textContainer?.lineBreakMode = .byCharWrapping
-        //msgView.isOpaque = true
-        //msgView.isScrollEnabled = false
-        msgView.isEditable = false
-        msgView.delegate = self // URLタップ用
-        
-        // URL以外の場所タップ用
-        let tapGensture = NSClickGestureRecognizer(target: self, action: #selector(tapTextViewAction(_:)))
-        msgView.addGestureRecognizer(tapGensture)
-        
-        return msgView
-    }
-    
-    // キャッシュの色を再設定する
-    func recolorCache() {
-        for view in self.cacheTextView {
-            view.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
-        }
-        
-        for data in self.cacheDict {
-            if let textView = data.value.0 as? MyTextView {
-                textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-                textView.textColor = ThemeColor.messageColor
-                textView.backgroundColor = ThemeColor.cellBgColor
-            }
-        }
-        for data in self.oldCacheDict {
-            if let textView = data.value.0 as? MyTextView {
-                textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-                textView.textColor = ThemeColor.messageColor
-                textView.backgroundColor = ThemeColor.cellBgColor
-            }
-        }
-    }
-    
-    class MyTextView: NSTextView {
-        weak var model: TimeLineViewModel?
-        var cachingFlag = false
-        
-        override func removeFromSuperview() {
-            super.removeFromSuperview()
-            
-            if model?.cacheTextView.contains(self) == false {
-                model?.cacheTextView.append(self)
-            }
-        }
-        
-        override func addSubview(_ view: NSView) {
-            super.addSubview(view)
-            
-            if let index = model?.cacheTextView.firstIndex(of: self) {
-                model?.cacheTextView.remove(at: index)
-            }
-        }
-    }*/
+     // NSTextViewをリサイクル
+     private var cacheTextView: [MyTextView] = []
+     private func dequeueReusableTextView() -> MyTextView {
+     for view in self.cacheTextView {
+     if view.cachingFlag == false {
+     if let index = self.cacheTextView.firstIndex(of: view) {
+     self.cacheTextView.remove(at: index)
+     }
+     view.isHidden = false
+     return view
+     }
+     }
+     
+     let msgView = MyTextView()
+     msgView.model = self
+     msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
+     msgView.textContainer?.lineBreakMode = .byCharWrapping
+     //msgView.isOpaque = true
+     //msgView.isScrollEnabled = false
+     msgView.isEditable = false
+     msgView.delegate = self // URLタップ用
+     
+     // URL以外の場所タップ用
+     let tapGensture = NSClickGestureRecognizer(target: self, action: #selector(tapTextViewAction(_:)))
+     msgView.addGestureRecognizer(tapGensture)
+     
+     return msgView
+     }
+     
+     // キャッシュの色を再設定する
+     func recolorCache() {
+     for view in self.cacheTextView {
+     view.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
+     }
+     
+     for data in self.cacheDict {
+     if let textView = data.value.0 as? MyTextView {
+     textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+     textView.textColor = ThemeColor.messageColor
+     textView.backgroundColor = ThemeColor.cellBgColor
+     }
+     }
+     for data in self.oldCacheDict {
+     if let textView = data.value.0 as? MyTextView {
+     textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+     textView.textColor = ThemeColor.messageColor
+     textView.backgroundColor = ThemeColor.cellBgColor
+     }
+     }
+     }
+     
+     class MyTextView: NSTextView {
+     weak var model: TimeLineViewModel?
+     var cachingFlag = false
+     
+     override func removeFromSuperview() {
+     super.removeFromSuperview()
+     
+     if model?.cacheTextView.contains(self) == false {
+     model?.cacheTextView.append(self)
+     }
+     }
+     
+     override func addSubview(_ view: NSView) {
+     super.addSubview(view)
+     
+     if let index = model?.cacheTextView.firstIndex(of: self) {
+     model?.cacheTextView.remove(at: index)
+     }
+     }
+     }*/
     
     // セルを返す
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -617,16 +617,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         /*if row < self.animationCellsCount {
-            let screenCellCount: Int
-            if SettingsData.isMiniView == .superMini {
-                screenCellCount = Int(tableView.frame.height / (10 + SettingsData.fontSize))
-            } else {
-                screenCellCount = Int(tableView.frame.height / (23 + SettingsData.fontSize * 1.5))
-            }
-            if row > screenCellCount {
-                return NSView()
-            }
-        }*/
+         let screenCellCount: Int
+         if SettingsData.isMiniView == .superMini {
+         screenCellCount = Int(tableView.frame.height / (10 + SettingsData.fontSize))
+         } else {
+         screenCellCount = Int(tableView.frame.height / (23 + SettingsData.fontSize * 1.5))
+         }
+         if row > screenCellCount {
+         return NSView()
+         }
+         }*/
         
         if index >= list.count {
             if self.showAutoPagerizeCell, let timelineView = tableView as? TimeLineView {
@@ -685,42 +685,42 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         /*
-        // カスタム絵文字のAPNGアニメーション対応
-        if SettingsData.useAnimation, let emojis = data.emojis, emojis.count > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                guard let messageView = cell?.messageView as? NSTextView else { return }
-                
-                guard let attributedText = messageView.textStorage?.attributedSubstring(from: NSMakeRange(0, messageView.textStorage?.length ?? 0)) else { return }
-                let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: messageView.textStorage!)
-                for data in list {
-                    let beginning = messageView.beginningOfDocument
-                    guard let start = messageView.position(from: beginning, offset: data.0.location) else { continue }
-                    guard let end = messageView.position(from: start, offset: data.0.length) else { continue }
-                    guard let textRange = messageView.textRange(from: start, to: end) else { continue }
-                    let position = messageView.firstRect(for: textRange)
-                    if position.origin.x == CGFloat.infinity { continue }
-                    
-                    for emoji in emojis {
-                        if emoji["shortcode"] as? String == data.1 {
-                            APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
-                                if image.frameCount <= 1 { return }
-                                let apngView = APNGImageView(image: image)
-                                //apngView.tag = 5555
-                                apngView.autoStartAnimation = true
-                                //apngView.backgroundColor = ThemeColor.cellBgColor
-                                let size = min(position.size.width, position.size.height)
-                                apngView.frame = CGRect(x: position.origin.x,
-                                                        y: position.origin.y + 3,
-                                                        width: size,
-                                                        height: size)
-                                messageView.addSubview(apngView)
-                            }
-                            break
-                        }
-                    }
-                }
-            }
-        }*/
+         // カスタム絵文字のAPNGアニメーション対応
+         if SettingsData.useAnimation, let emojis = data.emojis, emojis.count > 0 {
+         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+         guard let messageView = cell?.messageView as? NSTextView else { return }
+         
+         guard let attributedText = messageView.textStorage?.attributedSubstring(from: NSMakeRange(0, messageView.textStorage?.length ?? 0)) else { return }
+         let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: messageView.textStorage!)
+         for data in list {
+         let beginning = messageView.beginningOfDocument
+         guard let start = messageView.position(from: beginning, offset: data.0.location) else { continue }
+         guard let end = messageView.position(from: start, offset: data.0.length) else { continue }
+         guard let textRange = messageView.textRange(from: start, to: end) else { continue }
+         let position = messageView.firstRect(for: textRange)
+         if position.origin.x == CGFloat.infinity { continue }
+         
+         for emoji in emojis {
+         if emoji["shortcode"] as? String == data.1 {
+         APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
+         if image.frameCount <= 1 { return }
+         let apngView = APNGImageView(image: image)
+         //apngView.tag = 5555
+         apngView.autoStartAnimation = true
+         //apngView.backgroundColor = ThemeColor.cellBgColor
+         let size = min(position.size.width, position.size.height)
+         apngView.frame = CGRect(x: position.origin.x,
+         y: position.origin.y + 3,
+         width: size,
+         height: size)
+         messageView.addSubview(apngView)
+         }
+         break
+         }
+         }
+         }
+         }
+         }*/
         
         let account = accountList[data.accountId]
         
@@ -826,6 +826,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             self.inReplyToTootId = data.in_reply_to_id
             self.inReplyToAccountId = data.in_reply_to_account_id
             
+            if self.selectedRow == row {
+                self.setCellColor(cell: cell)
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.setCellColor(cell: cell)
                 
@@ -837,6 +840,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     }
                 }
             }
+            
+            cell.dateLabel.isHidden = false
             
             // 返信ボタンを追加
             cell.replyButton = NSButton()
@@ -1048,10 +1053,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     imageView.imageScaling = .scaleProportionallyUpOrDown
                     
                     /*
-                    // タップで全画面表示
-                    let tapGesture = UITapGestureRecognizer(target: cell, action: #selector(cell.imageTapAction(_:)))
-                    imageView.addGestureRecognizer(tapGesture)
-                    imageView.isUserInteractionEnabled = true */
+                     // タップで全画面表示
+                     let tapGesture = UITapGestureRecognizer(target: cell, action: #selector(cell.imageTapAction(_:)))
+                     imageView.addGestureRecognizer(tapGesture)
+                     imageView.isUserInteractionEnabled = true */
                     
                     // 画像読み込み
                     let isPreview = !(isDetailTimeline && row == selectedRow)
@@ -1328,16 +1333,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         selectRow(timelineView: timelineView, row: row)
     }
     
-    private func selectRow(timelineView: TimeLineView, row: Int) {
+    func selectRow(timelineView: TimeLineView, row: Int) {
         var index = row
         
         timelineView.selectedDate = Date()
         
         // 選択中のカラムの幅を広げる
         /*if timelineView.frame.width < 320 {
-            SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
-            MainViewController.instance?.view.needsLayout = true
-        }*/
+         SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
+         MainViewController.instance?.view.needsLayout = true
+         }*/
         
         // 入力フィールドからフォーカスを外す
         DispatchQueue.main.async {
@@ -1355,66 +1360,66 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if self.isDetailTimeline { return } // すでに詳細表示画面
             
             /*
-            // 連打防止
-            if self.isAnimating { return }
-            self.isAnimating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.isAnimating = false
-            }
-            
-            // トゥート詳細画面に移動
-            let (_, data, _, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
-            let mentionsData = getMentionsData(data: data)
-            let viewController = TimeLineViewController(type: TimeLineViewController.TimeLineType.mentions, option: nil, mentions: (mentionsData, accountList))
-            UIUtils.getFrontViewController()?.addChildViewController(viewController)
-            UIUtils.getFrontViewController()?.view.addSubview(viewController.view)
-            viewController.view.frame = CGRect(x: UIScreen.main.bounds.width,
-                                               y: 0,
-                                               width: UIScreen.main.bounds.width,
-                                               height: UIScreen.main.bounds.height)
-            UIView.animate(withDuration: 0.3) {
-                viewController.view.frame.origin.x = 0
-            }
-            
-            // ステータスの内容を更新する(お気に入りの数とか)
-            let isMerge = data.isMerge
-            guard let url = URL(string: "https://\((tableView as? TimeLineView)?.hostName ?? "")/api/v1/statuses/\(data.id ?? "-")") else { return }
-            try? MastodonRequest.get(url: url, accessToken: (tableView as? TimeLineView)?.accessToken ?? "") { [weak self] (data, response, error) in
-                guard let strongSelf = self else { return }
-                guard let data = data else { return }
-                do {
-                    if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
-                        var acct = ""
-                        let contentData = AnalyzeJson.analyzeJson(view: tableView as? TimeLineView, model: strongSelf, json: responseJson, acct: &acct, isMerge: isMerge)
-                        let contentList = [contentData]
-                        
-                        // 詳細ビューと元のビューの両方に反映する
-                        strongSelf.change(tableView: tableView as! TimeLineView, addList: contentList, accountList: strongSelf.accountList)
-                        if let tlView = viewController.view as? TimeLineView {
-                            tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
-                        }
-                    }
-                } catch { }
-            }*/
+             // 連打防止
+             if self.isAnimating { return }
+             self.isAnimating = true
+             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+             self.isAnimating = false
+             }
+             
+             // トゥート詳細画面に移動
+             let (_, data, _, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
+             let mentionsData = getMentionsData(data: data)
+             let viewController = TimeLineViewController(type: TimeLineViewController.TimeLineType.mentions, option: nil, mentions: (mentionsData, accountList))
+             UIUtils.getFrontViewController()?.addChildViewController(viewController)
+             UIUtils.getFrontViewController()?.view.addSubview(viewController.view)
+             viewController.view.frame = CGRect(x: UIScreen.main.bounds.width,
+             y: 0,
+             width: UIScreen.main.bounds.width,
+             height: UIScreen.main.bounds.height)
+             UIView.animate(withDuration: 0.3) {
+             viewController.view.frame.origin.x = 0
+             }
+             
+             // ステータスの内容を更新する(お気に入りの数とか)
+             let isMerge = data.isMerge
+             guard let url = URL(string: "https://\((tableView as? TimeLineView)?.hostName ?? "")/api/v1/statuses/\(data.id ?? "-")") else { return }
+             try? MastodonRequest.get(url: url, accessToken: (tableView as? TimeLineView)?.accessToken ?? "") { [weak self] (data, response, error) in
+             guard let strongSelf = self else { return }
+             guard let data = data else { return }
+             do {
+             if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+             var acct = ""
+             let contentData = AnalyzeJson.analyzeJson(view: tableView as? TimeLineView, model: strongSelf, json: responseJson, acct: &acct, isMerge: isMerge)
+             let contentList = [contentData]
+             
+             // 詳細ビューと元のビューの両方に反映する
+             strongSelf.change(tableView: tableView as! TimeLineView, addList: contentList, accountList: strongSelf.accountList)
+             if let tlView = viewController.view as? TimeLineView {
+             tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
+             }
+             }
+             } catch { }
+             }*/
         } else {
             // セルを拡大して表示
             /*
-            var indexPaths: [IndexPath] = [indexPath]
-            if let selectedRow = self.selectedRow, selectedRow < min(self.list.count, self.cellCount) {
-                let oldPath = IndexPath(row: selectedRow, section: 0)
-                indexPaths.append(oldPath)
-                
-                if oldPath.row < row {
-                    // 高さのずれを吸収
-                    let oldHeight = self.tableView(tableView, heightForRowAt: oldPath)
-                    self.selectedRow = indexPath.row
-                    let newHeight = self.tableView(tableView, heightForRowAt: oldPath)
-                    
-                    DispatchQueue.main.async {
-                        tableView.contentOffset.y = max(0, tableView.contentOffset.y + newHeight - oldHeight + 40)
-                    }
-                }
-            }*/
+             var indexPaths: [IndexPath] = [indexPath]
+             if let selectedRow = self.selectedRow, selectedRow < min(self.list.count, self.cellCount) {
+             let oldPath = IndexPath(row: selectedRow, section: 0)
+             indexPaths.append(oldPath)
+             
+             if oldPath.row < row {
+             // 高さのずれを吸収
+             let oldHeight = self.tableView(tableView, heightForRowAt: oldPath)
+             self.selectedRow = indexPath.row
+             let newHeight = self.tableView(tableView, heightForRowAt: oldPath)
+             
+             DispatchQueue.main.async {
+             tableView.contentOffset.y = max(0, tableView.contentOffset.y + newHeight - oldHeight + 40)
+             }
+             }
+             }*/
             
             self.selectedRow = row
             if index < list.count {
@@ -1430,6 +1435,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
             
             timelineView.reloadData()
+            
+            timelineView.scrollRowToVisible(row)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if let row = self.selectedRow {
+                    timelineView.scrollRowToVisible(row)
+                }
+            }
         }
     }
     

@@ -560,4 +560,24 @@ final class TimeLineView: NSTableView {
             }
         }
     }
+    
+    func myKeyDown(keyCode: UInt16) {
+        switch keyCode {
+        case 126, 40: // up arrow, k
+            if let selectedRow = model.selectedRow {
+                model.selectRow(timelineView: self, row: max(0, selectedRow - 1))
+            } else {
+                model.selectRow(timelineView: self, row: 0)
+            }
+        case 125, 38: // down arrow, l
+            if let selectedRow = model.selectedRow {
+                model.selectRow(timelineView: self, row: selectedRow + 1)
+            } else {
+                model.selectRow(timelineView: self, row: 0)
+            }
+            model.selectRow(timelineView: self, row: model.selectedRow!)
+        default:
+            break
+        }
+    }
 }
