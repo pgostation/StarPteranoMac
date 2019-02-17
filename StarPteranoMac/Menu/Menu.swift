@@ -164,9 +164,9 @@ final class Menu: NSObject, NSMenuDelegate {
                 tootMenu.addItem(menuItem1)
             }
             
-            /*tootMenu.addItem(NSMenuItem.separator())
+            tootMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
+                /*let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
                 menuItem1.target = menuTarget
                 tootMenu.addItem(menuItem1)
@@ -178,8 +178,13 @@ final class Menu: NSObject, NSMenuDelegate {
                 
                 let menuItem3 = NSMenuItem(title: I18n.get("Add Image…"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem3.target = menuTarget
-                tootMenu.addItem(menuItem3)
-            }*/
+                tootMenu.addItem(menuItem3)*/
+                
+                let menuItem4 = NSMenuItem(title: I18n.get("Scheduled Toot…"), action: #selector(doTootMenu(_:)), keyEquivalent: "t")
+                menuItem4.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
+                menuItem4.target = menuTarget
+                tootMenu.addItem(menuItem4)
+            }
             
             tootMenuItem.submenu = tootMenu
         }
@@ -261,10 +266,20 @@ final class Menu: NSObject, NSMenuDelegate {
     
     @objc func doViewMenu(_ item: NSMenuItem) {
         if item.title == I18n.get("Mini View") {
+            SettingsData.isMiniView = .superMini
+            MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Compact View") {
+            SettingsData.isMiniView = .miniView
+            MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Standard View") {
+            SettingsData.isMiniView = .normal
+            MainViewController.refreshAllTimeLineViews()
+        }
+        else if item.title == I18n.get("Full View") {
+            SettingsData.isMiniView = .full
+            MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Larger") {
             SettingsData.fontSize += 1

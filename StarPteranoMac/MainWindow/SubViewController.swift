@@ -12,7 +12,7 @@ import LYTabView
 final class SubViewController: NSViewController, NSTabViewDelegate {
     private let hostName: String
     private let accessToken: String
-    private let tootVC: TootViewController
+    let tootVC: TootViewController
     private let tabView = LYTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
     

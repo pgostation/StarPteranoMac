@@ -128,6 +128,8 @@ final class TootView: NSView {
         
         emojiButton.title = "😀"
         emojiButton.isBordered = false
+        
+        textCountLabel.isEditable = false
     }
     
     override func layout() {

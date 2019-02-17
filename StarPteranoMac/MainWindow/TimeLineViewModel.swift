@@ -335,7 +335,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             return 1
         }*/
         
-        let isSelected = !SettingsData.tapDetailMode && row == self.selectedRow
+        let isSelected = SettingsData.isMiniView == .full || (!SettingsData.tapDetailMode && row == self.selectedRow)
         
         if SettingsData.isMiniView == .miniView && !isSelected {
             return 23 + SettingsData.fontSize * 1.5
@@ -447,7 +447,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         // content解析
-        let (attributedText, hasLink, hasCard) = DecodeToot.decodeContentFast(content: data.content, emojis: data.emojis, callback: callback)
+        let (attributedText, _, hasCard) = DecodeToot.decodeContentFast(content: data.content, emojis: data.emojis, callback: callback)
         
         // 行間を広げる
         let paragrahStyle = NSMutableParagraphStyle()
@@ -818,7 +818,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         // 詳細表示の場合
-        if self.selectedRow == row {
+        if self.selectedRow == row || SettingsData.isMiniView == .full {
             cell.showDetail = true
             //cell.isSelected = true
             
@@ -840,9 +840,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // 返信ボタンを追加
             cell.replyButton = NSButton()
-            cell.replyButton?.title = "↩︎"
             cell.replyButton?.isBordered = false
-            //cell.replyButton?.setTitleColor(ThemeColor.detailButtonsColor, for: .normal)
+            do {
+                let color = ThemeColor.detailButtonsColor
+                let colorTitle = NSMutableAttributedString(string: "↩︎")
+                let titleRange = NSMakeRange(0, colorTitle.length)
+                colorTitle.addAttributes([NSAttributedString.Key.foregroundColor : color], range: titleRange)
+                cell.replyButton?.attributedTitle = colorTitle
+            }
             cell.replyButton?.action = #selector(cell.replyAction)
             cell.addSubview(cell.replyButton!)
             
@@ -863,13 +868,15 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if data.visibility == "direct" || data.visibility == "private" {
                 cell.boostButton?.title = "🔐"
             } else {
-                cell.boostButton?.title = "⇄"
-                if data.reblogged == 1 {
-                    //cell.boostButton?.setTitleColor(ThemeColor.detailButtonsHiliteColor, for: .normal)
-                } else {
-                    //cell.boostButton?.setTitleColor(ThemeColor.detailButtonsColor, for: .normal)
+                do {
+                    let color = data.reblogged == 1 ? ThemeColor.detailButtonsHiliteColor : ThemeColor.detailButtonsColor
+                    let colorTitle = NSMutableAttributedString(string: "⇄")
+                    let titleRange = NSMakeRange(0, colorTitle.length)
+                    colorTitle.addAttributes([NSAttributedString.Key.foregroundColor : color], range: titleRange)
+                    cell.boostButton?.attributedTitle = colorTitle
                 }
                 cell.boostButton?.action = #selector(cell.boostAction)
+                cell.boostButton?.target = cell
             }
             cell.addSubview(cell.boostButton!)
             
@@ -886,14 +893,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // お気に入りボタン
             cell.favoriteButton = NSButton()
-            cell.favoriteButton?.title = "★"
             cell.favoriteButton?.isBordered = false
-            if data.favourited == 1 {
-                //cell.favoriteButton?.setTitleColor(ThemeColor.detailButtonsHiliteColor, for: .normal)
-            } else {
-                //cell.favoriteButton?.setTitleColor(ThemeColor.detailButtonsColor, for: .normal)
+            do {
+                let color = data.favourited == 1 ? ThemeColor.detailButtonsHiliteColor : ThemeColor.detailButtonsColor
+                let colorTitle = NSMutableAttributedString(string: "★")
+                let titleRange = NSMakeRange(0, colorTitle.length)
+                colorTitle.addAttributes([NSAttributedString.Key.foregroundColor : color], range: titleRange)
+                cell.favoriteButton?.attributedTitle = colorTitle
             }
             cell.favoriteButton?.action = #selector(cell.favoriteAction)
+            cell.favoriteButton?.target = cell
             cell.addSubview(cell.favoriteButton!)
             
             // お気に入りされた数
@@ -920,6 +929,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.applicationLabel?.textColor = ThemeColor.dateColor
                 cell.applicationLabel?.isBordered = false
                 cell.applicationLabel?.drawsBackground = false
+                cell.applicationLabel?.isEditable = false
                 //cell.applicationLabel?.textAlignment = .right
                 //cell.applicationLabel?.adjustsFontSizeToFitWidth = true
                 cell.applicationLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
@@ -1328,6 +1338,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
             MainViewController.instance?.view.needsLayout = true
         }*/
+        
+        // 入力フィールドからフォーカスを外す
+        DispatchQueue.main.async {
+            MainViewController.instance?.quickResignFirstResponder()
+        }
         
         if timelineView.type == .user {
             index -= 1

@@ -305,7 +305,7 @@ final class TimeLineViewCell: NSView {
             // @IDを入力する
             DispatchQueue.main.async {
                 if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
-                    view.textField.string = "@\(self.idLabel.stringValue ?? "") "
+                    view.textField.string = "@\(self.idLabel.stringValue) "
                 }
             }
         }
@@ -391,9 +391,6 @@ final class TimeLineViewCell: NSView {
         }
         
         // 通報する
-        guard let accountId = self.accountId else { return }
-        let id = self.id
-        
         let reportItem = NSMenuItem(title: I18n.get("ACTION_REPORT_TOOT"),
                                       action: #selector(reportAction),
                                       keyEquivalent: "")
@@ -629,16 +626,16 @@ final class TimeLineViewCell: NSView {
         
         self.timer?.invalidate()
         if #available(OSX 10.12, *) {
-            self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { [weak self] timer in
-                if self?.superview == nil {
-                    timer.invalidate()
-                    return
-                }
-                
-                DispatchQueue.main.async { [weak self] in
+            DispatchQueue.main.async { [weak self] in
+                self?.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true, block: { [weak self] timer in
+                    if self?.superview == nil {
+                        timer.invalidate()
+                        return
+                    }
+                    
                     self?.refreshDate()
-                }
-            })
+                })
+            }
         }
     }
     
@@ -663,12 +660,12 @@ final class TimeLineViewCell: NSView {
                                       width: screenBounds.width,
                                       height: 1 / (NSScreen.main?.backingScaleFactor ?? 1))
         
-        self.iconView?.frame = CGRect(x: isMiniView != .normal ? 2 : 4,
+        self.iconView?.frame = CGRect(x: 6,
                                       y: height - (isMiniView == .superMini ? 12 - iconSize / 2 : (isMiniView != .normal ? 6 : 10)) - iconSize,
                                       width: iconSize,
                                       height: iconSize)
         
-        let nameLeft = iconSize + 7
+        let nameLeft = iconSize + 10
         self.nameLabel.frame = CGRect(x: nameLeft,
                                       y: height - (isMiniView != .normal ? 2 : 6) - (SettingsData.fontSize + 6),
                                       width: min(self.nameLabel.frame.width, screenBounds.width - nameLeft - 50),
@@ -716,11 +713,11 @@ final class TimeLineViewCell: NSView {
         } else if let messageView = self.messageView as? NSTextView {
             let y: CGFloat
             if isMiniView == .superMini {
-                y = -9
+                y = -0
             } else if let spolerTextLabel = self.spolerTextLabel {
                 y = spolerTextLabel.frame.minY + 20
             } else {
-                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? -9 : 12) + SettingsData.fontSize)
+                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: height - y - messageView.frame.height,

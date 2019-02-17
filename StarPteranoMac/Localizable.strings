@@ -49,6 +49,7 @@
 "Now Playing" = "iTunesの曲名を挿入";
 "Now Browsing" = "Safariの情報を挿入";
 "Add Image…" = "画像を追加…";
+"Scheduled Toot…" = "予約投稿…";
 
 // Tool Menu
 "Tool" = "ツール";
@@ -105,7 +106,7 @@
 // タイムライン変更
 "ACTION_HOME" = "ホーム";
 "ACTION_LOCAL" = "ローカル";
-"ACTION_HOMELOCAL" = "ローカル + ホーム";
+"ACTION_HOMELOCAL" = "ローカル+ホーム";
 "ACTION_FEDERATION" = "連合";
 "ACTION_LIST" = "リスト";
 "ACTION_NOTIFICATIONS" = "通知";

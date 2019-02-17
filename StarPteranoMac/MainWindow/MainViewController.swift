@@ -142,11 +142,17 @@ final class MainViewController: NSViewController {
             right = barList[index].frame.maxX
         }
     }
+    
+    // テキスト入力フィールドからフォーカスを外す
+    func quickResignFirstResponder() {
+        MainWindow.window?.makeFirstResponder(nil)
+    }
 }
 
 private final class SlideBar: NSView {
     var index = -1
     var accessToken = ""
+    private var timer: Timer?
     
     override func mouseDragged(with event: NSEvent) {
         let width = SettingsData.viewWidth(accessToken: accessToken) ?? 0
@@ -165,6 +171,14 @@ private final class SlideBar: NSView {
         }
         
         self.superview?.needsLayout = true
+        
+        // 0.3秒後に全ビューのレイアウトを更新
+        self.timer?.invalidate()
+        if #available(OSX 10.12, *) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { timer in
+                MainViewController.refreshAllTimeLineViews()
+            }
+        }
     }
     
     override func resetCursorRects() {
