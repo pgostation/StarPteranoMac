@@ -52,7 +52,7 @@ final class ImageCache {
         }
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
-            imageGlobalQueue.async {
+            DispatchQueue.main.async {
                 let url = URL(fileURLWithPath: filePath)
                 if let data = try? Data(contentsOf: url) {
                     if let image = EmojiImage(data: data) {
@@ -63,24 +63,20 @@ final class ImageCache {
                             smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
                         }
                         smallImage.shortcode = shortcode
-                        DispatchQueue.main.async {
-                            memCache.updateValue(smallImage, forKey: urlStr)
-                            callback(image)
-                            
-                            if memCache.count >= 120 { // メモリの使いすぎを防ぐ
-                                oldMemCache = memCache
-                                memCache = [:]
-                            }
+                        memCache.updateValue(smallImage, forKey: urlStr)
+                        callback(image)
+                        
+                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                            oldMemCache = memCache
+                            memCache = [:]
                         }
                     } else if let image = webpDecoder.decodedImage(with: data) {
-                        DispatchQueue.main.async {
-                            memCache.updateValue(image, forKey: urlStr)
-                            callback(image)
-                            
-                            if memCache.count >= 120 { // メモリの使いすぎを防ぐ
-                                oldMemCache = memCache
-                                memCache = [:]
-                            }
+                        memCache.updateValue(image, forKey: urlStr)
+                        callback(image)
+                        
+                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                            oldMemCache = memCache
+                            memCache = [:]
                         }
                     }
                 }
@@ -100,10 +96,10 @@ final class ImageCache {
         imageQueue.async {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
-                if let image = EmojiImage(data: data) {
-                    let smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
-                    smallImage.shortcode = shortcode
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if let image = EmojiImage(data: data) {
+                        let smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
+                        smallImage.shortcode = shortcode
                         if !isTemp {
                             memCache.updateValue(smallImage, forKey: urlStr)
                         }
@@ -119,29 +115,27 @@ final class ImageCache {
                             oldMemCache = memCache
                             memCache = [:]
                         }
-                    }
-                    
-                    // ストレージにキャッシュする
-                    let fileUrl = URL(fileURLWithPath: filePath)
-                    try? data.write(to: fileUrl)
-                    
-                    // ストレージの古いファイルを削除する
-                    if isTemp {
-                        let cacheDirUrl = URL(fileURLWithPath: cacheDir)
-                        let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-                        let nowDate = Date()
-                        for url in urls ?? [] {
-                            if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
-                                if let fileDate = attr[FileAttributeKey.creationDate] as? Date {
-                                    if nowDate.timeIntervalSince(fileDate) > 86400 {
-                                        try? fileManager.removeItem(at: url)
+                        
+                        // ストレージにキャッシュする
+                        let fileUrl = URL(fileURLWithPath: filePath)
+                        try? data.write(to: fileUrl)
+                        
+                        // ストレージの古いファイルを削除する
+                        if isTemp {
+                            let cacheDirUrl = URL(fileURLWithPath: cacheDir)
+                            let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+                            let nowDate = Date()
+                            for url in urls ?? [] {
+                                if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
+                                    if let fileDate = attr[FileAttributeKey.creationDate] as? Date {
+                                        if nowDate.timeIntervalSince(fileDate) > 86400 {
+                                            try? fileManager.removeItem(at: url)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                } else if let image = webpDecoder.decodedImage(with: data) {
-                    DispatchQueue.main.async {
+                    } else if let image = webpDecoder.decodedImage(with: data) {
                         memCache.updateValue(image, forKey: urlStr)
                         callback(image)
                         
@@ -149,14 +143,16 @@ final class ImageCache {
                             oldMemCache = memCache
                             memCache = [:]
                         }
+                        
+                        // ストレージにキャッシュする
+                        let fileUrl = URL(fileURLWithPath: filePath)
+                        try? data.write(to: fileUrl)
                     }
-                    
-                    // ストレージにキャッシュする
-                    let fileUrl = URL(fileURLWithPath: filePath)
-                    try? data.write(to: fileUrl)
                 }
             } else {
-                waitingDict.removeValue(forKey: urlStr)
+                DispatchQueue.main.async {
+                    waitingDict.removeValue(forKey: urlStr)
+                }
             }
         }
     }
@@ -172,7 +168,7 @@ final class APNGImageCache {
     private static var waitingDict: [String: [(APNGImage)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "APNGImageCache")
-    private static let imageGlobalQueue = DispatchQueue.global()
+    private static let imageGlobalQueue = DispatchQueue.main
     
     static func image(urlStr: String?, callback: @escaping (APNGImage)->Void) {
         guard let urlStr = urlStr else { return }
