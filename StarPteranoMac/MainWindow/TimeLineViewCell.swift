@@ -224,12 +224,6 @@ final class TimeLineViewCell: NSView {
             TimeLineViewCell.doubleTapFlag = false
         }
         
-        /*if TootViewController.isShown {
-            // トゥート画面表示中は移動せず、@IDを入力する
-            pressAccountAction(nil)
-            return
-        }*/
-        
         if let accountId = self.accountId {
             if let timelineView = self.superview as? TimeLineView {
                 if timelineView.option == accountId {
@@ -547,7 +541,7 @@ final class TimeLineViewCell: NSView {
     // 画像をタップ
     @objc func imageTapAction(_ sender: NSView) {
         for (index, imageView) in self.imageViews.enumerated() {
-            if imageView == sender {
+            if imageView == sender.superview?.subviews.first {
                 if imageTypes[index] == "unknown" {
                     // 分からんので内蔵ブラウザで開く
                     guard let url = URL(string: originalUrls[index]) else { return }
@@ -578,10 +572,8 @@ final class TimeLineViewCell: NSView {
                     }
                 } else {
                     // 静止画
-                    //let vc = ImageViewController(imagesUrls: self.imageUrls, previewUrls: self.previewUrls, index: index, smallImage: imageView.image)
-                    //ImageWindow(contentViewController: vc).show()
-                    
-                    break
+                    let vc = ImageViewController(imagesUrls: self.imageUrls, previewUrls: self.previewUrls, index: index, smallImage: imageView.image)
+                    ImageWindow(contentViewController: vc).show()
                 }
             }
         }
@@ -643,7 +635,6 @@ final class TimeLineViewCell: NSView {
         if let superview = self.tableView?.superview, self.frame.width != superview.frame.width {
             self.frame.size.width = superview.frame.width
         }
-        print("#### \(self.frame.size.width)")
         let screenBounds = self.frame
         let height = screenBounds.height
         let isDetailMode = !SettingsData.tapDetailMode && self.showDetail

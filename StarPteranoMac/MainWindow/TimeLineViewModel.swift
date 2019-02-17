@@ -975,15 +975,15 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 //cell.iconView?.clipsToBounds = true
                 //cell.iconView?.insets = UIEdgeInsetsMake(5, 5, 5, 5)
                 
-                // アイコンのタップジェスチャー
-                //let tapGesture = UITapGestureRecognizer(target: cell, action: #selector(cell.tapAccountAction))
-                //cell.iconView?.addGestureRecognizer(tapGesture)
-                //cell.iconView?.isUserInteractionEnabled = true
-                
-                // アイコンの長押しジェスチャー
-                //let pressGesture = UILongPressGestureRecognizer(target: cell, action: #selector(cell.pressAccountAction(_:)))
-                //cell.iconView?.addGestureRecognizer(pressGesture)
                 let iconSize = cell.isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
+                
+                // アイコンのタップジェスチャー
+                let coverButton = NSButton()
+                coverButton.isTransparent = true
+                coverButton.target = cell
+                coverButton.action = #selector(cell.tapAccountAction)
+                iconView.addSubview(coverButton)
+                coverButton.frame = NSRect(x: 0, y: 0, width: iconSize, height: iconSize)
                 
                 let height = cell.frame.height
                 cell.iconView?.frame = CGRect(x: cell.isMiniView != .normal ? 2 : 4,
@@ -1052,12 +1052,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     imageView.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
                     imageView.imageScaling = .scaleProportionallyUpOrDown
                     
-                    /*
-                     // タップで全画面表示
-                     let tapGesture = UITapGestureRecognizer(target: cell, action: #selector(cell.imageTapAction(_:)))
-                     imageView.addGestureRecognizer(tapGesture)
-                     imageView.isUserInteractionEnabled = true */
-                    
                     // 画像読み込み
                     let isPreview = !(isDetailTimeline && row == selectedRow)
                     ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { image in
@@ -1071,6 +1065,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     imageParentView.addSubview(imageView)
                     cell.addSubview(imageParentView)
                     cell.imageParentViews.append(imageParentView)
+                    
+                    // タップで全画面表示
+                    let coverButton = NSButton()
+                    coverButton.isTransparent = true
+                    coverButton.target = cell
+                    coverButton.action = #selector(cell.imageTapAction(_:))
+                    imageParentView.addSubview(coverButton)
+                    coverButton.frame = NSRect(x: 0, y: 0, width: 500, height: 500)
                     
                     if data.sensitive == 1 || data.spoiler_text != "" {
                         imageView.isHidden = true
