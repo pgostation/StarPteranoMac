@@ -22,7 +22,7 @@ final class TootView: NSView {
     // トゥート
     let spoilerTextField = MyTextView()
     let textField = MyTextView()
-    let textCountLabel = NSTextField()
+    let textCountLabel = MyTextField()
     
     // 入力バー
     let inputBar = NSView()

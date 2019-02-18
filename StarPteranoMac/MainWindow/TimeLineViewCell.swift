@@ -20,9 +20,9 @@ final class TimeLineViewCell: NSView {
     // 基本ビュー
     let lineLayer = CALayer()
     var iconView: NSImageView?
-    let nameLabel = NSTextField()
-    let idLabel = NSTextField()
-    let dateLabel = NSTextField()
+    let nameLabel = MyTextField()
+    let idLabel = MyTextField()
+    let dateLabel = MyTextField()
     var messageView: NSView?
     
     //追加ビュー
@@ -127,10 +127,16 @@ final class TimeLineViewCell: NSView {
             //self.nameLabel.addGestureRecognizer(tapGesture)
             //self.nameLabel.isUserInteractionEnabled = true
         }
+        
+        LeakCounter.add("TimeLineViewCell")
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        LeakCounter.sub("TimeLineViewCell")
     }
     
     // 再利用前に呼ばれる

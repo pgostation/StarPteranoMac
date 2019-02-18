@@ -9,7 +9,7 @@
 import Cocoa
 
 final class ImageViewController: NSViewController {
-    private let imageView = NSImageView()
+    private let imageView = MyImageView()
     private let coverButton = NSButton()
     private let leftButton = NSButton()
     private let rightButton = NSButton()

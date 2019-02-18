@@ -9,7 +9,7 @@
 import Cocoa
 
 final class ImageCheckView: NSView {
-    private let nsfwLabel = NSTextField()
+    private let nsfwLabel = MyTextField()
     let nsfwSw = NSButton()
     var urls: [URL] = []
     private var imageViews: [NSView] = []

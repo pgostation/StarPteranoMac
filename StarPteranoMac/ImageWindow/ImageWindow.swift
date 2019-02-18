@@ -20,6 +20,7 @@ final class ImageWindow: NSPanel {
         
         self.styleMask.insert(NSWindow.StyleMask.titled)
         self.styleMask.insert(NSWindow.StyleMask.resizable)
+        //self.styleMask.insert(NSWindow.StyleMask.hudWindow) // HUDよりも半透明のほうがいいかな
         
         self.level = .floating
         self.backgroundColor = NSColor.black.withAlphaComponent(0.5)

@@ -11,10 +11,10 @@ import Cocoa
 final class CardView: NSView {
     private let hostName: String
     private let accessToken: String
-    private let imageView = NSImageView()
-    private let titleLabel = NSTextField()
-    private let bodyLabel = NSTextField()
-    private let domainLabel = NSTextField()
+    private let imageView = MyImageView()
+    private let titleLabel = MyTextField()
+    private let bodyLabel = MyTextField()
+    private let domainLabel = MyTextField()
     private let coverButton = NSButton()
     private var url: URL?
     private static let dateFormatter: DateFormatter = {

@@ -46,7 +46,7 @@ final class Dialog {
         let alert = NSAlert()
         alert.messageText = message
         
-        let textField = NSTextField()
+        let textField = MyTextField()
         textField.stringValue = defaultText ?? ""
         alert.accessoryView = textField
         

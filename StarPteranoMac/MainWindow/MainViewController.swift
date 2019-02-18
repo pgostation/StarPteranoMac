@@ -175,8 +175,9 @@ private final class SlideBar: NSView {
         // 0.3秒後に全ビューのレイアウトを更新
         self.timer?.invalidate()
         if #available(OSX 10.12, *) {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { timer in
+            self.timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] timer in
                 MainViewController.refreshAllTimeLineViews()
+                self?.timer = nil
             }
         }
     }

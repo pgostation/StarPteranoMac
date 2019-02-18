@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class ClickableTextField: NSTextField {
+final class ClickableTextField: MyTextField {
     private var callback: (()->Void)? = nil
     
     func addTarget(callback: @escaping ()->Void) {

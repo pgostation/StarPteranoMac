@@ -178,9 +178,9 @@ final class AccountSettingsViewController: NSViewController {
 }
 
 final class AccountSettingsView: NSView {
-    let hostNameField = NSTextField()
+    let hostNameField = MyTextField()
     let authButton = NSButton()
-    let inputCodeField = NSTextField()
+    let inputCodeField = MyTextField()
     let codeEnterButton = NSButton()
     let accountsView = AccountsView()
     
@@ -305,7 +305,7 @@ final class AccountsView: NSScrollView {
 }
 
 private final class AccountView: NSView {
-    private let iconView = NSImageView()
+    private let iconView = MyImageView()
     private let hostLabel = CATextLayer()
     private let idLabel = CATextLayer()
     private let deleteButton = NSButton()

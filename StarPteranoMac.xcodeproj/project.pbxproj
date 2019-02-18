@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
+		12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */; };
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
 		128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751AB218478CA00BC8828 /* ImageUtils.swift */; };
@@ -67,6 +68,7 @@
 /* Begin PBXFileReference section */
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
+		12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakCounter.swift; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		128751AB218478CA00BC8828 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 				128751A72184225800BC8828 /* ImageCache.swift */,
 				128751AB218478CA00BC8828 /* ImageUtils.swift */,
 				128751C72184B44600BC8828 /* MovieCache.swift */,
+				12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -425,6 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
+				12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */,
 				128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */,
 				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,

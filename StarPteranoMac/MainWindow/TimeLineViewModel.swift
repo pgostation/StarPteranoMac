@@ -9,6 +9,7 @@
 import Cocoa
 import APNGKit
 import AVFoundation
+import SDWebImage
 
 final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
     private var list: [AnalyzeJson.ContentData] = []
@@ -393,7 +394,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         if data.spoiler_text != "" && data.spoiler_text != nil {
             if data.spoiler_text!.count > 15 {
-                let spolerTextLabel = NSTextField()
+                let spolerTextLabel = MyTextField()
                 spolerTextLabel.stringValue = data.spoiler_text ?? ""
                 spolerTextLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
                 //spolerTextLabel.numberOfLines = 0
@@ -857,7 +858,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.addSubview(cell.replyButton!)
             
             // 返信された数
-            cell.repliedLabel = NSTextField()
+            cell.repliedLabel = MyTextField()
             cell.repliedLabel?.isBordered = false
             cell.repliedLabel?.drawsBackground = false
             cell.addSubview(cell.repliedLabel!)
@@ -886,7 +887,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.addSubview(cell.boostButton!)
             
             // ブーストされた数
-            cell.boostedLabel = NSTextField()
+            cell.boostedLabel = MyTextField()
             cell.boostedLabel?.isBordered = false
             cell.boostedLabel?.drawsBackground = false
             cell.addSubview(cell.boostedLabel!)
@@ -911,7 +912,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.addSubview(cell.favoriteButton!)
             
             // お気に入りされた数
-            cell.favoritedLabel = NSTextField()
+            cell.favoritedLabel = MyTextField()
             cell.favoritedLabel?.isBordered = false
             cell.favoritedLabel?.drawsBackground = false
             cell.addSubview(cell.favoritedLabel!)
@@ -928,7 +929,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             // 使用アプリケーション
             if let application = data.application, let name = application["name"] as? String {
-                cell.applicationLabel = NSTextField()
+                cell.applicationLabel = MyTextField()
                 cell.addSubview(cell.applicationLabel!)
                 cell.applicationLabel?.stringValue = name
                 cell.applicationLabel?.textColor = ThemeColor.dateColor
@@ -960,11 +961,20 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
-        ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { image in
+        let iconView = MyImageView()
+        cell.iconView = iconView
+        cell.iconView?.wantsLayer = true
+        cell.iconView?.layer?.cornerRadius = 5
+        cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
+        iconView.sd_setImage(with: URL(string: account?.avatar ?? account?.avatar_static ?? ""))
+        cell.addSubview(iconView)
+        /*
+        ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { [weak cell] image in
+            guard let cell = cell else { return }
             if cell.id == id {
                 cell.iconView?.removeFromSuperview()
-                let iconView: NSImageView
-                iconView = NSImageView()
+                let iconView: MyImageView
+                iconView = MyImageView()
                 
                 cell.iconView = iconView
                 cell.addSubview(iconView)
@@ -991,7 +1001,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                               width: iconSize,
                                               height: iconSize)
             }
-        }
+        }*/
         
         cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: {
             if cell.id == id {
@@ -1016,7 +1026,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             if isDetailTimeline && row == selectedRow { // 拡大表示
                 cell.dateLabel.isHidden = true
-                cell.detailDateLabel = NSTextField()
+                cell.detailDateLabel = MyTextField()
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
                 dateFormatter.timeStyle = .medium
@@ -1043,7 +1053,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             for (index, media) in mediaData.enumerated() {
                 func addImageView(withPlayButton: Bool) {
-                    let imageView = NSImageView()
+                    let imageView = MyImageView()
                     
                     imageView.wantsLayer = true
                     imageView.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.3).cgColor
@@ -1053,12 +1063,17 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     imageView.imageScaling = .scaleProportionallyUpOrDown
                     
                     // 画像読み込み
+                    imageView.sd_setImage(with: URL(string: media.preview_url ?? ""))
+                    /*
                     let isPreview = !(isDetailTimeline && row == selectedRow)
-                    ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { image in
+                    ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image in
+                        guard let cell = cell else { return }
+                        guard let imageView = imageView else { return }
                         imageView.image = image
+                        imageView.animates = false
                         imageView.layer?.backgroundColor = nil
                         cell.needsLayout = true
-                    }
+                    }*/
                     cell.imageViews.append(imageView)
                     
                     let imageParentView = NSView()
@@ -1085,7 +1100,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     
                     if withPlayButton {
                         // 再生の絵文字を表示
-                        let triangleView = NSTextField()
+                        let triangleView = MyTextField()
                         triangleView.stringValue = "▶️"
                         triangleView.font = NSFont.systemFont(ofSize: 24)
                         triangleView.sizeToFit()
@@ -1101,7 +1116,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     addImageView(withPlayButton: false)
                     
                     // リンク先のファイル名を表示
-                    let label = NSTextField()
+                    let label = MyTextField()
                     label.stringValue = String((media.remote_url ?? "").split(separator: "/").last ?? "")
                     //label.textAlignment = .center
                     //label.numberOfLines = 0
@@ -1118,7 +1133,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         addImageView(withPlayButton: false)
                         
                         // 動画読み込み
-                        MovieCache.movie(urlStr: media.url) { player, queuePlayer, looper in
+                        MovieCache.movie(urlStr: media.url) { [weak cell] player, queuePlayer, looper in
+                            guard let cell = cell else { return }
                             if let player = player {
                                 // レイヤーの追加
                                 let playerLayer = AVPlayerLayer(player: player)
@@ -1172,7 +1188,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         // 長すぎて省略している場合
         if isContinue {
-            cell.continueView = NSTextField()
+            cell.continueView = MyTextField()
             cell.continueView?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
             cell.continueView?.stringValue = "▼"
             cell.continueView?.textColor = ThemeColor.nameColor
@@ -1183,7 +1199,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         // ブーストの場合
         if let reblog_acct = data.reblog_acct {
             let account = accountList[reblog_acct]
-            cell.boostView = NSTextField()
+            cell.boostView = MyTextField()
             cell.boostView?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
             cell.boostView?.textColor = ThemeColor.dateColor
             var username = account?.display_name ?? ""
@@ -1211,7 +1227,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         // DMの場合
         if data.visibility == "direct" {
-            cell.boostView = NSTextField()
+            cell.boostView = MyTextField()
             cell.boostView?.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
             cell.boostView?.textColor = NSColor.red
             cell.boostView?.stringValue = I18n.get("THIS_TOOT_IS_DIRECT_MESSAGE")
@@ -1301,6 +1317,13 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 if cell.superview == nil {
                     TimeLineViewModel.recycleList.append(cell)
                     TimeLineViewModel.usingList.remove(at: index)
+                    
+                    if TimeLineViewModel.recycleList.count > 10 {
+                        for _ in 0..<TimeLineViewModel.recycleList.count - 10 {
+                            let cell = TimeLineViewModel.recycleList.popLast()
+                            cell?.prepareForReuse()
+                        }
+                    }
                 }
             }
             TimeLineViewModel.timeDate = Date()
