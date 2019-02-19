@@ -33,7 +33,7 @@ final class MainWindow: NSWindow {
         
         let window = MainWindow(contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
                                     styleMask: NSWindow.StyleMask.closable,
-                                    backing: NSWindow.BackingStoreType.nonretained,
+                                    backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)
         window.styleMask.insert(NSWindow.StyleMask.titled)
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)

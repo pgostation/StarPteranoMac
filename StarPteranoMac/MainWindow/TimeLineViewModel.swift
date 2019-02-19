@@ -9,7 +9,6 @@
 import Cocoa
 import APNGKit
 import AVFoundation
-import SDWebImage
 
 final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
     private var list: [AnalyzeJson.ContentData] = []
@@ -830,7 +829,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if self.selectedRow == row {
                 self.setCellColor(cell: cell)
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak cell] in
+                guard let cell = cell else { return }
                 self.setCellColor(cell: cell)
                 
                 for subview in tableView.subviews {
@@ -966,9 +966,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         cell.iconView?.wantsLayer = true
         cell.iconView?.layer?.cornerRadius = 5
         cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
-        iconView.sd_setImage(with: URL(string: account?.avatar ?? account?.avatar_static ?? ""))
-        cell.addSubview(iconView)
-        /*
         ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { [weak cell] image in
             guard let cell = cell else { return }
             if cell.id == id {
@@ -1001,7 +998,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                               width: iconSize,
                                               height: iconSize)
             }
-        }*/
+        }
         
         cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: {
             if cell.id == id {
@@ -1063,8 +1060,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     imageView.imageScaling = .scaleProportionallyUpOrDown
                     
                     // 画像読み込み
-                    imageView.sd_setImage(with: URL(string: media.preview_url ?? ""))
-                    /*
                     let isPreview = !(isDetailTimeline && row == selectedRow)
                     ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image in
                         guard let cell = cell else { return }
@@ -1073,7 +1068,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         imageView.animates = false
                         imageView.layer?.backgroundColor = nil
                         cell.needsLayout = true
-                    }*/
+                    }
                     cell.imageViews.append(imageView)
                     
                     let imageParentView = NSView()
@@ -1308,11 +1303,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     // セルを使い回す
-    private static var usingList: [TimeLineViewCell] = []
-    private static var recycleList: [TimeLineViewCell] = []
+    //private static var usingList: [TimeLineViewCell] = []
+    //private static var recycleList: [TimeLineViewCell] = []
     private static var timeDate = Date()
     private func getCell(view: TimeLineView, height: CGFloat) -> TimeLineViewCell {
-        if Date().timeIntervalSince(TimeLineViewModel.timeDate) >= 1 {
+        /*if Date().timeIntervalSince(TimeLineViewModel.timeDate) >= 1 {
             for (index, cell) in TimeLineViewModel.usingList.enumerated().reversed() {
                 if cell.superview == nil {
                     TimeLineViewModel.recycleList.append(cell)
@@ -1327,17 +1322,17 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 }
             }
             TimeLineViewModel.timeDate = Date()
-        }
+        }*/
         
         let cell: TimeLineViewCell
-        if let tmpCell = TimeLineViewModel.recycleList.popLast() {
-            tmpCell.prepareForReuse()
-            cell = tmpCell
-        } else {
+        //if let tmpCell = TimeLineViewModel.recycleList.popLast() {
+        //    tmpCell.prepareForReuse()
+        //    cell = tmpCell
+        //} else {
             cell = TimeLineViewCell()
-        }
+        //}
         cell.tableView = view
-        TimeLineViewModel.usingList.append(cell)
+        //TimeLineViewModel.usingList.append(cell)
         
         if SettingsData.isMiniView == .superMini {
             cell.nameLabel.isHidden = true

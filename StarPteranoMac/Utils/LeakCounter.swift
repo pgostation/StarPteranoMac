@@ -17,7 +17,7 @@ final class LeakCounter {
     static func add(_ str: String) {
         dict[str] = (dict[str] ?? 0) + 1
         
-        if dict[str]! > 500 && alerted[str] != true {
+        if dict[str]! > 200 && alerted[str] != true {
             print("#### \(str).count = \(dict[str]!)")
             
             print("#### dict = \(dict)")

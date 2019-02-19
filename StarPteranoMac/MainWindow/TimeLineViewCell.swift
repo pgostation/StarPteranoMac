@@ -139,6 +139,12 @@ final class TimeLineViewCell: NSView {
         LeakCounter.sub("TimeLineViewCell")
     }
     
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+        
+        self.prepareForReuse()
+    }
+    
     // 再利用前に呼ばれる
     override func prepareForReuse() {
         self.id = ""
@@ -190,13 +196,25 @@ final class TimeLineViewCell: NSView {
         self.looper = nil
         if self.replyButton != nil {
             self.replyButton?.removeFromSuperview()
+            self.replyButton?.target = nil
+            self.replyButton = nil
             self.repliedLabel?.removeFromSuperview()
+            self.repliedLabel = nil
             self.boostButton?.removeFromSuperview()
+            self.boostButton?.target = nil
+            self.boostButton = nil
             self.boostedLabel?.removeFromSuperview()
+            self.boostedLabel = nil
             self.favoriteButton?.removeFromSuperview()
+            self.favoriteButton?.target = nil
+            self.favoriteButton = nil
             self.favoritedLabel?.removeFromSuperview()
+            self.favoritedLabel = nil
             self.detailButton?.removeFromSuperview()
+            self.detailButton?.target = nil
+            self.detailButton = nil
             self.applicationLabel?.removeFromSuperview()
+            self.applicationLabel = nil
         }
         self.iconView?.removeFromSuperview()
         self.iconView?.image = nil

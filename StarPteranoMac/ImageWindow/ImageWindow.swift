@@ -12,7 +12,7 @@ final class ImageWindow: NSPanel {
     init(contentViewController: NSViewController) {
         super.init(contentRect: contentViewController.view.frame,
                    styleMask: NSWindow.StyleMask.closable,
-                   backing: NSWindow.BackingStoreType.retained,
+                   backing: NSWindow.BackingStoreType.buffered,
                    defer: false)
         
         self.contentViewController = contentViewController
