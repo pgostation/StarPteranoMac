@@ -252,3 +252,30 @@ final class APNGImageCache {
         oldMemCache = [:]
     }
 }
+
+// APNGじゃないファイルを判定
+final class NormalPNGFileList {
+    private static let userDefault = UserDefaults(suiteName: "NormalPNGFileList")
+    
+    static func add(urlStr: String?) {
+        guard let urlStr = urlStr else { return }
+        if userDefault?.bool(forKey: urlStr) == true {
+            return
+        }
+        
+        if let dict = userDefault?.dictionaryRepresentation() {
+            if dict.count > 1000 {
+                for key in dict.keys {
+                    userDefault?.removeObject(forKey: key)
+                }
+            }
+        }
+        
+        userDefault?.set(true, forKey: urlStr)
+    }
+    
+    static func isNormal(urlStr: String?) -> Bool {
+        guard let urlStr = urlStr else { return true }
+        return userDefault?.bool(forKey: urlStr) == true
+    }
+}

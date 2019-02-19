@@ -265,59 +265,51 @@ final class DecodeToot {
                     }
                     
                     // カスタム絵文字のアニメーション
-                    /*
-                    if let textField = textField {
+                    if let textField = textField, !NormalPNGFileList.isNormal(urlStr: emoji["url"] as? String) {
                         let attributedText = textField.attributedStringValue
                         let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: NSTextStorage(attributedString: attributedText))
                         
                         for data in list {
-                            // https://stackoverflow.com/questions/34647916/find-rect-position-of-words-in-nstextfield
-                            guard let textFieldCell: NSCell = textField.cell, let textFieldCellBounds = textFieldCell.controlView?.bounds else {
-                                return
-                            }
-                            let textBounds: NSRect = textFieldCell.titleRect(forBounds: textFieldCellBounds)
-                            let textContainer: NSTextContainer = NSTextContainer()
-                            let layoutManager: NSLayoutManager = NSLayoutManager()
-                            let textStorage: NSTextStorage = NSTextStorage()
-                            
-                            layoutManager.addTextContainer(textContainer)
-                            textStorage.addLayoutManager(layoutManager)
-                            
-                            layoutManager.typesetterBehavior = NSLayoutManager.TypesetterBehavior.behavior_10_2_WithCompatibility
-                            
-                            textContainer.containerSize = textBounds.size;
-                            textStorage.beginEditing()
-                            textStorage.setAttributedString(textFieldCell.attributedStringValue)
-                            textStorage.endEditing()
-                            
-                            let rangeCharacters = data.0
-                            
-                            let rect = layoutManager.boundingRect(forGlyphRange: rangeCharacters, in: textContainer)
-                            
                             for emoji in emojis {
                                 if emoji["shortcode"] as? String == data.1 {
-                                    APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
-                                        if image.frameCount <= 1 { return }
-                                        
-                                        if textField.superview != nil {
-                                            let apngView = APNGImageView(image: image)
-                                            //apngView.tag = 5555
-                                            apngView.autoStartAnimation = true
-                                            apngView.wantsLayer = true
-                                            apngView.layer?.backgroundColor = textField.layer?.backgroundColor
-                                            let size = min(rect.size.width, rect.size.height, 15)
-                                            apngView.frame = CGRect(x: rect.origin.x,
-                                                                    y: rect.origin.y + 3,
-                                                                    width: size,
-                                                                    height: size)
-                                            textField.addSubview(apngView)
+                                    let urlStr = emoji["url"] as? String
+                                    APNGImageCache.image(urlStr: urlStr) { image in
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                            if image.frameCount <= 1 {
+                                                NormalPNGFileList.add(urlStr: urlStr)
+                                                return
+                                            }
+                                            
+                                            let rect: CGRect
+                                            do {
+                                                let rangeCharacters = data.0
+                                                
+                                                let tmpLabel = NSTextField()
+                                                tmpLabel.font = tmpLabel.font
+                                                
+                                                let prevString = attributedText.attributedSubstring(from: NSRange.init(location: 0, length: max(0, rangeCharacters.location - 1)))
+                                                tmpLabel.attributedStringValue = prevString
+                                                tmpLabel.sizeToFit()
+                                                
+                                                rect = CGRect(x: tmpLabel.frame.maxX + 5, y: 0, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
+                                            }
+                                            
+                                            if textField.superview != nil {
+                                                let apngView = APNGImageView(image: image)
+                                                //apngView.tag = 5555
+                                                apngView.autoStartAnimation = true
+                                                apngView.wantsLayer = true
+                                                apngView.layer?.backgroundColor = textField.layer?.backgroundColor
+                                                apngView.frame = rect
+                                                textField.addSubview(apngView)
+                                            }
                                         }
                                     }
                                     break
                                 }
                             }
                         }
-                    } */
+                    }
                 }
                 if attachment.image == nil {
                     execCallback = true
