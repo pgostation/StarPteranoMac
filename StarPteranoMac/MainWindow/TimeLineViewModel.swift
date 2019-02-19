@@ -1534,9 +1534,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         override func mouseDown(with event: NSEvent) {
             guard let cell = self.superview as? TimeLineViewCell else { return }
             
-            if let tableView = cell.tableView, let indexPath = cell.indexPath {
+            if let tableView = cell.tableView, let indexPath = cell.indexPath, tableView.model.selectedRow != indexPath {
                 // セル選択時の処理を実行
                 tableView.model.selectRow(timelineView: tableView, row: indexPath)
+            } else {
+                super.mouseDown(with: event)
             }
         }
     }
