@@ -432,9 +432,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     // メッセージのビューとデータを返す
-    private var cacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
-    private var oldCacheDict: [String: (NSView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
-    private func getMessageViewAndData(tableView: NSTableView, index: Int, row: Int, add: Bool, callback: (()->Void)?) -> (NSView, AnalyzeJson.ContentData, Bool, Bool) {
+    private var cacheDict: [String: (MyTextView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
+    private var oldCacheDict: [String: (MyTextView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
+    private func getMessageViewAndData(tableView: NSTableView, index: Int, row: Int, add: Bool, callback: (()->Void)?) -> (MyTextView, AnalyzeJson.ContentData, Bool, Bool) {
         let data = list[index]
         
         if data.emojis == nil, let id = data.id, let cache = self.cacheDict[id] ?? self.oldCacheDict[id] {
@@ -684,43 +684,62 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             return cell
         }
         
-        /*
-         // カスタム絵文字のAPNGアニメーション対応
-         if SettingsData.useAnimation, let emojis = data.emojis, emojis.count > 0 {
-         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-         guard let messageView = cell?.messageView as? NSTextView else { return }
-         
-         guard let attributedText = messageView.textStorage?.attributedSubstring(from: NSMakeRange(0, messageView.textStorage?.length ?? 0)) else { return }
-         let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: messageView.textStorage!)
-         for data in list {
-         let beginning = messageView.beginningOfDocument
-         guard let start = messageView.position(from: beginning, offset: data.0.location) else { continue }
-         guard let end = messageView.position(from: start, offset: data.0.length) else { continue }
-         guard let textRange = messageView.textRange(from: start, to: end) else { continue }
-         let position = messageView.firstRect(for: textRange)
-         if position.origin.x == CGFloat.infinity { continue }
-         
-         for emoji in emojis {
-         if emoji["shortcode"] as? String == data.1 {
-         APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
-         if image.frameCount <= 1 { return }
-         let apngView = APNGImageView(image: image)
-         //apngView.tag = 5555
-         apngView.autoStartAnimation = true
-         //apngView.backgroundColor = ThemeColor.cellBgColor
-         let size = min(position.size.width, position.size.height)
-         apngView.frame = CGRect(x: position.origin.x,
-         y: position.origin.y + 3,
-         width: size,
-         height: size)
-         messageView.addSubview(apngView)
-         }
-         break
-         }
-         }
-         }
-         }
-         }*/
+        // カスタム絵文字のAPNGアニメーション対応
+        if SettingsData.useAnimation, let emojis = data.emojis, emojis.count > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                guard let textField = cell?.messageView else { return }
+                
+                let attributedText = textField.attributedString()
+                let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: NSTextStorage(attributedString: attributedText))
+                
+                for data in list {
+                    // https://stackoverflow.com/questions/34647916/find-rect-position-of-words-in-nstextfield
+                    let textContainer: NSTextContainer = NSTextContainer()
+                    let layoutManager: NSLayoutManager = NSLayoutManager()
+                    let textStorage: NSTextStorage = NSTextStorage()
+                    
+                    layoutManager.addTextContainer(textContainer)
+                    textStorage.addLayoutManager(layoutManager)
+                    
+                    layoutManager.typesetterBehavior = NSLayoutManager.TypesetterBehavior.behavior_10_2_WithCompatibility
+                    
+                    textContainer.containerSize = textField.frame.size;
+                    textStorage.beginEditing()
+                    textStorage.setAttributedString(attributedText)
+                    textStorage.endEditing()
+                    
+                    let rangeCharacters = data.0
+                    
+                    var count: Int = 0
+                    let rects: NSRectArray = layoutManager.rectArray(forCharacterRange: rangeCharacters,
+                                                                     withinSelectedCharacterRange: rangeCharacters,
+                                                                     in: textContainer,
+                                                                     rectCount: &count)!
+                    
+                    let rect = rects[0]
+                    
+                    for emoji in emojis {
+                        if emoji["shortcode"] as? String == data.1 {
+                            APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
+                                if image.frameCount <= 1 { return }
+                                let apngView = APNGImageView(image: image)
+                                //apngView.tag = 5555
+                                apngView.autoStartAnimation = true
+                                apngView.wantsLayer = true
+                                apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+                                let size = min(rect.size.width, rect.size.height)
+                                apngView.frame = CGRect(x: rect.origin.x,
+                                                        y: rect.origin.y + 3,
+                                                        width: size,
+                                                        height: size)
+                                messageView.addSubview(apngView)
+                            }
+                            break
+                        }
+                    }
+                }
+            }
+        }
         
         let account = accountList[data.accountId]
         
@@ -742,7 +761,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         if cell.isMiniView != .normal && self.selectedRow != row {
             //(messageView as? NSTextField)?.numberOfLines = 1
-            (messageView as? NSTextView)?.sizeToFit()
+            messageView.sizeToFit()
         }
         
         cell.isFaved = (data.favourited == 1)
@@ -759,11 +778,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.spolerTextLabel = NSTextView()
             cell.spolerTextLabel?.textColor = ThemeColor.messageColor
             cell.spolerTextLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-            let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: {
+            let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: { [weak cell] in
+                guard let cell = cell else { return }
                 if cell.id == id {
                     let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: nil)
                     cell.spolerTextLabel?.textStorage?.append(attributedText)
-                    cell?.layout()
+                    cell.layout()
                 }
             })
             cell.spolerTextLabel?.textStorage?.append(attributedText)
@@ -1000,9 +1020,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
-        cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: {
+        cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, textField: cell.nameLabel, callback: { [weak cell] in
+            guard let cell = cell else { return }
             if cell.id == id {
-                cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, callback: nil)
+                cell.nameLabel.attributedStringValue = DecodeToot.decodeName(name: account?.display_name ?? "", emojis: account?.emojis, textField: cell.nameLabel, callback: nil)
                 cell.needsLayout = true
             }
         })
@@ -1202,7 +1223,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 username = account?.acct ?? ""
             }
             let name = String(format: I18n.get("BOOSTED_BY_%@"), username)
-            cell.boostView?.attributedStringValue = DecodeToot.decodeName(name: name, emojis: account?.emojis, callback: nil)
+            cell.boostView?.attributedStringValue = DecodeToot.decodeName(name: name, emojis: account?.emojis, textField: cell.boostView, callback: nil)
             cell.addSubview(cell.boostView!)
         }
         

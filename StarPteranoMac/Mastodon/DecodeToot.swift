@@ -9,6 +9,7 @@
 // トゥートのHTML文字列を解析して、リンクや絵文字付き文字列にする
 
 import Cocoa
+import APNGKit
 
 final class DecodeToot {
     // 自前でHTML解析
@@ -238,7 +239,7 @@ final class DecodeToot {
     }
     
     // 名前部分の絵文字解析
-    static func decodeName(name: String?, emojis: [[String: Any]]?, callback: (()->Void)?) -> NSMutableAttributedString {
+    static func decodeName(name: String?, emojis: [[String: Any]]?, textField: NSTextField? = nil, callback: (()->Void)?) -> NSMutableAttributedString {
         let text = name ?? ""
         
         let attributedText = NSMutableAttributedString(string: text)
@@ -262,6 +263,61 @@ final class DecodeToot {
                             attachment.bounds.size = CGSize(width: SettingsData.fontSize + 6, height: image.size.height / image.size.width * (SettingsData.fontSize + 6))
                         }
                     }
+                    
+                    // カスタム絵文字のアニメーション
+                    /*
+                    if let textField = textField {
+                        let attributedText = textField.attributedStringValue
+                        let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: NSTextStorage(attributedString: attributedText))
+                        
+                        for data in list {
+                            // https://stackoverflow.com/questions/34647916/find-rect-position-of-words-in-nstextfield
+                            guard let textFieldCell: NSCell = textField.cell, let textFieldCellBounds = textFieldCell.controlView?.bounds else {
+                                return
+                            }
+                            let textBounds: NSRect = textFieldCell.titleRect(forBounds: textFieldCellBounds)
+                            let textContainer: NSTextContainer = NSTextContainer()
+                            let layoutManager: NSLayoutManager = NSLayoutManager()
+                            let textStorage: NSTextStorage = NSTextStorage()
+                            
+                            layoutManager.addTextContainer(textContainer)
+                            textStorage.addLayoutManager(layoutManager)
+                            
+                            layoutManager.typesetterBehavior = NSLayoutManager.TypesetterBehavior.behavior_10_2_WithCompatibility
+                            
+                            textContainer.containerSize = textBounds.size;
+                            textStorage.beginEditing()
+                            textStorage.setAttributedString(textFieldCell.attributedStringValue)
+                            textStorage.endEditing()
+                            
+                            let rangeCharacters = data.0
+                            
+                            let rect = layoutManager.boundingRect(forGlyphRange: rangeCharacters, in: textContainer)
+                            
+                            for emoji in emojis {
+                                if emoji["shortcode"] as? String == data.1 {
+                                    APNGImageCache.image(urlStr: emoji["url"] as? String) { image in
+                                        if image.frameCount <= 1 { return }
+                                        
+                                        if textField.superview != nil {
+                                            let apngView = APNGImageView(image: image)
+                                            //apngView.tag = 5555
+                                            apngView.autoStartAnimation = true
+                                            apngView.wantsLayer = true
+                                            apngView.layer?.backgroundColor = textField.layer?.backgroundColor
+                                            let size = min(rect.size.width, rect.size.height, 15)
+                                            apngView.frame = CGRect(x: rect.origin.x,
+                                                                    y: rect.origin.y + 3,
+                                                                    width: size,
+                                                                    height: size)
+                                            textField.addSubview(apngView)
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                    } */
                 }
                 if attachment.image == nil {
                     execCallback = true

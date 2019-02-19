@@ -23,7 +23,7 @@ final class TimeLineViewCell: NSView {
     let nameLabel = MyTextField()
     let idLabel = MyTextField()
     let dateLabel = MyTextField()
-    var messageView: NSView?
+    var messageView: TimeLineViewModel.MyTextView?
     
     //追加ビュー
     var continueView: NSTextField? // 長すぎるトゥートで、続きがあることを表示

@@ -75,8 +75,8 @@ final class ImageUtils {
     }
     
     // 上下反転する (何故か絵文字が上下反転するので)
-    static func flipped(_ image: NSImage) -> NSImage {
-        let flippedImage = NSImage(size: image.size)
+    static func flipped(_ image: NSImage) -> EmojiImage {
+        let flippedImage = EmojiImage(size: image.size)
         flippedImage.lockFocus()
         
         let transform = NSAffineTransform()
@@ -87,6 +87,9 @@ final class ImageUtils {
         let rect = NSRect(origin: NSZeroPoint, size: image.size)
         image.draw(at: NSZeroPoint, from: rect, operation: .sourceOver, fraction: 1.0)
         flippedImage.unlockFocus()
+        
+        flippedImage.shortcode = (image as? EmojiImage)?.shortcode
+        
         return flippedImage
     }
 }
