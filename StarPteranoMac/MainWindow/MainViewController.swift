@@ -18,7 +18,7 @@ final class MainViewController: NSViewController {
         
         MainViewController.instance = self
         
-        self.view = NSView()
+        self.view = MainView()
         self.view.needsLayout = true
         self.view.frame.size = MainWindow.window?.frame.size ?? NSSize(width: 0, height: 0)
         
@@ -146,6 +146,27 @@ final class MainViewController: NSViewController {
     // テキスト入力フィールドからフォーカスを外す
     func quickResignFirstResponder() {
         MainWindow.window?.makeFirstResponder(nil)
+    }
+}
+
+class MainView: NSView {
+    override func updateLayer() {
+        super.updateLayer()
+        
+        func isDarkmode() -> Bool {
+            if #available(OSX 10.14, *) {
+                let basicAppearance = self.effectiveAppearance.bestMatch(from: [NSAppearance.Name.aqua, NSAppearance.Name.darkAqua])
+                return basicAppearance == NSAppearance.Name.darkAqua
+            } else {
+                return false
+            }
+        }
+        let newDarkMode = isDarkmode()
+        if SettingsData.isDarkMode != newDarkMode {
+            SettingsData.isDarkMode = newDarkMode
+            
+            MainViewController.refreshAllTimeLineViews()
+        }
     }
 }
 

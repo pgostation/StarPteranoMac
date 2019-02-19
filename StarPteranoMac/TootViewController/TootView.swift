@@ -196,4 +196,8 @@ final class TootView: NSView {
             superview?.needsLayout = true
         }
     }
+    
+    override func updateLayer() {
+        refresh()
+    }
 }
