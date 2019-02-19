@@ -48,6 +48,8 @@
 		129F4350217F6F5D008E856D /* SettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434F217F6F5D008E856D /* SettingsData.swift */; };
 		12CFB10D221849560066CC42 /* LYTabView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; };
 		12CFB10E221849560066CC42 /* LYTabView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DF0D2C221C408A006A8C0B /* ImageUpload.swift */; };
+		12DF0D2F221C4345006A8C0B /* SettingsSelectProtectMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */; };
 		731E82750AECD71202C5532D /* Pods_StarPteranoMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43972D36367E7634349279A8 /* Pods_StarPteranoMac.framework */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +113,8 @@
 		129F434F217F6F5D008E856D /* SettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsData.swift; sourceTree = "<group>"; };
 		12CFB108221847B70066CC42 /* KPCTabsControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KPCTabsControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12CFB10C221849560066CC42 /* LYTabView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LYTabView.framework; path = Carthage/Build/Mac/LYTabView.framework; sourceTree = "<group>"; };
+		12DF0D2C221C408A006A8C0B /* ImageUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUpload.swift; sourceTree = "<group>"; };
+		12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSelectProtectMode.swift; sourceTree = "<group>"; };
 		43972D36367E7634349279A8 /* Pods_StarPteranoMac.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StarPteranoMac.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F08368C04FE0E65A158039A7 /* Pods-StarPteranoMac.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +138,7 @@
 				128751BE2184943300BC8828 /* TootViewController.swift */,
 				128751D02185445A00BC8828 /* TootView.swift */,
 				128751D22185497600BC8828 /* ImageCheckView.swift */,
+				12DF0D2C221C408A006A8C0B /* ImageUpload.swift */,
 			);
 			path = TootViewController;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 				129F4344217F4F18008E856D /* SettingsWindow.swift */,
 				1291FC452181FD8B009B8788 /* SettingsViewController.swift */,
 				1291FC4721834628009B8788 /* AccountSettingsViewController.swift */,
+				12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */,
 			);
 			path = SettingsWindow;
 			sourceTree = "<group>";
@@ -431,6 +437,7 @@
 				12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */,
 				128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */,
 				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
+				12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
@@ -443,6 +450,7 @@
 				128751CD2184BD5C00BC8828 /* ImageViewController.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
 				128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */,
+				12DF0D2F221C4345006A8C0B /* SettingsSelectProtectMode.swift in Sources */,
 				128751B62184817000BC8828 /* TimeLineView.swift in Sources */,
 				128751BA2184830200BC8828 /* ThemeColor.swift in Sources */,
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,

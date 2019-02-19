@@ -1543,7 +1543,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         return mentionContents
     }
     
-    final class MyTextView: NSTextView {
+    class MyTextView: NSTextView {
         // NSTextViewのリンク以外タップ時の処理
         override func mouseDown(with event: NSEvent) {
             guard let cell = self.superview as? TimeLineViewCell else { return }

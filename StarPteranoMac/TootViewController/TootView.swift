@@ -14,15 +14,17 @@ final class TootView: NSView {
     static var savedSpoilerText: String?
     static var savedImages: [URL] = []
     static var inReplyToId: String? = nil
+    static var scheduledDate: Date?
     
     //----
     
     var protectMode = SettingsData.protectMode
     
     // トゥート
-    let spoilerTextField = MyTextView()
-    let textField = MyTextView()
+    let spoilerTextField = TootTextView()
+    let textField = TootTextView()
     let textCountLabel = MyTextField()
+    weak var target: TootViewController?
     
     // 入力バー
     let inputBar = NSView()
@@ -189,7 +191,7 @@ final class TootView: NSView {
                                       height: 25)
     }
     
-    final class MyTextView: NSTextView {
+    class MyTextView: NSTextView {
         override func layout() {
             super.layout()
             
@@ -199,5 +201,15 @@ final class TootView: NSView {
     
     override func updateLayer() {
         refresh()
+    }
+    
+    class TootTextView: MyTextView {
+        override func keyDown(with event: NSEvent) {
+            if event.keyCode == 52 && event.modifierFlags.contains(.command) { // cmd + return
+                (self.superview as? TootView)?.target?.tootAction()
+                return
+            }
+            super.keyDown(with: event)
+        }
     }
 }

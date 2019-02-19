@@ -162,6 +162,10 @@ final class Menu: NSObject, NSMenuDelegate {
                 let menuItem1 = NSMenuItem(title: I18n.get("New Toot"), action: #selector(doTootMenu(_:)), keyEquivalent: "n")
                 menuItem1.target = menuTarget
                 tootMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Toot"), action: #selector(doTootMenu(_:)), keyEquivalent: "\n")
+                menuItem2.target = menuTarget
+                tootMenu.addItem(menuItem2)
             }
             
             tootMenu.addItem(NSMenuItem.separator())
@@ -266,7 +270,11 @@ final class Menu: NSObject, NSMenuDelegate {
     
     @objc func doViewMenu(_ item: NSMenuItem) {
         if item.title == I18n.get("Mini View") {
-            SettingsData.isMiniView = .superMini
+            if SettingsData.isMiniView == .superMini {
+                SettingsData.isMiniView = .normal
+            } else {
+                SettingsData.isMiniView = .superMini
+            }
             MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Compact View") {
@@ -293,6 +301,14 @@ final class Menu: NSObject, NSMenuDelegate {
     
     @objc func doTootMenu(_ item: NSMenuItem) {
         if item.title == I18n.get("New Toot") {
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField.becomeFirstResponder()
+            }
+        }
+        if item.title == I18n.get("Toot") {
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                (tlVC.parent as? SubViewController)?.tootVC.tootAction()
+            }
         }
     }
     
