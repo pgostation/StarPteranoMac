@@ -15,7 +15,22 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     private var accountList: [String: AnalyzeJson.AccountData] = [:]
     private var accountIdDict: [String: String] = [:]
     var showAutoPagerizeCell = true // 過去遡り用セルを表示するかどうか
-    var selectedRow: Int? = nil
+    private weak var tableView: TimeLineView?
+    private var _selectedRow: Int?
+    var selectedRow: Int? {
+        get {
+            return _selectedRow
+        }
+        set {
+            if let newValue = newValue {
+                if _selectedRow != newValue, let tableView = self.tableView {
+                    _selectedRow = newValue
+                    self.selectRow(timelineView: tableView, row: newValue)
+                }
+            }
+            _selectedRow = newValue
+        }
+    }
     private var selectedAccountId: String?
     private var inReplyToTootId: String?
     private var inReplyToAccountId: String?
@@ -711,10 +726,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     let rangeCharacters = data.0
                     
                     var count: Int = 0
-                    let rects: NSRectArray = layoutManager.rectArray(forCharacterRange: rangeCharacters,
+                    guard let rects: NSRectArray = layoutManager.rectArray(forCharacterRange: rangeCharacters,
                                                                      withinSelectedCharacterRange: rangeCharacters,
                                                                      in: textContainer,
-                                                                     rectCount: &count)!
+                                                                     rectCount: &count) else { return }
                     
                     let rect = rects[0]
                     
@@ -1213,6 +1228,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.continueView?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
             cell.continueView?.stringValue = "▼"
             cell.continueView?.textColor = ThemeColor.nameColor
+            cell.continueView?.alignment = .center
+            cell.continueView?.isBezeled = false
+            cell.continueView?.drawsBackground = false
             //cell.continueView?.textAlignment = .center
             cell.addSubview(cell.continueView!)
         }
@@ -1375,11 +1393,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         guard let timelineView = notification.object as? TimeLineView else { return }
-        if let row = timelineView.model.selectedRow {
-            timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
-            
-            selectRow(timelineView: timelineView, row: row)
-        }
+        
+        let row = timelineView.selectedRow // timelineView.model.selectedRow ?? 0
+        //timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+        
+        selectRow(timelineView: timelineView, row: row)
     }
     
     func selectRow(timelineView: TimeLineView, row: Int) {

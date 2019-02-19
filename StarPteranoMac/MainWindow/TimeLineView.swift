@@ -575,9 +575,16 @@ final class TimeLineView: NSTableView {
             } else {
                 model.selectRow(timelineView: self, row: 0)
             }
-            model.selectRow(timelineView: self, row: model.selectedRow!)
+            model.selectRow(timelineView: self, row: model.selectedRow ?? 0)
         default:
             break
         }
+    }
+    
+    override func becomeFirstResponder() -> Bool {
+        self.selectedDate = Date()
+        
+        self.resignFirstResponder()
+        return false
     }
 }

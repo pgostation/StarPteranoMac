@@ -741,7 +741,7 @@ final class TimeLineViewCell: NSView {
         }
         
         self.continueView?.frame = CGRect(x: screenBounds.width / 2 - 40 / 2,
-                                          y: ((self.messageView?.frame.minY ?? 0) - 6) - 18,
+                                          y: ((self.messageView?.frame.minY ?? 0) - 6) - 4,
                                           width: 40,
                                           height: 18)
         
