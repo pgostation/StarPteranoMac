@@ -748,7 +748,7 @@ final class TimeLineViewCell: NSView {
         let imageHeight = isDetailMode ? (self.frame.width - 80 + 10) : 90
         let imagesOffset = CGFloat(self.imageViews.count) * imageHeight
         self.boostView?.frame = CGRect(x: nameLeft - 12,
-                                       y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 24,
+                                       y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 36,
                                        width: screenBounds.width - 56,
                                        height: 24)
         

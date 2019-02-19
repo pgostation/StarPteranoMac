@@ -89,6 +89,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     
     // トゥートの追加
     func change(tableView: TimeLineView, addList: [AnalyzeJson.ContentData], accountList: [String: AnalyzeJson.AccountData], isStreaming: Bool = false, isNewRefresh: Bool = false, isBoosted: Bool = false) {
+        self.tableView = tableView
         
         // ミュートフラグの立っているものは削除しておく
         var addList2 = addList
@@ -1241,6 +1242,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.boostView = MyTextField()
             cell.boostView?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
             cell.boostView?.textColor = ThemeColor.dateColor
+            cell.boostView?.isBezeled = false
             var username = account?.display_name ?? ""
             if username == "" {
                 username = account?.acct ?? ""
@@ -1255,7 +1257,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.showMoreButton = NSButton()
             cell.showMoreButton?.title = I18n.get("BUTTON_SHOW_MORE")
             //cell.showMoreButton?.setTitleColor(ThemeColor.nameColor, for: .normal)
+            cell.showMoreButton?.target = cell
             cell.showMoreButton?.action = #selector(cell.showMoreAction)
+            cell.showMoreButton?.isBordered = false
             cell.addSubview(cell.showMoreButton!)
             
             if let id = data.id, id != "" && TimeLineViewCell.showMoreList.contains(id) {
@@ -1503,7 +1507,17 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             timelineView.reloadData()
             
-            timelineView.scrollRowToVisible(row)
+            if let row = self.selectedRow {
+                var rect = timelineView.rect(ofRow: row)
+                if let parentHeight = self.tableView?.superview?.frame.height {
+                    let remain = parentHeight - rect.height
+                    rect.size.height += remain
+                    rect.origin.y = (rect.origin.y - remain / 2)
+                }
+                if !timelineView.visibleRect.contains(timelineView.rect(ofRow: row)) {
+                    timelineView.scrollToVisible(rect)
+                }
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 if let row = self.selectedRow {
