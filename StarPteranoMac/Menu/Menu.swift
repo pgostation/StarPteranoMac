@@ -306,8 +306,14 @@ final class Menu: NSObject, NSMenuDelegate {
             }
         }
         if item.title == I18n.get("Toot") {
-            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
-                (tlVC.parent as? SubViewController)?.tootVC.tootAction()
+            guard let activeField = NSApplication.shared.keyWindow?.firstResponder as? NSTextView else { return }
+            if let tootView = activeField.superview as? TootView {
+                for subVC in MainViewController.instance?.subVCList ?? [] {
+                    if tootView.superview == subVC.view {
+                        subVC.tootVC.tootAction()
+                        break
+                    }
+                }
             }
         }
     }

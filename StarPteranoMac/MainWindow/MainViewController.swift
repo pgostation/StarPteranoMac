@@ -10,7 +10,7 @@ import Cocoa
 
 final class MainViewController: NSViewController {
     static weak var instance: MainViewController?
-    private var subVCList: [SubViewController] = []
+    var subVCList: [SubViewController] = []
     private var barList: [NSView] = []
     
     init() {
