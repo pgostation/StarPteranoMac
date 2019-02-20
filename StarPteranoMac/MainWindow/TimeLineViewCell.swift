@@ -826,7 +826,7 @@ final class TimeLineViewCell: NSView {
         }
         
         if self.replyButton != nil {
-            var top: CGFloat = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
+            var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
             
             if let cardView = self.cardView, !cardView.isHidden {
                 cardView.frame.origin.y = top - 200
