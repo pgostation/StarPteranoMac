@@ -7,7 +7,6 @@
 //
 
 import Cocoa
-import APNGKit
 import AVFoundation
 import AVKit
 
@@ -150,10 +149,6 @@ final class TimeLineViewCell: NSView {
         self.id = ""
         self.tableView = nil
         self.showDetail = false
-        while let apngView = self.messageView?.viewWithTag(5555) as? APNGImageView {
-            apngView.stopAnimating()
-            apngView.removeFromSuperview()
-        }
         self.messageView?.removeFromSuperview()
         self.messageView = nil
         self.continueView?.removeFromSuperview()

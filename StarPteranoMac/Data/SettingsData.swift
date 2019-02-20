@@ -9,7 +9,7 @@
 import Cocoa
 
 final class SettingsData {
-    private static let defaults = UserDefaults(suiteName: "Settings")!
+    private static let defaults = UserDefaults(suiteName: "StarPteranoMac_Settings")!
     
     private static var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -681,7 +681,7 @@ final class SettingsData {
     }
     
     // フォロー中リストデータに追加
-    private static let followingDefaults = UserDefaults(suiteName: "FollowingList")!
+    private static let followingDefaults = UserDefaults(suiteName: "StarPteranoMac_FollowingList")!
     static func addFollowingList(accessToken: String, id: String?) {
         guard let id = id else { return }
         

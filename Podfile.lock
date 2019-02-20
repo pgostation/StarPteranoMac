@@ -1,22 +1,5 @@
 PODS:
   - APNGKit (1.1.0)
-  - FirebaseAuth (5.3.0):
-    - FirebaseAuthInterop (~> 1.0)
-    - FirebaseCore (~> 5.2)
-    - GoogleUtilities/Environment (~> 5.2)
-    - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseAuthInterop (1.0.0)
-  - FirebaseCore (5.2.0):
-    - GoogleUtilities/Logger (~> 5.2)
-  - FirebaseDatabase (5.1.0):
-    - FirebaseAuthInterop (~> 1.0)
-    - FirebaseCore (~> 5.2)
-    - leveldb-library (~> 1.18)
-  - GoogleUtilities/Environment (5.3.7)
-  - GoogleUtilities/Logger (5.3.7):
-    - GoogleUtilities/Environment
-  - GTMSessionFetcher/Core (1.2.1)
-  - leveldb-library (1.20)
   - libwebp (0.6.1):
     - libwebp/core (= 0.6.1)
     - libwebp/dec (= 0.6.1)
@@ -47,63 +30,32 @@ PODS:
   - SDWebImage/WebP (4.4.5):
     - libwebp (~> 0.5)
     - SDWebImage/Core
+  - SDWebImageAPNGCoder (0.1.0):
+    - SDWebImage/Core (~> 4.2)
   - Starscream (3.0.6)
 
 DEPENDENCIES:
   - APNGKit
-  - FirebaseAuth (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
-  - FirebaseCore (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
-  - FirebaseDatabase (from `https://github.com/firebase/firebase-ios-sdk.git`, branch `master`)
   - SDWebImage
   - SDWebImage/WebP
+  - SDWebImageAPNGCoder
   - Starscream
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - APNGKit
-    - FirebaseAuthInterop
-    - GoogleUtilities
-    - GTMSessionFetcher
-    - leveldb-library
     - libwebp
     - SDWebImage
+    - SDWebImageAPNGCoder
     - Starscream
-
-EXTERNAL SOURCES:
-  FirebaseAuth:
-    :branch: master
-    :git: https://github.com/firebase/firebase-ios-sdk.git
-  FirebaseCore:
-    :branch: master
-    :git: https://github.com/firebase/firebase-ios-sdk.git
-  FirebaseDatabase:
-    :branch: master
-    :git: https://github.com/firebase/firebase-ios-sdk.git
-
-CHECKOUT OPTIONS:
-  FirebaseAuth:
-    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
-    :git: https://github.com/firebase/firebase-ios-sdk.git
-  FirebaseCore:
-    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
-    :git: https://github.com/firebase/firebase-ios-sdk.git
-  FirebaseDatabase:
-    :commit: 520ea859ec536a4c16c9024be27dce2ce2c157d3
-    :git: https://github.com/firebase/firebase-ios-sdk.git
 
 SPEC CHECKSUMS:
   APNGKit: 8fcf50c4004d6d01473707412d162e90d1fa599a
-  FirebaseAuth: c9b3ff063c223d2841d97240af547ce511bce19a
-  FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
-  FirebaseCore: ea2d1816723ef21492b8e9113303e1350db5e08c
-  FirebaseDatabase: 23acb0c53cd4d4070a427b60100b2e4aaa97c45d
-  GoogleUtilities: 111a012f4c3a29c9e7c954c082fafd6ee3c999c0
-  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
-  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   SDWebImage: ecc03494e973b93b80213649d32175f8d2d17d4d
+  SDWebImageAPNGCoder: 11a74266cc9893cfda660df70b120f9cb3758d51
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
 
-PODFILE CHECKSUM: 49263057ec2cbcdda44efcbb52f5c39ebcde0fba
+PODFILE CHECKSUM: 7fbf70bb134d1042fbc0a580d9ecd6b9475da232
 
 COCOAPODS: 1.6.0

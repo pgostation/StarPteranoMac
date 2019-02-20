@@ -7,8 +7,9 @@
 //
 
 import Cocoa
-import APNGKit
 import SDWebImage
+import SDWebImageAPNGCoder
+import APNGKit
 
 final class ImageCache {
     private static let scale = NSScreen.main?.backingScaleFactor ?? 1
@@ -44,10 +45,10 @@ final class ImageCache {
         // ストレージキャッシュにある場合
         let cacheDir: String
         if isTemp {
-            cacheDir = NSHomeDirectory() + "/Library/Caches/preview"
+            cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac/preview"
             try? fileManager.createDirectory(atPath: cacheDir, withIntermediateDirectories: true, attributes: nil)
         } else {
-            cacheDir = NSHomeDirectory() + "/Library/Caches"
+            cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac"
             try? fileManager.createDirectory(atPath: cacheDir, withIntermediateDirectories: true, attributes: nil)
         }
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
@@ -163,31 +164,24 @@ final class ImageCache {
 }
 
 final class APNGImageCache {
-    private static var memCache: [String: APNGImage] = [:]
-    private static var oldMemCache: [String: APNGImage] = [:]
-    private static var waitingDict: [String: [(APNGImage)->Void]] = [:]
+    private static var waitingDict: [String: [(APNGImage, URL)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "APNGImageCache")
     private static let imageGlobalQueue = DispatchQueue.main
+    private static let apngCoder = SDWebImageAPNGCoder.shared()
+    private static let manager = SDWebImageCodersManager.sharedInstance()
+    private static var firstCall = true
     
-    static func image(urlStr: String?, callback: @escaping (APNGImage)->Void) {
+    static func image(urlStr: String?, callback: @escaping (APNGImage, URL)->Void) {
         guard let urlStr = urlStr else { return }
         
-        // メモリキャッシュにある場合
-        if let image = memCache[urlStr] {
-            callback(image)
-            return
-        }
-        // 破棄候補のメモリキャッシュにある場合
-        if let image = oldMemCache[urlStr] {
-            memCache[urlStr] = image
-            oldMemCache.removeValue(forKey: urlStr)
-            callback(image)
-            return
+        if firstCall {
+            manager.addCoder(apngCoder)
+            firstCall = false
         }
         
         // ストレージキャッシュにある場合
-        let cacheDir = NSHomeDirectory() + "/Library/Caches"
+        let cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac"
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
             imageGlobalQueue.async {
@@ -195,14 +189,7 @@ final class APNGImageCache {
                 if let data = try? Data(contentsOf: url) {
                     if let image = APNGImage(data: data) {
                         DispatchQueue.main.async {
-                            memCache.updateValue(image, forKey: urlStr)
-                            callback(image)
-                            
-                            if memCache.count >= 40 { // メモリの使いすぎを防ぐ
-                                oldMemCache = memCache
-                                memCache = [:]
-                                APNGCache.defaultCache.clearMemoryCache()
-                            }
+                            callback(image, url)
                         }
                     }
                 }
@@ -223,39 +210,31 @@ final class APNGImageCache {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
                 if let image = APNGImage(data: data) {
-                    DispatchQueue.main.async {
-                        memCache.updateValue(image, forKey: urlStr)
-                        callback(image)
-                        
-                        for waitingCallback in waitingDict[urlStr] ?? [] {
-                            waitingCallback(image)
-                        }
-                        
-                        waitingDict.removeValue(forKey: urlStr)
-                        
-                        if memCache.count >= 40 { // メモリの使いすぎを防ぐ
-                            oldMemCache = memCache
-                            memCache = [:]
-                            APNGCache.defaultCache.clearMemoryCache()
-                        }
-                    }
-                    
                     // ストレージにキャッシュする
                     let fileUrl = URL(fileURLWithPath: filePath)
                     try? data.write(to: fileUrl)
+                    
+                    DispatchQueue.main.async {
+                        callback(image, fileUrl)
+                        
+                        for waitingCallback in waitingDict[urlStr] ?? [] {
+                            waitingCallback(image, fileUrl)
+                        }
+                        
+                        waitingDict.removeValue(forKey: urlStr)
+                    }
                 }
             }
         }
     }
     
     static func clear() {
-        oldMemCache = [:]
     }
 }
 
 // APNGじゃないファイルを判定
 final class NormalPNGFileList {
-    private static let userDefault = UserDefaults(suiteName: "NormalPNGFileList")
+    private static let userDefault = UserDefaults(suiteName: "StarPteranoMac_NormalPNGFileList")
     
     static func add(urlStr: String?) {
         guard let urlStr = urlStr else { return }

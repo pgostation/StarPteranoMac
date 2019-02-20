@@ -7,8 +7,8 @@
 //
 
 import Cocoa
-import APNGKit
 import AVFoundation
+import SDWebImage
 
 final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
     private var list: [AnalyzeJson.ContentData] = []
@@ -25,7 +25,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if let newValue = newValue {
                 if _selectedRow != newValue, let tableView = self.tableView {
                     _selectedRow = newValue
-                    self.selectRow(timelineView: tableView, row: newValue)
+                    self.selectRow(timelineView: tableView, row: newValue, notSelect: true)
                 }
             }
             _selectedRow = newValue
@@ -692,10 +692,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             let y = cell.isMiniView == .superMini ? -9 : cell.detailDateLabel?.frame.maxY ?? cell.spolerTextLabel?.frame.maxY ?? ((cell.isMiniView != .normal ? -9 : 5) + SettingsData.fontSize)
             messageView.frame.origin.y = y
         })
-        while let apngView = messageView.viewWithTag(5555) as? APNGImageView {
-            apngView.stopAnimating()
-            apngView.removeFromSuperview()
-        }
         
         if data.id == nil && (timelineView.type != .user && timelineView.type != .mentions) {
             // タイムライン途中読み込み用のセル
@@ -752,22 +748,22 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         if emoji["shortcode"] as? String == data.1 {
                             let urlStr = emoji["url"] as? String
                             if NormalPNGFileList.isNormal(urlStr: urlStr) { continue }
-                            APNGImageCache.image(urlStr: urlStr) { image in
+                            APNGImageCache.image(urlStr: urlStr) { (image, localUrl) in
                                 if image.frameCount <= 1 {
                                     NormalPNGFileList.add(urlStr: urlStr)
                                     return
                                 }
-                                let apngView = APNGImageView(image: image)
-                                //apngView.tag = 5555
-                                apngView.autoStartAnimation = true
-                                apngView.wantsLayer = true
-                                apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-                                let size = min(rect.size.width, rect.size.height)
-                                apngView.frame = CGRect(x: rect.origin.x,
-                                                        y: rect.origin.y + 3,
-                                                        width: size,
-                                                        height: size)
-                                messageView.addSubview(apngView)
+                                let apngView = NSImageView()
+                                apngView.sd_setImage(with: localUrl, completed: { (image, error, type, url) in
+                                    apngView.wantsLayer = true
+                                    apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+                                    let size = min(rect.size.width, rect.size.height)
+                                    apngView.frame = CGRect(x: rect.origin.x,
+                                                            y: rect.origin.y + 3,
+                                                            width: size,
+                                                            height: size)
+                                    messageView.addSubview(apngView)
+                                })
                             }
                             break
                         }
@@ -1418,10 +1414,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         selectRow(timelineView: timelineView, row: row)
     }
     
-    func selectRow(timelineView: TimeLineView, row: Int) {
+    func selectRow(timelineView: TimeLineView, row: Int, notSelect: Bool = false) {
         var index = row
         
-        timelineView.selectedDate = Date()
+        if !notSelect {
+            timelineView.selectedDate = Date()
+        }
         
         // 選択中のカラムの幅を広げる
         /*if timelineView.frame.width < 320 {

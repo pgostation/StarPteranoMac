@@ -10,6 +10,7 @@
 
 import Cocoa
 import APNGKit
+import SDWebImage
 
 final class DecodeToot {
     // 自前でHTML解析
@@ -273,7 +274,7 @@ final class DecodeToot {
                             for emoji in emojis {
                                 if emoji["shortcode"] as? String == data.1 {
                                     let urlStr = emoji["url"] as? String
-                                    APNGImageCache.image(urlStr: urlStr) { image in
+                                    APNGImageCache.image(urlStr: urlStr) { image, localUrl in
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                             if image.frameCount <= 1 {
                                                 NormalPNGFileList.add(urlStr: urlStr)
@@ -295,13 +296,14 @@ final class DecodeToot {
                                             }
                                             
                                             if textField.superview != nil {
-                                                let apngView = APNGImageView(image: image)
-                                                //apngView.tag = 5555
-                                                apngView.autoStartAnimation = true
-                                                apngView.wantsLayer = true
-                                                apngView.layer?.backgroundColor = textField.layer?.backgroundColor
-                                                apngView.frame = rect
-                                                textField.addSubview(apngView)
+                                                let apngView = NSImageView()
+                                                apngView.sd_setImage(with: localUrl, completed: { (_, _, _, _) in
+                                                    //apngView.tag = 5555
+                                                    apngView.wantsLayer = true
+                                                    apngView.layer?.backgroundColor = textField.layer?.backgroundColor
+                                                    apngView.frame = rect
+                                                    textField.addSubview(apngView)
+                                                })
                                             }
                                         }
                                     }
