@@ -277,7 +277,9 @@ final class AccountsView: NSScrollView {
         let accountList = SettingsData.accountList
         
         for view in accountViews {
-            view.removeFromSuperview()
+            DispatchQueue.main.async {
+                view.removeFromSuperview()
+            }
         }
         accountViews = []
         

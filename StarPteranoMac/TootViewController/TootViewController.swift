@@ -10,8 +10,8 @@ import Cocoa
 
 final class TootViewController: NSViewController, NSTextViewDelegate {
     private static var instances: [String: TootViewController] = [:]
-    private let hostName: String
-    private let accessToken: String
+    let hostName: String
+    let accessToken: String
     
     init(hostName: String, accessToken: String) {
         self.hostName = hostName
@@ -237,7 +237,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
     
     // 公開範囲を設定する
     @objc func protectAction() {
-        SettingsSelectProtectMode.showActionSheet { (mode) in
+        SettingsSelectProtectMode.showActionSheet(hostName: hostName, accessToken: accessToken) { (mode) in
             guard let view = self.view as? TootView else { return }
             
             view.protectMode = mode
