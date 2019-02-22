@@ -18,7 +18,6 @@ final class ImageCache {
     private static var waitingDict: [String: [(NSImage)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "ImageCache")
-    private static let imageGlobalQueue = DispatchQueue.global()
     private static let webpDecoder = SDWebImageWebPCoder()
     
     // 画像をキャッシュから取得する。なければネットに取りに行く
@@ -53,7 +52,7 @@ final class ImageCache {
         }
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
-            DispatchQueue.main.async {
+            imageQueue.async {
                 let url = URL(fileURLWithPath: filePath)
                 if let data = try? Data(contentsOf: url) {
                     if let image = EmojiImage(data: data) {
@@ -65,7 +64,9 @@ final class ImageCache {
                         }
                         smallImage.shortcode = shortcode
                         memCache.updateValue(smallImage, forKey: urlStr)
-                        callback(image)
+                        DispatchQueue.main.async {
+                            callback(image)
+                        }
                         
                         if memCache.count >= 120 { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
@@ -73,7 +74,9 @@ final class ImageCache {
                         }
                     } else if let image = webpDecoder.decodedImage(with: data) {
                         memCache.updateValue(image, forKey: urlStr)
-                        callback(image)
+                        DispatchQueue.main.async {
+                            callback(image)
+                        }
                         
                         if memCache.count >= 120 { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
@@ -167,7 +170,6 @@ final class APNGImageCache {
     private static var waitingDict: [String: [(APNGImage, URL)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "APNGImageCache")
-    private static let imageGlobalQueue = DispatchQueue.main
     private static let apngCoder = SDWebImageAPNGCoder.shared()
     private static let manager = SDWebImageCodersManager.sharedInstance()
     private static var firstCall = true
@@ -184,7 +186,7 @@ final class APNGImageCache {
         let cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac"
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
-            imageGlobalQueue.async {
+            imageQueue.async {
                 let url = URL(fileURLWithPath: filePath)
                 if let data = try? Data(contentsOf: url) {
                     if let image = APNGImage(data: data) {

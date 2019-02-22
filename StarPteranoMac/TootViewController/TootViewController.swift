@@ -271,6 +271,14 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
                 if let view = subVC.view.viewWithTag(3948) {
                     view.removeFromSuperview()
                 } else {
+                    // このビューの入力フィールドをファーストレスポンダにする
+                    if NSApplication.shared.keyWindow?.firstResponder == (self.view as? TootView)?.spoilerTextField {
+                        // なにもしない
+                    } else {
+                        NSApplication.shared.keyWindow?.makeFirstResponder((self.view as? TootView)?.textField)
+                    }
+                    
+                    // 絵文字キーボードを表示する
                     let emojiView = EmojiView(hostName: hostName, accessToken: accessToken)
                     subVC.view.addSubview(emojiView)
                     

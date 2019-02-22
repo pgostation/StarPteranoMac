@@ -8,15 +8,13 @@
 
 import Cocoa
 import SDWebImage
+import APNGKit
 
-final class EmojiView: NSView {
+final class EmojiView: NSView, NSTextFieldDelegate {
     private let hostName: String
     private let accessToken: String
     private let spaceButton = NSButton()
-    private let returnButton = NSButton()
-    private let deleteButton = NSButton()
-    private let searchButton = NSButton()
-    private let heightSlider = HeightSlider()
+    private let searchField = NSTextField()
     private var emojiScrollView: EmojiInputScrollView! = nil
     private let emojiScrollClipView = NSClipView()
     private let emojiScrollContentView = NSView()
@@ -34,22 +32,14 @@ final class EmojiView: NSView {
         self.emojiScrollView = EmojiInputScrollView(hostName: hostName, accessToken: accessToken, emojiScrollContentView: emojiScrollContentView)
         
         self.addSubview(spaceButton)
-        self.addSubview(returnButton)
-        self.addSubview(deleteButton)
-        self.addSubview(searchButton)
-        self.addSubview(heightSlider)
+        self.addSubview(searchField)
         self.addSubview(emojiScrollView)
         emojiScrollView.contentView = emojiScrollClipView
         emojiScrollClipView.documentView = emojiScrollContentView
         
         spaceButton.target = self
         spaceButton.action = #selector(spaceAction)
-        returnButton.target = self
-        returnButton.action = #selector(returnAction)
-        deleteButton.target = self
-        deleteButton.action = #selector(deleteAction)
-        searchButton.target = self
-        searchButton.action = #selector(searchAction)
+        searchField.delegate = self
         
         setProperties()
     }
@@ -69,23 +59,7 @@ final class EmojiView: NSView {
         //spaceButton.clipsToBounds = true
         spaceButton.layer?.cornerRadius = 10
         
-        returnButton.title = I18n.get("BUTTON_RETURNKEY")
-        //returnButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
-        //returnButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        //returnButton.backgroundColor = ThemeColor.opaqueButtonsBgColor
-        //returnButton.clipsToBounds = true
-        returnButton.layer?.cornerRadius = 10
-        
-        deleteButton.title = I18n.get("BUTTON_BACKKEY")
-        //deleteButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
-        //deleteButton.backgroundColor = ThemeColor.opaqueButtonsBgColor
-        //deleteButton.clipsToBounds = true
-        deleteButton.layer?.cornerRadius = 10
-        
-        searchButton.title = "🔍"
-        //searchButton.backgroundColor = ThemeColor.opaqueButtonsBgColor
-        //searchButton.clipsToBounds = true
-        searchButton.layer?.cornerRadius = 10
+        searchField.placeholderString = I18n.get("SEARCH_PLACEHOLDER")
     }
     
     @objc func spaceAction() {
@@ -126,17 +100,6 @@ final class EmojiView: NSView {
         textView.deleteBackward(nil)
     }
     
-    @objc func searchAction() {
-        Dialog.showWithTextInput(message: I18n.get("DIALOG_SEARCH_EMOJI"), okName: "OK", cancelName: "Cancel", defaultText: nil, callback: { textField, result in
-            if !result {
-                self.emojiScrollView.searchText = nil
-            } else {
-                self.emojiScrollView.searchText = textField.stringValue
-            }
-            self.emojiScrollContentView.needsLayout = true
-        })
-    }
-    
     // キャレット直前の文字を返す
     static func getCarretBeforeChar(textView: NSTextView) -> Character? {
         let currentRange = textView.selectedRange()
@@ -150,36 +113,26 @@ final class EmojiView: NSView {
         //
     }
     
+    func controlTextDidChange(_ obj: Notification) {
+        self.emojiScrollView.searchText = self.searchField.stringValue
+        self.emojiScrollView.needsLayout = true
+    }
+    
     override func layout() {
         self.spaceButton.frame = NSRect(x: 10,
-                                        y: self.frame.height - 42,
-                                        width: 70,
-                                        height: 40)
+                                        y: self.frame.height - 27,
+                                        width: 50,
+                                        height: 25)
         
-        self.returnButton.frame = NSRect(x: 85,
-                                         y: self.frame.height - 42,
-                                         width: 70,
-                                         height: 40)
-        
-        self.deleteButton.frame = NSRect(x: 160,
-                                         y: self.frame.height - 42,
-                                         width: 70,
-                                         height: 40)
-        
-        self.searchButton.frame = NSRect(x: 235,
-                                         y: self.frame.height - 42,
-                                         width: 40,
-                                         height: 40)
-        
-        self.heightSlider.frame = NSRect(x: self.frame.width - 35,
-                                         y: 1,
-                                         width: 35,
-                                         height: 40)
+        self.searchField.frame = NSRect(x: 70,
+                                        y: self.frame.height - 27,
+                                        width: 150,
+                                        height: 25)
         
         self.emojiScrollView.frame = NSRect(x: 0,
                                             y: 0,
                                             width: self.frame.width,
-                                            height: self.frame.height - 44)
+                                            height: self.frame.height - 30)
     }
 }
 
@@ -254,13 +207,25 @@ private final class EmojiInputScrollView: NSScrollView {
             // 静的イメージ
             ImageCache.image(urlStr: emoji.url, isTemp: false, isSmall: true, shortcode: emoji.short_code) { image in
                 button.image = image
-                button.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
+                button.isHidden = false
             }
             
             if SettingsData.useAnimation {
                 if let urlStr = emoji.url {
                     if !NormalPNGFileList.isNormal(urlStr: urlStr) {
-                        button.sd_setImage(with: URL(string: urlStr) )
+                        APNGImageCache.image(urlStr: urlStr) { (image, localUrl) in
+                            if image.frameCount <= 1 {
+                                NormalPNGFileList.add(urlStr: urlStr)
+                                return
+                            }
+                            let imageView = NSImageView()
+                            imageView.wantsLayer = true
+                            imageView.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+                            imageView.frame = button.bounds
+                            imageView.sd_setImage(with: localUrl, completed: { (_, _, _, _) in
+                                button.addSubview(imageView)
+                            })
+                        }
                     }
                 }
             }
@@ -316,9 +281,13 @@ private final class EmojiInputScrollView: NSScrollView {
         init(key: String) {
             self.key = key
             
-            super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+            let buttonSize: CGFloat = 22 + SettingsData.fontSize
+            super.init(frame: NSRect(x: 0, y: 0, width: buttonSize, height: buttonSize))
             
             self.isBordered = false
+            self.title = ""
+            self.isHidden = true
+            self.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -349,7 +318,10 @@ private final class EmojiInputScrollView: NSScrollView {
         let yCount = ceil(CGFloat(recentEmojiButtons?.count ?? 0) / xCount) + ceil(CGFloat(emojiButtons.count) / xCount) // ボタンの縦に並ぶ数
         let recentYCount = ceil(CGFloat(recentEmojiButtons?.count ?? 0) / xCount)
         let offset: CGFloat = (recentEmojiButtons != nil) ? 12 : 0
-        let viewHeight = (buttonSize + margin) * yCount + offset
+        var viewHeight = (buttonSize + margin) * yCount + offset
+        if viewHeight < self.frame.height {
+            viewHeight = self.frame.height
+        }
         
         self.hasVerticalScroller = true
         emojiScrollContentView.frame = NSRect(x: 0, y: 0, width: screenBounds.width, height: viewHeight)
@@ -373,7 +345,7 @@ private final class EmojiInputScrollView: NSScrollView {
             }
             
             self.separatorView.frame = CGRect(x: 0,
-                                              y: viewHeight - (recentYCount * (buttonSize + margin) + 2),
+                                              y: viewHeight - (recentYCount * (buttonSize + margin) + 2) - offset,
                                               width: screenBounds.width,
                                               height: 8)
         } else {
@@ -389,7 +361,7 @@ private final class EmojiInputScrollView: NSScrollView {
                 if index >= emojiButtons.count { break }
                 let button = emojiButtons[index]
                 button.frame = CGRect(x: CGFloat(x) * (buttonSize + margin),
-                                      y: viewHeight - ((CGFloat(y) + recentYCount + 1) * (buttonSize + margin)),
+                                      y: viewHeight - ((CGFloat(y) + recentYCount + 1) * (buttonSize + margin)) - offset,
                                       width: buttonSize,
                                       height: buttonSize)
             }
@@ -433,8 +405,5 @@ private final class EmojiInputScrollView: NSScrollView {
     private func addRecent(key: String) {
         SettingsData.addRecentEmoji(key: key, accessToken: accessToken)
     }
-}
-
-private final class HeightSlider: NSView {
 }
 

@@ -130,6 +130,5 @@
 "PROTECTMODE_DIRECT" = "✉️ ダイレクト";
 
 // 絵文字キーボード
-"BUTTON_BACKKEY" = "🔙";
-"BUTTON_RETURNKEY" = "改行";
 "BUTTON_SPACEKEY" = "空白";
+"SEARCH_PLACEHOLDER" = "検索";
