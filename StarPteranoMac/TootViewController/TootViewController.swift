@@ -266,6 +266,17 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
     
     // カスタム絵文字キーボードを表示する
     @objc func emojiAction() {
-        
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            if accessToken == subVC.tootVC.accessToken {
+                if let view = subVC.view.viewWithTag(3948) {
+                    view.removeFromSuperview()
+                } else {
+                    let emojiView = EmojiView(hostName: hostName, accessToken: accessToken)
+                    subVC.view.addSubview(emojiView)
+                    
+                    subVC.view.needsLayout = true
+                }
+            }
+        }
     }
 }

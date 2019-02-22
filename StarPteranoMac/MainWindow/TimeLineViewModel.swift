@@ -416,6 +416,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 spolerTextLabel.lineBreakMode = .byCharWrapping
                 spolerTextLabel.frame.size.width = tableView.frame.width - 70
                 spolerTextLabel.drawsBackground = false
+                spolerTextLabel.isBezeled = false
                 spolerTextLabel.sizeToFit()
                 detailOffset += 20 + spolerTextLabel.frame.height
             } else {
@@ -1253,6 +1254,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.boostView?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
             cell.boostView?.textColor = ThemeColor.dateColor
             cell.boostView?.isBezeled = false
+            cell.boostView?.drawsBackground = false
             var username = account?.display_name ?? ""
             if username == "" {
                 username = account?.acct ?? ""

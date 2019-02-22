@@ -119,6 +119,7 @@
 
 // タイムライン画面
 "BUTTON_SHOW_MORE" = "もっと見る";
+"BUTTON_HIDE_REDO" = "やっぱり隠す";
 "BOOSTED_BY_%@" = "🔁 %@";
 
 // 公開範囲
@@ -127,3 +128,8 @@
 "PROTECTMODE_UNLISTED" = "🔓 未収載";
 "PROTECTMODE_PRIVATE" = "🔐 フォロワー限定";
 "PROTECTMODE_DIRECT" = "✉️ ダイレクト";
+
+// 絵文字キーボード
+"BUTTON_BACKKEY" = "🔙";
+"BUTTON_RETURNKEY" = "改行";
+"BUTTON_SPACEKEY" = "空白";

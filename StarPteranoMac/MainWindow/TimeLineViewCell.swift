@@ -499,10 +499,7 @@ final class TimeLineViewCell: NSView {
         }
         
         let text: String
-        if let label = self.messageView as? NSTextField {
-            let attrtext = label.attributedStringValue
-            text = DecodeToot.encodeEmoji(attributedText: attrtext, textStorage: NSTextStorage(attributedString: attrtext))
-        } else if let textView = self.messageView as? NSTextView, let attrtext = textView.textStorage?.attributedSubstring(from: NSMakeRange(0, textView.textStorage?.length ?? 0)) {
+        if let textView = self.messageView, let attrtext = textView.textStorage?.attributedSubstring(from: NSMakeRange(0, textView.textStorage?.length ?? 0)) {
             text = DecodeToot.encodeEmoji(attributedText: attrtext, textStorage: textView.textStorage!)
         } else {
             text = ""
@@ -707,25 +704,12 @@ final class TimeLineViewCell: NSView {
                                              width: self.spolerTextLabel?.frame.width ?? 0,
                                              height: self.spolerTextLabel?.frame.height ?? 0)
         
-        if let messageView = self.messageView as? NSTextField {
-            let y: CGFloat
-            if isMiniView == .superMini {
-                y = 0
-            } else if let spolerTextLabel = self.spolerTextLabel {
-                y = spolerTextLabel.frame.minY + 20
-            } else {
-                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? 1 : 8) + SettingsData.fontSize)
-            }
-            messageView.frame = CGRect(x: nameLeft,
-                                       y: height - y - messageView.frame.height,
-                                       width: min(screenBounds.width - SettingsData.iconSize - 10, messageView.frame.width),
-                                       height: messageView.frame.height)
-        } else if let messageView = self.messageView as? NSTextView {
+        if let messageView = self.messageView {
             let y: CGFloat
             if isMiniView == .superMini {
                 y = -0
             } else if let spolerTextLabel = self.spolerTextLabel {
-                y = spolerTextLabel.frame.minY + 20
+                y = height - (spolerTextLabel.frame.minY - 20)
             } else {
                 y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
             }

@@ -16,7 +16,7 @@ final class ImageUtils {
     static func small(image: EmojiImage, size: CGFloat) -> EmojiImage {
         if image.size.width < size * self.scale { return image }
         
-        let rate = max(size / image.size.width, size / image.size.height)
+        let rate = max(size * self.scale / image.size.width, size * self.scale / image.size.height)
         
         let resizedSize = CGSize(width: image.size.width * rate, height: image.size.height * rate)
         
@@ -47,7 +47,7 @@ final class ImageUtils {
     static func smallIcon(image: NSImage, size: CGFloat) -> NSImage {
         if image.size.width < size * self.scale { return image }
         
-        let rate = max(size / image.size.width, size / image.size.height)
+        let rate = max(size * self.scale / image.size.width, size * self.scale / image.size.height)
         
         let resizedSize = CGSize(width: image.size.width * rate, height: image.size.height * rate)
         

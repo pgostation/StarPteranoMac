@@ -184,8 +184,7 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem3.target = menuTarget
                 tootMenu.addItem(menuItem3)*/
                 
-                let menuItem4 = NSMenuItem(title: I18n.get("Scheduled Toot…"), action: #selector(doTootMenu(_:)), keyEquivalent: "t")
-                menuItem4.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
+                let menuItem4 = NSMenuItem(title: I18n.get("Scheduled Toot…"), action: #selector(doTootMenu(_:)), keyEquivalent: "")
                 menuItem4.target = menuTarget
                 tootMenu.addItem(menuItem4)
             }
