@@ -13,7 +13,7 @@ final class LeakCounter {
     
     private static var dict: [String: Int] = [:]
     private static var alerted: [String: Bool] = [:]
-    private static let queue = DispatchQueue.global()
+    private static let queue = DispatchQueue(label: "LeakCounter")
     
     static func add(_ str: String) {
         queue.async {

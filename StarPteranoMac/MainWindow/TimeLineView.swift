@@ -584,6 +584,11 @@ final class TimeLineView: NSTableView {
                 model.selectRow(timelineView: self, row: 0)
             }
             model.selectRow(timelineView: self, row: model.selectedRow ?? 0)
+        case 48: //tab
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
+                MainWindow.window?.makeFirstResponder(textField)
+            }
         default:
             break
         }

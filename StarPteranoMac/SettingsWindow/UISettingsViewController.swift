@@ -29,6 +29,8 @@ final class UISettingsViewController: NSViewController {
         view.favDialogButton.target = self
         view.transparentButton.action = #selector(transparentAction(_:))
         view.transparentButton.target = self
+        view.darkmodeButton.action = #selector(darkmodeAction(_:))
+        view.darkmodeButton.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -65,6 +67,12 @@ final class UISettingsViewController: NSViewController {
     @objc func transparentAction(_ sender: NSButton) {
         SettingsData.isTransparentWindow = (sender.state == .on)
     }
+    
+    @objc func darkmodeAction(_ sender: NSButton) {
+        SettingsData.forceDarkMode = (sender.state == .on)
+        
+        MainViewController.refreshAllTimeLineViews()
+    }
 }
 
 final class UISettingsView: NSView {
@@ -76,6 +84,7 @@ final class UISettingsView: NSView {
     let useAbsoluteTimeButton = NSButton()
     let favDialogButton = NSButton()
     let transparentButton = NSButton()
+    let darkmodeButton = NSButton()
     
     init() {
         super.init(frame: SettingsWindow.contentRect)
@@ -90,6 +99,7 @@ final class UISettingsView: NSView {
         self.addSubview(useAbsoluteTimeButton)
         self.addSubview(favDialogButton)
         self.addSubview(transparentButton)
+        self.addSubview(darkmodeButton)
         
         setProperties()
     }
@@ -133,6 +143,10 @@ final class UISettingsView: NSView {
         transparentButton.title = I18n.get("BUTTON_TRANSPARENT_WINDOW")
         setCheckboxStyle(button: transparentButton)
         transparentButton.state = SettingsData.isTransparentWindow ? .on : .off
+        
+        darkmodeButton.title = I18n.get("BUTTON_FORCE_DARKMODE")
+        setCheckboxStyle(button: darkmodeButton)
+        darkmodeButton.state = SettingsData.forceDarkMode ? .on : .off
     }
     
     override func layout() {
@@ -181,6 +195,11 @@ final class UISettingsView: NSView {
         
         transparentButton.frame = NSRect(x: 30,
                                          y: SettingsWindow.contentRect.height - 350,
+                                         width: 200,
+                                         height: 20)
+        
+        darkmodeButton.frame = NSRect(x: 30,
+                                         y: SettingsWindow.contentRect.height - 400,
                                          width: 200,
                                          height: 20)
     }

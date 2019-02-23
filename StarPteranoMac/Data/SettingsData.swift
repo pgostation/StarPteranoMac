@@ -251,9 +251,31 @@ final class SettingsData {
         }
     }
     
+    // 強制ダークモード
+    static var forceDarkMode: Bool {
+        get {
+            if let string = defaults.string(forKey: "forceDarkMode") {
+                return (string == "ON")
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "forceDarkMode")
+            } else {
+                defaults.removeObject(forKey: "forceDarkMode")
+            }
+            
+            ThemeColor.change()
+        }
+    }
+    
     // ダークモードかどうか
     static var isDarkMode: Bool {
         get {
+            if forceDarkMode {
+                return true
+            }
             if let string = defaults.string(forKey: "isDarkMode") {
                 return (string == "ON")
             }

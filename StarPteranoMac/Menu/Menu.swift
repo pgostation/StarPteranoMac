@@ -301,7 +301,8 @@ final class Menu: NSObject, NSMenuDelegate {
     @objc func doTootMenu(_ item: NSMenuItem) {
         if item.title == I18n.get("New Toot") {
             if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
-                ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField.becomeFirstResponder()
+                let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
+                MainWindow.window?.makeFirstResponder(textField)
             }
         }
         if item.title == I18n.get("Toot") {
