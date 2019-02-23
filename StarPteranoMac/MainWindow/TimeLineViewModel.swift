@@ -1018,7 +1018,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         cell.iconView?.wantsLayer = true
         cell.iconView?.layer?.cornerRadius = 5
         cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
-        ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { [weak cell] image in
+        ImageCache.image(urlStr: account?.avatar ?? account?.avatar_static, isTemp: false, isSmall: true) { [weak cell] image, url in
             guard let cell = cell else { return }
             if cell.id == id {
                 cell.iconView?.removeFromSuperview()
@@ -1114,7 +1114,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     
                     // 画像読み込み
                     let isPreview = !(isDetailTimeline && row == selectedRow)
-                    ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image in
+                    ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image, url in
                         guard let cell = cell else { return }
                         guard let imageView = imageView else { return }
                         imageView.image = image
@@ -1152,7 +1152,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                         triangleView.stringValue = "▶️"
                         triangleView.font = NSFont.systemFont(ofSize: 24)
                         triangleView.sizeToFit()
-                        imageView.addSubview(triangleView)
+                        triangleView.isBezeled = false
+                        triangleView.drawsBackground = false
+                        imageParentView.addSubview(triangleView)
                         DispatchQueue.main.async {
                             triangleView.frame.origin = CGPoint(x: imageView.bounds.width / 2 - 12, y: imageView.bounds.height / 2 - 12)
                         }

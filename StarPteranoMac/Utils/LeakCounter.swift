@@ -13,21 +13,26 @@ final class LeakCounter {
     
     private static var dict: [String: Int] = [:]
     private static var alerted: [String: Bool] = [:]
+    private static let queue = DispatchQueue.global()
     
     static func add(_ str: String) {
-        dict[str] = (dict[str] ?? 0) + 1
-        
-        if dict[str]! > 200 && alerted[str] != true {
-            print("#### \(str).count = \(dict[str]!)")
+        queue.async {
+            dict[str] = (dict[str] ?? 0) + 1
             
-            print("#### dict = \(dict)")
-            
-            alerted[str] = true
+            if dict[str]! > 200 && alerted[str] != true {
+                print("#### \(str).count = \(dict[str]!)")
+                
+                print("#### dict = \(dict)")
+                
+                alerted[str] = true
+            }
         }
     }
     
     static func sub(_ str: String) {
-        dict[str] = (dict[str] ?? 0) - 1
+        queue.async {
+            dict[str] = (dict[str] ?? 0) - 1
+        }
     }
 }
 

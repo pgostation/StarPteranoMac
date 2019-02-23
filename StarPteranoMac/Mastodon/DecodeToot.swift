@@ -107,7 +107,7 @@ final class DecodeToot {
                 attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 
                 var execCallback = false
-                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
+                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image, url in
                     if execCallback {
                         callback?()
                     } else {
@@ -209,7 +209,7 @@ final class DecodeToot {
                 let attachment = NSTextAttachment()
                 attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 var execCallback = false
-                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
+                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image, url in
                     if execCallback {
                         callback?()
                     } else {
@@ -255,7 +255,7 @@ final class DecodeToot {
                 let attachment = NSTextAttachment()
                 attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 var execCallback = false
-                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image in
+                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image, url in
                     if execCallback {
                         callback?()
                     } else {

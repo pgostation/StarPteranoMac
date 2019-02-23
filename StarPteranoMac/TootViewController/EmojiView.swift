@@ -205,7 +205,7 @@ private final class EmojiInputScrollView: NSScrollView {
             let button = EmojiButton(key: emoji.short_code ?? "")
             
             // 静的イメージ
-            ImageCache.image(urlStr: emoji.url, isTemp: false, isSmall: true, shortcode: emoji.short_code) { image in
+            ImageCache.image(urlStr: emoji.url, isTemp: false, isSmall: true, shortcode: emoji.short_code) { image, url in
                 button.image = image
                 button.isHidden = false
             }

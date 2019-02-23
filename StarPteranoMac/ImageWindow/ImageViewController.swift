@@ -9,8 +9,8 @@
 import Cocoa
 
 final class ImageViewController: NSViewController {
-    private let imageView = MyImageView()
-    private let coverButton = NSButton()
+    private let imageView = LocalImageView()
+    private let coverButton = ThroughButton()
     private let leftButton = NSButton()
     private let rightButton = NSButton()
     private var selectedIndex: Int
@@ -52,15 +52,16 @@ final class ImageViewController: NSViewController {
         // 画像クリックボタン追加
         view.addSubview(coverButton)
         coverButton.frame = imageView.frame
-        coverButton.isTransparent = true
+        //coverButton.isTransparent = true
         coverButton.target = self
         coverButton.action = #selector(tapAction)
         
         // フル画像読み込み
         let index = selectedIndex
-        ImageCache.image(urlStr: imagesUrls[index], isTemp: true, isSmall: false) { [weak self] image in
+        ImageCache.image(urlStr: imagesUrls[index], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
             if index != self?.selectedIndex { return }
             self?.imageView.image = image
+            self?.imageView.fileUrl = fileUrl
         }
     }
     
@@ -117,14 +118,16 @@ final class ImageViewController: NSViewController {
         }
         
         let index = selectedIndex
-        ImageCache.image(urlStr: previewUrls[selectedIndex], isTemp: false, isSmall: false) { [weak self] image in
+        ImageCache.image(urlStr: previewUrls[selectedIndex], isTemp: false, isSmall: false) { [weak self] (image, fileUrl) in
             if index != self?.selectedIndex { return }
             self?.imageView.image = image
+            self?.imageView.fileUrl = fileUrl
         }
         
-        ImageCache.image(urlStr: imagesUrls[selectedIndex], isTemp: true, isSmall: false) { [weak self] image in
+        ImageCache.image(urlStr: imagesUrls[selectedIndex], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
             if index != self?.selectedIndex { return }
             self?.imageView.image = image
+            self?.imageView.fileUrl = fileUrl
         }
     }
     
@@ -140,5 +143,32 @@ final class ImageViewController: NSViewController {
     @objc func tapAction() {
         guard let url = URL(string: imagesUrls[selectedIndex]) else { return }
         NSWorkspace.shared.open(url)
+    }
+    
+    // マウスクリックに反応するボタンだが、同時に裏に置かれたイベントにも反応できるボタン
+    final class ThroughButton: NSView {
+        weak var target: AnyObject?
+        var action: Selector?
+        private var mouseDownFlag = false
+        
+        override func mouseDown(with event: NSEvent) {
+            super.mouseDown(with: event)
+            
+            mouseDownFlag = true
+        }
+        
+        override func mouseUp(with event: NSEvent) {
+            let point = event.locationInWindow
+            if mouseDownFlag && self.frame.contains(point) {
+                _ = target?.perform(action)
+            }
+            super.mouseUp(with: event)
+            
+            mouseDownFlag = false
+        }
+    }
+    
+    final class LocalImageView: NSImageView {
+        var fileUrl: URL?
     }
 }

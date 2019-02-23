@@ -55,4 +55,24 @@ final class ImageWindow: NSPanel {
             (self.contentViewController as? ImageViewController)?.rightAction()
         }
     }
+    
+    override func mouseDragged(with event: NSEvent) {
+        if #available(OSX 10.13, *) {
+            if let imageView = (self.contentView?.subviews.first as? ImageViewController.LocalImageView), let image = imageView.image, let url = imageView.fileUrl {
+                let smallImage = ImageUtils.small(image: image, pixels: 400 * 400)
+                
+                let pasteboard = NSPasteboard(name: NSPasteboard.Name.dragPboard)
+                pasteboard.declareTypes([NSPasteboard.PasteboardType.fileURL], owner: nil)
+                (url as NSURL).write(to: pasteboard)
+                
+                self.drag(smallImage,
+                          at: NSPoint(x: 10, y: 10),
+                          offset: NSSize(width: 0, height: 0),
+                          event: event,
+                          pasteboard: pasteboard,
+                          source: self,
+                          slideBack: true)
+            }
+        }
+    }
 }

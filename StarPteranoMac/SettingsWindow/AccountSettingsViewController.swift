@@ -348,7 +348,7 @@ private final class AccountView: NSView {
         deleteButton.bezelStyle = .roundRect
         
         if let imageUrl = SettingsData.accountIconUrl(accessToken: account.1) {
-            ImageCache.image(urlStr: imageUrl, isTemp: false, isSmall: true) { [weak self] image in
+            ImageCache.image(urlStr: imageUrl, isTemp: false, isSmall: true) { [weak self] image, url in
                 self?.iconView.image = image
             }
         }

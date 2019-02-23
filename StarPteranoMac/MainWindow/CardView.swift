@@ -188,7 +188,7 @@ final class CardView: NSView {
         
         if SettingsData.isLoadPreviewImage {
             // 画像を取得して設定
-            ImageCache.image(urlStr: card.image, isTemp: true, isSmall: false, shortcode: nil, isPreview: true) { (image) in
+            ImageCache.image(urlStr: card.image, isTemp: true, isSmall: false, shortcode: nil, isPreview: true) { (image, url) in
                 self.imageView.image = image
                 self.layout()
             }

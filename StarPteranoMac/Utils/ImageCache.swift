@@ -13,30 +13,30 @@ import APNGKit
 
 final class ImageCache {
     private static let scale = NSScreen.main?.backingScaleFactor ?? 1
-    private static var memCache: [String: NSImage] = [:]
-    private static var oldMemCache: [String: NSImage] = [:]
-    private static var waitingDict: [String: [(NSImage)->Void]] = [:]
+    private static var memCache: [String: (NSImage, URL?)] = [:]
+    private static var oldMemCache: [String: (NSImage, URL?)] = [:]
+    private static var waitingDict: [String: [(NSImage, URL?)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "ImageCache")
     private static let webpDecoder = SDWebImageWebPCoder()
     
     // 画像をキャッシュから取得する。なければネットに取りに行く
-    static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, callback: @escaping (NSImage)->Void) {
+    static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, callback: @escaping (NSImage, URL?)->Void) {
         guard let urlStr = urlStr else { return }
         
         // メモリキャッシュにある場合
-        if let image = memCache[urlStr] {
+        if let (image, url) = memCache[urlStr] {
             if image.size.width > 50 * self.scale || isSmall {
-                callback(image)
+                callback(image, url)
                 return
             }
         }
         // 破棄候補のメモリキャッシュにある場合
-        if let image = oldMemCache[urlStr] {
+        if let (image, url) = oldMemCache[urlStr] {
             if image.size.width > 50 * self.scale || isSmall {
-                memCache[urlStr] = image
+                memCache[urlStr] = (image, url)
                 oldMemCache.removeValue(forKey: urlStr)
-                callback(image)
+                callback(image, url)
                 return
             }
         }
@@ -63,9 +63,9 @@ final class ImageCache {
                             smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
                         }
                         smallImage.shortcode = shortcode
-                        memCache.updateValue(smallImage, forKey: urlStr)
+                        memCache.updateValue((smallImage, url), forKey: urlStr)
                         DispatchQueue.main.async {
-                            callback(image)
+                            callback(image, url)
                         }
                         
                         if memCache.count >= 120 { // メモリの使いすぎを防ぐ
@@ -73,9 +73,9 @@ final class ImageCache {
                             memCache = [:]
                         }
                     } else if let image = webpDecoder.decodedImage(with: data) {
-                        memCache.updateValue(image, forKey: urlStr)
+                        memCache.updateValue((image, url), forKey: urlStr)
                         DispatchQueue.main.async {
-                            callback(image)
+                            callback(image, url)
                         }
                         
                         if memCache.count >= 120 { // メモリの使いすぎを防ぐ
@@ -101,16 +101,17 @@ final class ImageCache {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
                 DispatchQueue.main.async {
+                    let fileUrl = URL(fileURLWithPath: filePath)
                     if let image = EmojiImage(data: data) {
                         let smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
                         smallImage.shortcode = shortcode
                         if !isTemp {
-                            memCache.updateValue(smallImage, forKey: urlStr)
+                            memCache.updateValue((smallImage, fileUrl), forKey: urlStr)
                         }
-                        callback(image)
+                        callback(image, fileUrl)
                         
                         for waitingCallback in waitingDict[urlStr] ?? [] {
-                            waitingCallback(image)
+                            waitingCallback(image, fileUrl)
                         }
                         
                         waitingDict.removeValue(forKey: urlStr)
@@ -121,7 +122,6 @@ final class ImageCache {
                         }
                         
                         // ストレージにキャッシュする
-                        let fileUrl = URL(fileURLWithPath: filePath)
                         try? data.write(to: fileUrl)
                         
                         // ストレージの古いファイルを削除する
@@ -140,8 +140,8 @@ final class ImageCache {
                             }
                         }
                     } else if let image = webpDecoder.decodedImage(with: data) {
-                        memCache.updateValue(image, forKey: urlStr)
-                        callback(image)
+                        memCache.updateValue((image, fileUrl), forKey: urlStr)
+                        callback(image, fileUrl)
                         
                         if memCache.count >= 120 { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
