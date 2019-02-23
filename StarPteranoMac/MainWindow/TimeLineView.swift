@@ -122,6 +122,8 @@ final class TimeLineView: NSTableView {
             url = URL(string: "https://\(hostName)/api/v1/timelines/direct?limit=50\(sinceIdStr)")
         case .list:
             url = URL(string: "https://\(hostName)/api/v1/timelines/list/\(option!)?limit=50\(sinceIdStr)")
+        case .scheduled:
+            return
         }
         
         guard let requestUrl = url else { return }
@@ -457,6 +459,8 @@ final class TimeLineView: NSTableView {
             url = URL(string: "https://\(hostName)/api/v1/timelines/direct?limit=50\(maxIdStr)")
         case .list:
             url = URL(string: "https://\(hostName)/api/v1/timelines/list/\(option!)?limit=50\(maxIdStr)")
+        case .scheduled:
+            return
         }
         
         guard let requestUrl = url else { return }

@@ -558,6 +558,8 @@ final class SettingsData {
             } else {
                 defaults.removeObject(forKey: "isTransparentWindow")
             }
+            
+            ThemeColor.change()
         }
     }
     

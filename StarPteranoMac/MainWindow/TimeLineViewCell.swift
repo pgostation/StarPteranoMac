@@ -601,6 +601,68 @@ final class TimeLineViewCell: NSView {
     
     // 日時表示を更新
     func refreshDate() {
+        if self.tableView?.type == .scheduled {
+            refreshDateAbsoluteLong()
+        } else if SettingsData.useAbsoluteTime || (self.tableView?.type == .scheduled) {
+            refreshDateAbsolute()
+        } else {
+            refreshDateRelated()
+        }
+    }
+    
+    // 絶対時間で表示
+    private static var timeLongFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm"
+        return formatter
+    }()
+    private static var monthLongFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy-MM-dd"
+        return formatter
+    }()
+    private func refreshDateAbsoluteLong() {
+        let diffTime = Int(Date().timeIntervalSince(self.date))
+        if diffTime / 86400 < 365 {
+            self.dateLabel.stringValue = TimeLineViewCell.timeLongFormatter.string(from: self.date)
+        } else {
+            self.dateLabel.stringValue = TimeLineViewCell.monthLongFormatter.string(from: self.date)
+        }
+    }
+    
+    // 絶対時間で表示
+    private static var timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+    private static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd"
+        return formatter
+    }()
+    private static var monthFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yy-MM"
+        return formatter
+    }()
+    private func refreshDateAbsolute() {
+        let diffTime = Int(Date().timeIntervalSince(self.date))
+        let dateStr = TimeLineViewCell.dateFormatter.string(from: self.date)
+        let nowDateStr = TimeLineViewCell.dateFormatter.string(from: Date())
+        if diffTime / 3600 < 18 || (dateStr == nowDateStr && diffTime / 3600 <= 24) {
+            self.dateLabel.stringValue = TimeLineViewCell.timeFormatter.string(from: self.date)
+        }
+        else if diffTime / 86400 < 365 {
+            self.dateLabel.stringValue = dateStr
+        }
+        else {
+            self.dateLabel.stringValue = TimeLineViewCell.monthFormatter.string(from: self.date)
+        }
+    }
+    
+    // 相対時間で表示
+    private func refreshDateRelated() {
         let diffTime = Int(Date().timeIntervalSince(self.date))
         if diffTime <= 0 {
             self.dateLabel.stringValue = I18n.get("DATETIME_NOW")

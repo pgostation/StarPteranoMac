@@ -59,8 +59,10 @@ final class TootView: NSView {
     }
     
     func refresh() {
-        self.wantsLayer = true
-        self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        if !SettingsData.isTransparentWindow {
+            self.wantsLayer = true
+            self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        }
         
         textCountLabel.textColor = ThemeColor.contrastColor
         textCountLabel.font = NSFont.systemFont(ofSize: 18)
@@ -71,8 +73,11 @@ final class TootView: NSView {
         textCountLabel.layer?.cornerRadius = 10
         textCountLabel.isBezeled = false
         
-        spoilerTextField.wantsLayer = true
-        spoilerTextField.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        if SettingsData.isTransparentWindow {
+            spoilerTextField.backgroundColor = NSColor.clear
+        } else {
+            spoilerTextField.backgroundColor = ThemeColor.viewBgColor
+        }
         spoilerTextField.textColor = ThemeColor.messageColor
         spoilerTextField.font = NSFont.systemFont(ofSize: SettingsData.fontSize + 5)
         spoilerTextField.isEditable = true
@@ -88,8 +93,11 @@ final class TootView: NSView {
                 self.textField.becomeFirstResponder()
             }
         }
-        textField.wantsLayer = true
-        textField.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        if SettingsData.isTransparentWindow {
+            textField.backgroundColor = NSColor.clear
+        } else {
+            textField.backgroundColor = ThemeColor.viewBgColor
+        }
         textField.textColor = ThemeColor.messageColor
         textField.font = NSFont.systemFont(ofSize: SettingsData.fontSize + 5)
         textField.isEditable = true
@@ -99,7 +107,9 @@ final class TootView: NSView {
         textField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         textField.textContainerInset = NSSize.init(width: 1, height: 5)
         
-        inputBar.layer?.backgroundColor = ThemeColor.cellBgColor.withAlphaComponent(0.9).cgColor
+        if !SettingsData.isTransparentWindow {
+            inputBar.layer?.backgroundColor = ThemeColor.cellBgColor.withAlphaComponent(0.9).cgColor
+        }
         
         imagesButton.title = "🏞"
         imagesButton.isBordered = false
@@ -124,8 +134,9 @@ final class TootView: NSView {
         }
         protectButton.isBordered = false
         
-        cwButton.title = "CW"
-        //cwButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
+        let attributedTitle = NSMutableAttributedString(string: "CW")
+        attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor], range: NSRange.init(location: 0, length: attributedTitle.length))
+        cwButton.attributedTitle = attributedTitle
         cwButton.isBordered = false
         
         emojiButton.title = "😀"

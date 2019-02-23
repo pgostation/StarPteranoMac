@@ -21,6 +21,7 @@ final class TimeLineViewController: NSViewController {
         case mentions // 単一トゥート(と会話)
         case direct // ダイレクトメッセージ
         case list // リスト
+        case scheduled // 予約投稿
     }
     
     private let hostName: String

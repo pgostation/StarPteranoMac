@@ -52,6 +52,8 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         
+        self.emojiScrollView.backgroundColor = ThemeColor.viewBgColor
+        
         spaceButton.title = I18n.get("BUTTON_SPACEKEY")
         //spaceButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
         //spaceButton.titleLabel?.adjustsFontSizeToFitWidth = true

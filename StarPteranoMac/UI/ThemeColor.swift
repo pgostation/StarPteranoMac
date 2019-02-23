@@ -51,11 +51,19 @@ final class ThemeColor {
             cellBgColor = NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
             separatorColor = NSColor.darkGray
             
-            messageColor = NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
-            nameColor = NSColor(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)
-            idColor = NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
-            dateColor = NSColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
-            linkTextColor = NSColor(red: 0.3, green: 0.5, blue: 1, alpha: 1)
+            if SettingsData.isTransparentWindow {
+                messageColor = NSColor(red: 1, green: 1, blue: 1, alpha: 1)
+                idColor = NSColor(red: 1, green: 1, blue: 1, alpha: 1)
+                dateColor = NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
+                linkTextColor = NSColor(red: 0.3, green: 0.7, blue: 1, alpha: 1)
+                nameColor = NSColor(red: 0.5, green: 1, blue: 0.3, alpha: 1)
+            } else {
+                messageColor = NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
+                idColor = NSColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1)
+                dateColor = NSColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1)
+                linkTextColor = NSColor(red: 0.3, green: 0.5, blue: 1, alpha: 1)
+                nameColor = NSColor(red: 0.5, green: 0.8, blue: 0.3, alpha: 1)
+            }
             
             detailButtonsColor = NSColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             detailButtonsHiliteColor = NSColor(red: 0.5, green: 1.0, blue: 0.6, alpha: 1)

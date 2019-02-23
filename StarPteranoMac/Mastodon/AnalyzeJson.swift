@@ -66,6 +66,7 @@ final class AnalyzeJson {
                 let url = media_attachment["url"] as? String
                 let remote_url = media_attachment["remote_url"] as? String
                 let type = media_attachment["type"] as? String
+                let description = media_attachment["description"] as? String
                 var width = 0
                 var height = 0
                 if let meta = media_attachment["meta"] as? [String : Any] {
@@ -81,7 +82,8 @@ final class AnalyzeJson {
                                      url: url,
                                      remote_url: remote_url,
                                      width: width,
-                                     height: height)
+                                     height: height,
+                                     description: description)
                 if mediaData == nil {
                     mediaData = []
                 }
@@ -496,6 +498,7 @@ final class AnalyzeJson {
         let remote_url: String?
         let width: Int?
         let height: Int?
+        let description: String?
     }
     
     // メンション

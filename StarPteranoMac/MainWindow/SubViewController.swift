@@ -217,19 +217,19 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     
     override func viewDidLayout() {
         tootVC.view.frame = NSRect(x: 0,
-                                   y: self.view.frame.height - tootVC.view.frame.height - 20,
+                                   y: self.view.frame.height - tootVC.view.frame.height - 22,
                                    width: self.view.frame.width,
                                    height: tootVC.view.frame.height)
         
         tabView.frame = NSRect(x: 0,
-                               y: self.view.frame.height - 20 - tootVC.view.frame.height - 20,
+                               y: self.view.frame.height - 20 - tootVC.view.frame.height - 22,
                                width: self.view.frame.width,
                                height: 20)
         
         scrollView.frame = NSRect(x: 0,
                                   y: 0,
                                   width: self.view.frame.width,
-                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 20)
+                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 22)
         
         if let emojiView = self.view.viewWithTag(3948) {
             let height = min(500, scrollView.frame.height)
