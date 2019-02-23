@@ -21,7 +21,7 @@ final class ImageCache {
     private static let webpDecoder = SDWebImageWebPCoder()
     
     // 画像をキャッシュから取得する。なければネットに取りに行く
-    static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, callback: @escaping (NSImage, URL?)->Void) {
+    static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, isThread: Bool = false, callback: @escaping (NSImage, URL?)->Void) {
         guard let urlStr = urlStr else { return }
         
         // メモリキャッシュにある場合
@@ -52,7 +52,7 @@ final class ImageCache {
         }
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
-            imageQueue.async {
+            (isThread ? imageQueue : DispatchQueue.main).async {
                 let url = URL(fileURLWithPath: filePath)
                 if let data = try? Data(contentsOf: url) {
                     if let image = EmojiImage(data: data) {
@@ -97,7 +97,7 @@ final class ImageCache {
         waitingDict[urlStr] = []
         
         // ネットワークに取りに行く
-        imageQueue.async {
+        (isThread ? imageQueue : DispatchQueue.main).async {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
                 DispatchQueue.main.async {

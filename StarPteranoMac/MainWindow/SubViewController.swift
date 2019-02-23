@@ -184,6 +184,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             }
         }
         
+        selectedItem = .home
+        
         return popUp
     }
     

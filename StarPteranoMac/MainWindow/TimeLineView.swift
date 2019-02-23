@@ -41,7 +41,6 @@ final class TimeLineView: NSTableView {
         
         self.headerView = nil
         
-        self.backgroundColor = ThemeColor.cellBgColor
         //self.separatorStyle = .none
         
         if type != .mentions {
@@ -60,6 +59,11 @@ final class TimeLineView: NSTableView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // ダークモード切り替えで更新
+    override func updateLayer() {
+        self.backgroundColor = ThemeColor.cellBgColor
     }
     
     // タイムラインを初回取得/手動更新
