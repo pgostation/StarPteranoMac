@@ -19,6 +19,8 @@ final class GeneralSettingsViewController: NSViewController {
         view.protectModeButton.target = self
         view.useStreamingButton.action = #selector(useStreamingAction(_:))
         view.useStreamingButton.target = self
+        view.defaultNSFWButton.action = #selector(defaultNSFWAction(_:))
+        view.defaultNSFWButton.target = self
         view.clearCacheButton.action = #selector(clearCacheAction)
         view.clearCacheButton.target = self
     }
@@ -48,6 +50,15 @@ final class GeneralSettingsViewController: NSViewController {
         SettingsData.isStreamingMode = (sender.state == .on)
     }
     
+    @objc func defaultNSFWAction(_ sender: NSButton) {
+        SettingsData.defaultNSFW = (sender.state == .on)
+        
+        MainWindow.window?.close()
+        DispatchQueue.main.async {
+            MainWindow.show()
+        }
+    }
+    
     @objc func clearCacheAction() {
         //####
     }
@@ -56,6 +67,7 @@ final class GeneralSettingsViewController: NSViewController {
 final class GeneralSettingsView: NSView {
     let protectModeButton = NSButton()
     let useStreamingButton = NSButton()
+    let defaultNSFWButton = NSButton()
     let clearCacheButton = NSButton()
     
     init() {
@@ -63,6 +75,7 @@ final class GeneralSettingsView: NSView {
         
         self.addSubview(protectModeButton)
         self.addSubview(useStreamingButton)
+        self.addSubview(defaultNSFWButton)
         self.addSubview(clearCacheButton)
         
         setProperties()
@@ -98,6 +111,10 @@ final class GeneralSettingsView: NSView {
         setCheckboxStyle(button: useStreamingButton)
         useStreamingButton.state = SettingsData.isStreamingMode ? .on : .off
         
+        defaultNSFWButton.title = I18n.get("BUTTON_DEFAULT_NSFW")
+        setCheckboxStyle(button: defaultNSFWButton)
+        defaultNSFWButton.state = SettingsData.defaultNSFW ? .on : .off
+        
         clearCacheButton.title = I18n.get("BUTTON_CLEARCACHE")
         setButtonStyle(button: clearCacheButton)
     }
@@ -112,17 +129,22 @@ final class GeneralSettingsView: NSView {
         
         protectModeButton.frame = NSRect(x: 30,
                                          y: SettingsWindow.contentRect.height - 50,
-                                         width: 150,
+                                         width: 200,
                                          height: 35)
         
         useStreamingButton.frame = NSRect(x: 30,
                                           y: SettingsWindow.contentRect.height - 90,
-                                          width: 150,
+                                          width: 200,
                                           height: 20)
         
+        defaultNSFWButton.frame = NSRect(x: 30,
+                                         y: SettingsWindow.contentRect.height - 150,
+                                         width: 200,
+                                         height: 20)
+        
         clearCacheButton.frame = NSRect(x: 30,
-                                        y: SettingsWindow.contentRect.height - 150,
-                                        width: 150,
+                                        y: SettingsWindow.contentRect.height - 200,
+                                        width: 200,
                                         height: 35)
     }
 }

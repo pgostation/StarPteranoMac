@@ -74,8 +74,9 @@
 "BUTTON_DELETE" = "削除";
 
 // 一般設定
-"SETTINGS_PROTECTMODE" = "公開範囲";
+"SETTINGS_PROTECTMODE" = "デフォルト公開範囲";
 "BUTTON_USESTREAMING" = "ストリーミングを使用";
+"BUTTON_DEFAULT_NSFW" = "デフォルトで画像をNSFW";
 "BUTTON_CLEARCACHE" = "キャッシュをクリア";
 
 // UI設定
@@ -89,12 +90,12 @@
 "BUTTON_FORCE_DARKMODE" = "常にダークモード";
 
 // ログイン
-"PLACEHOLDER_INPUT_DOMAIN" = "Input domain (ex：mastodon.social)";
-"BUTTON_MASTODON_OAUTH" = "Mastodon Server Auth";
-"ALERT_INPUT_DOMAIN" = "Input domain.";
-"PLACEHOLDER_INPUT_CODE" = "Input code";
-"BUTTON_ENTER_CODE" = "Enter code";
-"ALERT_INPUT_CODE_FAILURE" = "Bad code.";
+"PLACEHOLDER_INPUT_DOMAIN" = "ドメインを入力 (ex：mastodon.social)";
+"BUTTON_MASTODON_OAUTH" = "マストドン サーバーで認証";
+"ALERT_INPUT_DOMAIN" = "ドメインが入力されていません";
+"PLACEHOLDER_INPUT_CODE" = "コードを入力";
+"BUTTON_ENTER_CODE" = "コードを登録";
+"ALERT_INPUT_CODE_FAILURE" = "不正なコードのようです";
 "REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";
 
 // 詳細アクション
@@ -147,3 +148,6 @@
 // 絵文字キーボード
 "BUTTON_SPACEKEY" = "空白";
 "SEARCH_PLACEHOLDER" = "検索";
+
+// 画像確認画面
+"BUTTON_DELETE_IMAGE" = "削除";

@@ -11,16 +11,30 @@ import SDWebImage
 import AVKit
 
 final class ImageCheckView: NSView {
-    private let nsfwLabel = MyTextField()
     let nsfwSw = NSButton()
     var urls: [URL] = []
     private var imageViews: [NSView] = []
     private var deleteButtons: [NSButton] = []
     
+    override var tag: Int {
+        return 7624
+    }
+    
     init() {
         super.init(frame: NSRect.init(x: 0, y: 0, width: 0, height: 0))
         
+        self.addSubview(nsfwSw)
+        
+        self.wantsLayer = true
+        self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        
+        let attributedTitle = NSMutableAttributedString(string: "NSFW")
+        attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor], range: NSRange.init(location: 0, length: attributedTitle.length))
+        nsfwSw.attributedTitle = attributedTitle
         nsfwSw.setButtonType(NSButton.ButtonType.switch)
+        if SettingsData.defaultNSFW {
+            nsfwSw.state = .on
+        }
     }
     
     required init?(coder decoder: NSCoder) {
@@ -82,13 +96,59 @@ final class ImageCheckView: NSView {
                     deleteButtons.remove(at: index)
                 }
                 
-                (self.superview as? TootView)?.refresh()
+                (self.superview?.viewWithTag(8364) as? TootView)?.refresh()
                 
                 self.needsLayout = true
+                
+                if urls.count == 0 {
+                    self.removeFromSuperview()
+                }
                 
                 break
             }
         }
     }
     
+    override func layout() {
+        let imageSize: CGFloat = min(150, (self.superview?.frame.width ?? 300) / 2 - 20)
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        for imageView in self.imageViews {
+            imageView.frame = CGRect(x: 5 + x * (imageSize + 10),
+                                     y: y * (imageSize + 60),
+                                     width: imageSize,
+                                     height: imageSize)
+            
+            x += 1
+            if x >= 2 {
+                x = 0
+                y += 1
+            }
+        }
+        
+        x = 0
+        y = 0
+        for deleteButton in self.deleteButtons {
+            deleteButton.frame = CGRect(x: 40 + x * (imageSize + 10),
+                                        y: 150 + y * (imageSize + 60),
+                                        width: 80,
+                                        height: 30)
+            
+            x += 1
+            if x >= 2 {
+                x = 0
+                y += 1
+            }
+        }
+        
+        let height = 45 + y * (imageSize + 60) + imageSize + 40
+        
+        self.frame.size.width = min(300, (self.superview?.frame.width ?? 300))
+        self.frame.size.height = height
+        
+        nsfwSw.frame = CGRect(x: 10,
+                              y: height - 30,
+                              width: 150,
+                              height: 20)
+    }
 }

@@ -37,6 +37,10 @@ final class TootView: NSView {
     // 画像チェック画面
     let imageCheckView = ImageCheckView()
     
+    override var tag: Int {
+        return 8364
+    }
+    
     init() {
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
         
@@ -118,9 +122,11 @@ final class TootView: NSView {
             imagesCountButton.isHidden = true
         } else {
             imagesCountButton.isHidden = false
-            imagesCountButton.title = "[\(imageCheckView.urls.count)]"
+            let attributedTitle = NSMutableAttributedString(string: "[\(imageCheckView.urls.count)]")
+            attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor], range: NSRange.init(location: 0, length: attributedTitle.length))
+            imagesCountButton.attributedTitle = attributedTitle
         }
-        //imagesCountButton.setTitleColor(ThemeColor.messageColor, for: .normal)
+        imagesCountButton.isBordered = false
         
         switch self.protectMode {
         case .publicMode:

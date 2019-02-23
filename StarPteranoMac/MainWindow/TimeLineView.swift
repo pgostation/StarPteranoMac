@@ -593,6 +593,13 @@ final class TimeLineView: NSTableView {
                 let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
                 MainWindow.window?.makeFirstResponder(textField)
             }
+        case 53: //esc
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                if let tlView = tlVC.view as? TimeLineView {
+                    tlView.model.selectedRow = nil
+                    tlView.reloadData()
+                }
+            }
         default:
             break
         }

@@ -85,7 +85,9 @@ final class CardView: NSView {
         self.isHidden = true
         //self.clipsToBounds = true
         self.wantsLayer = true
-        self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        if !SettingsData.isTransparentWindow {
+            self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        }
         self.layer?.cornerRadius = 8
         self.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
         self.layer?.borderColor = ThemeColor.nameColor.cgColor

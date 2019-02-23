@@ -27,6 +27,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     _selectedRow = newValue
                     self.selectRow(timelineView: tableView, row: newValue, notSelect: true)
                 }
+            } else {
+                selectedAccountId = nil
             }
             _selectedRow = newValue
         }
@@ -1315,7 +1317,13 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             return false
         }
         
-        if self.selectedRow != nil && self.selectedRow == cell.indexPath {
+        if SettingsData.isTransparentWindow && !SettingsData.useColoring {
+            // 
+            cell.layer?.backgroundColor = NSColor.clear.cgColor
+            cell.nameLabel.backgroundColor = NSColor.clear
+            cell.idLabel.backgroundColor = NSColor.clear
+            cell.dateLabel.backgroundColor = NSColor.clear
+        } else if self.selectedRow != nil && self.selectedRow == cell.indexPath {
             // 選択色
             cell.layer?.backgroundColor = ThemeColor.selectedBgColor.cgColor
             //cell.messageView?.backgroundColor = ThemeColor.selectedBgColor

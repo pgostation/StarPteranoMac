@@ -231,6 +231,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                   width: self.view.frame.width,
                                   height: self.view.frame.height - 20 - tootVC.view.frame.height - 22)
         
+        // 絵文字キーボード
         if let emojiView = self.view.viewWithTag(3948) {
             let height = min(500, scrollView.frame.height)
             emojiView.frame = NSRect(x: 0,
@@ -239,6 +240,15 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                      height: height)
             
             emojiView.needsLayout = true
+        }
+        
+        // 画像確認画面
+        if let imageCheckView = self.view.viewWithTag(7624) {
+            let height = imageCheckView.frame.height
+            imageCheckView.frame = NSRect(x: 0,
+                                          y: scrollView.frame.height - height,
+                                          width: imageCheckView.frame.width,
+                                          height: height)
         }
     }
 }

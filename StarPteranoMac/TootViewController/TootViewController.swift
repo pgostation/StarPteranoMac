@@ -222,6 +222,12 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
                 guard let url = openPanel.url else { return }
                 
                 view.imageCheckView.add(imageUrl: url)
+                
+                for i in 1...3 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 * Double(i)) {
+                        view.refresh()
+                    }
+                }
             }
         }
     }
@@ -230,9 +236,23 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
     @objc func showImagesAction() {
         guard let view = self.view as? TootView else { return }
         
-        view.imageCheckView.isHidden = false
-        
-        view.textField.resignFirstResponder()
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            if accessToken == subVC.tootVC.accessToken {
+                if let view = subVC.view.viewWithTag(7624) {
+                    // 隠す
+                    view.removeFromSuperview()
+                } else {
+                    // 表示する
+                    subVC.view.addSubview(view.imageCheckView)
+                    
+                    view.imageCheckView.needsLayout = true
+                    subVC.view.needsLayout = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        subVC.view.needsLayout = true
+                    }
+                }
+            }
+        }
     }
     
     // 公開範囲を設定する
@@ -257,11 +277,6 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         } else {
             view.spoilerTextField.becomeFirstResponder()
         }
-    }
-    
-    // スケジュール設定/解除/スケジュール投稿確認
-    @objc func scheduleAction() {
-        
     }
     
     // カスタム絵文字キーボードを表示する

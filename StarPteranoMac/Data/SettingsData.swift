@@ -433,7 +433,7 @@ final class SettingsData {
         }
     }
     
-    // GIFアニメーションを行うかどうか
+    // カスタム絵文字アニメーションを行うかどうか
     private static var _useAnimation: Bool?
     static var useAnimation: Bool {
         get {
@@ -454,40 +454,6 @@ final class SettingsData {
                 defaults.removeObject(forKey: "useAnimation")
             } else {
                 defaults.set("OFF", forKey: "useAnimation")
-            }
-        }
-    }
-    
-    // 連合ボタンを表示
-    static var showFTLButton: Bool {
-        get {
-            if let string = defaults.string(forKey: "showFTLButton") {
-                return (string == "ON")
-            }
-            return false
-        }
-        set(newValue) {
-            if newValue {
-                defaults.set("ON", forKey: "showFTLButton")
-            } else {
-                defaults.removeObject(forKey: "showFTLButton")
-            }
-        }
-    }
-    
-    // リストボタンを表示
-    static var showListButton: Bool {
-        get {
-            if let string = defaults.string(forKey: "showListButton") {
-                return (string == "ON")
-            }
-            return false
-        }
-        set(newValue) {
-            if newValue {
-                defaults.set("ON", forKey: "showListButton")
-            } else {
-                defaults.removeObject(forKey: "showListButton")
             }
         }
     }
@@ -560,6 +526,24 @@ final class SettingsData {
             }
             
             ThemeColor.change()
+        }
+    }
+    
+    // デフォルトでNSFWを有効にするか
+    static var defaultNSFW: Bool {
+        get {
+            if let string = defaults.string(forKey: "defaultNSFW") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "defaultNSFW")
+            } else {
+                defaults.removeObject(forKey: "defaultNSFW")
+            }
         }
     }
     
