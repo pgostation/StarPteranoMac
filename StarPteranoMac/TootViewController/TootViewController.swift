@@ -257,8 +257,9 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
     
     // 公開範囲を設定する
     @objc func protectAction() {
-        SettingsSelectProtectMode.showActionSheet(hostName: hostName, accessToken: accessToken) { (mode) in
-            guard let view = self.view as? TootView else { return }
+        guard let view = self.view as? TootView else { return }
+        
+        SettingsSelectProtectMode.showActionSheet(hostName: hostName, accessToken: accessToken, fromView: view.protectButton) { (mode) in
             
             view.protectMode = mode
             view.refresh()

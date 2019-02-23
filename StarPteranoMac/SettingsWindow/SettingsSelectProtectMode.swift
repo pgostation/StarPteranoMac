@@ -8,37 +8,42 @@
 
 import Cocoa
 
-
 final class SettingsSelectProtectMode {
-    static func showActionSheet(hostName: String, accessToken: String, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
+    static func showActionSheet(hostName: String, accessToken: String, fromView: NSView, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
         for subVC in MainViewController.instance?.subVCList ?? [] {
             if accessToken == subVC.tootVC.accessToken {
-                if let view = subVC.view.viewWithTag(123) {
-                    view.removeFromSuperview()
-                } else {
-                    subVC.view.addSubview(ProtectModeView(y: subVC.tootVC.view.frame.minY, callback: callback))
-                }
+                let vc = ProtectModeViewController()
+                vc.view = ProtectModeView(vc: vc, callback: callback)
+                subVC.present(vc, asPopoverRelativeTo: fromView.bounds, of: fromView, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
                 break
             }
         }
     }
 }
 
-final class ProtectModeView: NSView {
-    override var tag: Int {
-        return 123
+final class ProtectModeViewController: NSViewController {
+    init() {
+        super.init(nibName: nil, bundle: nil)
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+final class ProtectModeView: NSView {
+    weak var vc: ProtectModeViewController?
     private let publicButton = NSButton()
     private let unlistedButton = NSButton()
     private let privateButton = NSButton()
     private let directButton = NSButton()
     private let callback: ((SettingsData.ProtectMode)->Void)
     
-    init(y: CGFloat, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
+    init(vc: ProtectModeViewController, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
+        self.vc = vc
         self.callback = callback
         
-        super.init(frame: NSRect(x: 0, y: y - 160, width: 150, height: 160))
+        super.init(frame: NSRect(x: 0, y: 0, width: 150, height: 160))
         
         self.addSubview(publicButton)
         self.addSubview(unlistedButton)
@@ -81,22 +86,22 @@ final class ProtectModeView: NSView {
     
     @objc func publicAction() {
         callback(SettingsData.ProtectMode.publicMode)
-        self.removeFromSuperview()
+        vc?.dismiss(nil)
     }
     
     @objc func unlistedAction() {
         callback(SettingsData.ProtectMode.unlisted)
-        self.removeFromSuperview()
+        vc?.dismiss(nil)
     }
     
     @objc func privateAction() {
         callback(SettingsData.ProtectMode.privateMode)
-        self.removeFromSuperview()
+        vc?.dismiss(nil)
     }
     
     @objc func directAction() {
         callback(SettingsData.ProtectMode.direct)
-        self.removeFromSuperview()
+        vc?.dismiss(nil)
     }
     
     override func layout() {

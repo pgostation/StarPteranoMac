@@ -30,20 +30,16 @@ final class GeneralSettingsViewController: NSViewController {
     }
     
     @objc func protectModeAction(_ sender: NSButton) {
-        guard let view = view as? GeneralSettingsView else { return }
+        guard let view = self.view as? GeneralSettingsView else { return }
         
-        let protectView = ProtectModeView(y: view.protectModeButton.frame.minY, callback: { mode in
+        let vc = ProtectModeViewController()
+        vc.view = ProtectModeView(vc: vc, callback: { mode in
             SettingsData.protectMode = mode
             view.setProperties()
             
-            MainWindow.window?.close()
-            DispatchQueue.main.async {
-                MainWindow.show()
-            }
+            MainViewController.refreshAllTimeLineViews()
         })
-        view.addSubview(protectView)
-        
-        protectView.frame.origin.x = sender.frame.minX
+        self.present(vc, asPopoverRelativeTo: view.protectModeButton.bounds, of: view.protectModeButton, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
     }
     
     @objc func useStreamingAction(_ sender: NSButton) {
@@ -133,12 +129,12 @@ final class GeneralSettingsView: NSView {
                                          height: 35)
         
         useStreamingButton.frame = NSRect(x: 30,
-                                          y: SettingsWindow.contentRect.height - 100 - 5,
+                                          y: SettingsWindow.contentRect.height - 100 + 5,
                                           width: 200,
                                           height: 20)
         
         defaultNSFWButton.frame = NSRect(x: 30,
-                                         y: SettingsWindow.contentRect.height - 150 - 5,
+                                         y: SettingsWindow.contentRect.height - 150 + 5,
                                          width: 200,
                                          height: 20)
         

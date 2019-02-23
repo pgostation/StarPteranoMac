@@ -52,11 +52,3 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         return true
     }
 }
-
-
-//   MainViewControllerはタブ的だが、複数のViewControllerを同時に表示するだけ
-// TwUIあたりを使うか、CALayer中心にビューを構築するのが良さそう
-
-// キーボードショートカット
-
-
