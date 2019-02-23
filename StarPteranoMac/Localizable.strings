@@ -73,10 +73,19 @@
 // アカウント設定
 "BUTTON_DELETE" = "削除";
 
+// ログイン
+"PLACEHOLDER_INPUT_DOMAIN" = "ドメインを入力 (ex：mastodon.social)";
+"BUTTON_MASTODON_OAUTH" = "マストドン サーバーで認証";
+"ALERT_INPUT_DOMAIN" = "ドメインが入力されていません";
+"PLACEHOLDER_INPUT_CODE" = "コードを入力";
+"BUTTON_ENTER_CODE" = "コードを登録";
+"ALERT_INPUT_CODE_FAILURE" = "不正なコードのようです";
+"REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";
+
 // 一般設定
 "SETTINGS_PROTECTMODE" = "デフォルト公開範囲";
 "BUTTON_USESTREAMING" = "ストリーミングを使用";
-"BUTTON_DEFAULT_NSFW" = "デフォルトで画像をNSFW";
+"BUTTON_DEFAULT_NSFW" = "メディアをデフォルトで閲覧注意";
 "BUTTON_CLEARCACHE" = "キャッシュをクリア";
 
 // UI設定
@@ -89,14 +98,11 @@
 "BUTTON_TRANSPARENT_WINDOW" = "透過ウィンドウ";
 "BUTTON_FORCE_DARKMODE" = "常にダークモード";
 
-// ログイン
-"PLACEHOLDER_INPUT_DOMAIN" = "ドメインを入力 (ex：mastodon.social)";
-"BUTTON_MASTODON_OAUTH" = "マストドン サーバーで認証";
-"ALERT_INPUT_DOMAIN" = "ドメインが入力されていません";
-"PLACEHOLDER_INPUT_CODE" = "コードを入力";
-"BUTTON_ENTER_CODE" = "コードを登録";
-"ALERT_INPUT_CODE_FAILURE" = "不正なコードのようです";
-"REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";
+// 通知設定
+"BUTTON_NOTIFY_MENTION" = "返信を通知する";
+"BUTTON_NOTIFY_FAVORITE" = "お気に入りを通知する";
+"BUTTON_NOTIFY_BOOST" = "ブーストを通知する";
+"BUTTON_NOTIFY_FOLLOW" = "フォローを通知する";
 
 // 詳細アクション
 "ACTION_OPEN_WITH_BROWSER" = "ブラウザで開く";
@@ -151,3 +157,10 @@
 
 // 画像確認画面
 "BUTTON_DELETE_IMAGE" = "削除";
+"BUTTON_NSFW" = "閲覧注意";
+
+// 通知
+"NOTIFY_MENTION" = "返信されました";
+"NOTIFY_FAV" = "お気に入りされました";
+"NOTIFY_BOOST" = "ブーストされました";
+"NOTIFY_FOLLOW" = "フォローされました";

@@ -9,11 +9,14 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
 
     //@IBOutlet weak var window: NSWindow!
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // 通知対応
+        NSUserNotificationCenter.default.delegate = self
+        
         // メニューを作成する
         Menu.makeMainMenus()
         
@@ -36,6 +39,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // アカウント登録があればMainViewControllerを開く
             MainWindow.show()
         }
+    }
+    
+    // 通知
+    func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+        let info = notification.userInfo
+        
+        print("#### notification=\(String(describing: info))")
+    }
+    
+    func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+        return true
     }
 }
 

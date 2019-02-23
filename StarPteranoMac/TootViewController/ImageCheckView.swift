@@ -28,7 +28,7 @@ final class ImageCheckView: NSView {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         
-        let attributedTitle = NSMutableAttributedString(string: "NSFW")
+        let attributedTitle = NSMutableAttributedString(string: I18n.get("BUTTON_NSFW"))
         attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor], range: NSRange.init(location: 0, length: attributedTitle.length))
         nsfwSw.attributedTitle = attributedTitle
         nsfwSw.setButtonType(NSButton.ButtonType.switch)

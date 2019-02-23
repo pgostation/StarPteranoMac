@@ -547,6 +547,78 @@ final class SettingsData {
         }
     }
     
+    // メンション通知を有効にするかどうか
+    static var notifyMentions: Bool {
+        get {
+            if let string = defaults.string(forKey: "notifyMentions") {
+                let value = (string == "ON")
+                return value
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "notifyMentions")
+            } else {
+                defaults.set("OFF", forKey: "notifyMentions")
+            }
+        }
+    }
+    
+    // お気に入り通知を有効にするかどうか
+    static var notifyFavorites: Bool {
+        get {
+            if let string = defaults.string(forKey: "notifyFavorites") {
+                let value = (string == "ON")
+                return value
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "notifyFavorites")
+            } else {
+                defaults.set("OFF", forKey: "notifyFavorites")
+            }
+        }
+    }
+    
+    // ブースト通知を有効にするかどうか
+    static var notifyBoosts: Bool {
+        get {
+            if let string = defaults.string(forKey: "notifyBoosts") {
+                let value = (string == "ON")
+                return value
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "notifyBoosts")
+            } else {
+                defaults.set("OFF", forKey: "notifyBoosts")
+            }
+        }
+    }
+    
+    // フォロー通知を有効にするかどうか
+    static var notifyFollows: Bool {
+        get {
+            if let string = defaults.string(forKey: "notifyFollows") {
+                let value = (string == "ON")
+                return value
+            }
+            return true
+        }
+        set(newValue) {
+            if newValue {
+                defaults.removeObject(forKey: "notifyFollows")
+            } else {
+                defaults.set("OFF", forKey: "notifyFollows")
+            }
+        }
+    }
+    
     // 最近使った絵文字に追加
     static func addRecentEmoji(key: String, accessToken: String) {
         var list = recentEmojiList(accessToken: accessToken)

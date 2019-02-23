@@ -53,6 +53,9 @@ final class MainViewController: NSViewController {
             if let view = subVC.scrollView.documentView as? TimeLineView {
                 view.reloadData()
             }
+            if let tootView = subVC.tootVC.view as? TootView {
+                tootView.refresh()
+            }
         }
     }
     

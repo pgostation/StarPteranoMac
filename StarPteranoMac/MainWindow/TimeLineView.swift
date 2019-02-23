@@ -384,7 +384,7 @@ final class TimeLineView: NSTableView {
                     //MainViewController.instance?.markNotificationButton(accessToken: accessToken ?? "", to: true)
                     
                     // 効果音を出す
-                    if TimeLineView.audioPlayer == nil {
+                    /*if TimeLineView.audioPlayer == nil {
                         if let soundFilePath = Bundle.main.path(forResource: "decision21", ofType: "mp3") {
                             let sound = URL(fileURLWithPath: soundFilePath)
                             TimeLineView.audioPlayer = try? AVAudioPlayer(contentsOf: sound, fileTypeHint:nil)
@@ -392,7 +392,47 @@ final class TimeLineView: NSTableView {
                         }
                     }
                     TimeLineView.audioPlayer?.currentTime = 0
-                    TimeLineView.audioPlayer?.play()
+                    TimeLineView.audioPlayer?.play()*/
+                    
+                    // デスクトップ通知する
+                    if let string = payload as? String {
+                        guard let json = try JSONSerialization.jsonObject(with: string.data(using: String.Encoding.utf8)!, options: .allowFragments) as? [String: Any] else { return }
+                        
+                        guard let typeStr = json["type"] as? String else { return }
+                        
+                        var titleStr = "%@"
+                        switch typeStr {
+                        case "mention":
+                            if !SettingsData.notifyMentions { return }
+                            titleStr = I18n.get("NOTIFY_MENTION")
+                        case "favourite":
+                            if !SettingsData.notifyFavorites { return }
+                            titleStr = I18n.get("NOTIFY_FAV")
+                        case "reblog":
+                            if !SettingsData.notifyBoosts { return }
+                            titleStr = I18n.get("NOTIFY_BOOST")
+                        case "follow":
+                            if !SettingsData.notifyFollows { return }
+                            titleStr = I18n.get("NOTIFY_FOLLOW")
+                        default:
+                            return
+                        }
+                        
+                        let acctStr = (json["account"] as? [String: Any])?["acct"] as? String
+                        
+                        let contentHtmlStr = (json["status"] as? [String: Any])?["content"] as? String
+                        let contentStr = DecodeToot.decodeContent(content: contentHtmlStr, emojis: nil, callback: nil)
+                        
+                        let notification = NSUserNotification()
+                        notification.title = titleStr
+                        notification.subtitle = acctStr
+                        notification.informativeText = String(contentStr.0.string.prefix(50))
+                        notification.userInfo = ["accessToken" : self.accessToken,
+                                                 "created_at": (json["created_at"] as? String) ?? ""]
+                        DispatchQueue.main.async {
+                            NSUserNotificationCenter.default.deliver(notification)
+                        }
+                    }
                 case "delete":
                     if let deleteId = payload as? String {
                         // waitingStatusListからの削除

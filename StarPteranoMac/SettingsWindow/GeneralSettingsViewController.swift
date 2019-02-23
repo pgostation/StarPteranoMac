@@ -133,12 +133,12 @@ final class GeneralSettingsView: NSView {
                                          height: 35)
         
         useStreamingButton.frame = NSRect(x: 30,
-                                          y: SettingsWindow.contentRect.height - 90,
+                                          y: SettingsWindow.contentRect.height - 100 - 5,
                                           width: 200,
                                           height: 20)
         
         defaultNSFWButton.frame = NSRect(x: 30,
-                                         y: SettingsWindow.contentRect.height - 150,
+                                         y: SettingsWindow.contentRect.height - 150 - 5,
                                          width: 200,
                                          height: 20)
         
