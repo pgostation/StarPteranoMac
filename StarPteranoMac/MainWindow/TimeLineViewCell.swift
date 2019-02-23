@@ -130,16 +130,10 @@ final class TimeLineViewCell: NSView {
             //self.nameLabel.addGestureRecognizer(tapGesture)
             //self.nameLabel.isUserInteractionEnabled = true
         }
-        
-        LeakCounter.add("TimeLineViewCell")
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        LeakCounter.sub("TimeLineViewCell")
     }
     
     override func removeFromSuperview() {

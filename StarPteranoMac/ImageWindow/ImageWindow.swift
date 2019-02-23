@@ -57,6 +57,8 @@ final class ImageWindow: NSPanel {
     }
     
     override func mouseDragged(with event: NSEvent) {
+        if event.locationInWindow.y > self.frame.height - 22 { return }
+        
         if #available(OSX 10.13, *) {
             if let imageView = (self.contentView?.subviews.first as? ImageViewController.LocalImageView), let image = imageView.image, let url = imageView.fileUrl {
                 let smallImage = ImageUtils.small(image: image, pixels: 400 * 400)
@@ -66,7 +68,8 @@ final class ImageWindow: NSPanel {
                 (url as NSURL).write(to: pasteboard)
                 
                 self.drag(smallImage,
-                          at: NSPoint(x: 10, y: 10),
+                          at: NSPoint.init(x: event.locationInWindow.x - smallImage.size.width / 2,
+                                           y: event.locationInWindow.y - smallImage.size.height / 2),
                           offset: NSSize(width: 0, height: 0),
                           event: event,
                           pasteboard: pasteboard,
