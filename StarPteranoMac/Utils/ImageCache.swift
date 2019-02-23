@@ -97,7 +97,7 @@ final class ImageCache {
         waitingDict[urlStr] = []
         
         // ネットワークに取りに行く
-        (isThread ? imageQueue : DispatchQueue.main).async {
+        imageQueue.async {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
                 DispatchQueue.main.async {

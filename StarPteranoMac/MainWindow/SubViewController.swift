@@ -64,8 +64,9 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         tabView.tabBarView.addNewTabButtonAction = #selector(newTabAction)
         tabView.tabBarView.addNewTabButtonTarget = self
         
-        scrollView.scrollerStyle = .legacy
+        //scrollView.scrollerStyle = .legacy
         scrollView.hasVerticalScroller = true
+        scrollView.drawsBackground = false
     }
     
     private func addTab(mode: SettingsData.TLMode) {

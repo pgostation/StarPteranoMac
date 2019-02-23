@@ -118,16 +118,18 @@ final class ImageViewController: NSViewController {
         }
         
         let index = selectedIndex
-        ImageCache.image(urlStr: previewUrls[selectedIndex], isTemp: false, isSmall: false) { [weak self] (image, fileUrl) in
+        ImageCache.image(urlStr: previewUrls[selectedIndex], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
             if index != self?.selectedIndex { return }
             self?.imageView.image = image
             self?.imageView.fileUrl = fileUrl
         }
         
-        ImageCache.image(urlStr: imagesUrls[selectedIndex], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
-            if index != self?.selectedIndex { return }
-            self?.imageView.image = image
-            self?.imageView.fileUrl = fileUrl
+        DispatchQueue.main.async {
+            ImageCache.image(urlStr: self.imagesUrls[self.selectedIndex], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
+                if index != self?.selectedIndex { return }
+                self?.imageView.image = image
+                self?.imageView.fileUrl = fileUrl
+            }
         }
     }
     

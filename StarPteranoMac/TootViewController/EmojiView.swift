@@ -27,7 +27,7 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        super.init(frame: CGRect(x: 0, y: 0, width: 320, height: SettingsData.emojiKeyboardHeight))
+        super.init(frame: CGRect(x: 0, y: 0, width: 320, height: 500))
         
         self.emojiScrollView = EmojiInputScrollView(hostName: hostName, accessToken: accessToken, emojiScrollContentView: emojiScrollContentView)
         

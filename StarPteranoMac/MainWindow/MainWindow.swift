@@ -14,6 +14,12 @@ final class MainWindow: NSWindow {
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
         super.init(contentRect: contentRect, styleMask: style, backing: backingStoreType, defer: flag)
         
+        if SettingsData.isTransparentWindow {
+            self.backgroundColor = ThemeColor.viewBgColor.withAlphaComponent(0.5)
+            self.titlebarAppearsTransparent = true
+            self.isOpaque = false
+        }
+        
         AccountSettingsViewController.getAccountData(view: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.moved),

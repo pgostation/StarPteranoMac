@@ -49,9 +49,9 @@ final class ImageWindow: NSPanel {
     }
     
     override func keyDown(with event: NSEvent) {
-        if event.keyCode == 123 {
+        if event.keyCode == 123 || event.keyCode == 4 || event.keyCode == 38 {
             (self.contentViewController as? ImageViewController)?.leftAction()
-        } else if event.keyCode == 124 {
+        } else if event.keyCode == 124 || event.keyCode == 40 || event.keyCode == 37 {
             (self.contentViewController as? ImageViewController)?.rightAction()
         }
     }

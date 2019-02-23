@@ -53,6 +53,10 @@ final class SettingsViewController: NSViewController {
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
+        
+        let vc = GeneralSettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
     }
     
     @objc func uiAction() {
@@ -64,6 +68,10 @@ final class SettingsViewController: NSViewController {
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
+        
+        let vc = UISettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
     }
     
     @objc func notifyAction() {
@@ -75,6 +83,10 @@ final class SettingsViewController: NSViewController {
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
+        
+        let vc = NotifySettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
     }
     
     @objc func searchAction() {
@@ -86,6 +98,10 @@ final class SettingsViewController: NSViewController {
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
+        
+        let vc = SearchSettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
     }
     
     @objc func detailAction() {
@@ -97,6 +113,10 @@ final class SettingsViewController: NSViewController {
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
+        
+        let vc = DetailSettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
     }
 }
 

@@ -84,7 +84,11 @@ final class TimeLineViewCell: NSView {
         
         // 固定プロパティは初期化時に設定
         //self.clipsToBounds = true
-        self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        if SettingsData.isTransparentWindow {
+            self.layer?.backgroundColor = NSColor.clear.cgColor
+        } else {
+            self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        }
         //self.isOpaque = true
         //self.selectionStyle = .none
         

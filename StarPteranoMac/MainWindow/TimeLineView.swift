@@ -63,7 +63,11 @@ final class TimeLineView: NSTableView {
     
     // ダークモード切り替えで更新
     override func updateLayer() {
-        self.backgroundColor = ThemeColor.cellBgColor
+        if SettingsData.isTransparentWindow {
+            self.backgroundColor = NSColor.clear
+        } else {
+            self.backgroundColor = ThemeColor.cellBgColor
+        }
     }
     
     // タイムラインを初回取得/手動更新

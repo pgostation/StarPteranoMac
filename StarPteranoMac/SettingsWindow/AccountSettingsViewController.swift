@@ -16,7 +16,9 @@ final class AccountSettingsViewController: NSViewController {
         self.view = view
         
         view.authButton.action = #selector(authAction)
+        view.authButton.target = self
         view.codeEnterButton.action = #selector(codeEnterAction)
+        view.codeEnterButton.target = self
     }
     
     required init?(coder: NSCoder) {

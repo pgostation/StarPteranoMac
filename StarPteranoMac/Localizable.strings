@@ -73,6 +73,20 @@
 // アカウント設定
 "BUTTON_DELETE" = "削除";
 
+// 一般設定
+"SETTINGS_PROTECTMODE" = "公開範囲";
+"BUTTON_USESTREAMING" = "ストリーミングを使用";
+"BUTTON_CLEARCACHE" = "キャッシュをクリア";
+
+// UI設定
+"BUTTON_USING_COLOR" = "選択したセルに色をつける";
+"LABEL_ICONSIZE" = "アイコンサイズ";
+"BUTTON_LOAD_PREVIEW" = "画像プレビューを読み込む";
+"BUTTON_USE_ANIMATION" = "カスタム絵文字のアニメーション";
+"BUTTON_ABSOLUTE_TIME" = "絶対時間表示";
+"BUTTON_FAVORITE_DIALOG" = "お気に入り時に確認表示";
+"BUTTON_TRANSPARENT_WINDOW" = "透過ウィンドウ";
+
 // ログイン
 "PLACEHOLDER_INPUT_DOMAIN" = "Input domain (ex：mastodon.social)";
 "BUTTON_MASTODON_OAUTH" = "Mastodon Server Auth";

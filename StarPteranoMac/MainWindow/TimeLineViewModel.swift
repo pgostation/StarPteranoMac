@@ -756,13 +756,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                 }
                                 let apngView = NSImageView()
                                 apngView.sd_setImage(with: localUrl, completed: { (image, error, type, url) in
-                                    apngView.wantsLayer = true
-                                    apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-                                    let size = min(rect.size.width, rect.size.height)
+                                    if SettingsData.isTransparentWindow {
+                                        apngView.layer?.backgroundColor = NSColor.clear.cgColor
+                                    } else {
+                                        apngView.wantsLayer = true
+                                        apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+                                    }
                                     apngView.frame = CGRect(x: rect.origin.x,
                                                             y: rect.origin.y + 3,
-                                                            width: size,
-                                                            height: size)
+                                                            width: rect.size.width,
+                                                            height: rect.size.height)
                                     messageView.addSubview(apngView)
                                 })
                             }
@@ -1356,11 +1359,18 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             cell.dateLabel.backgroundColor = ThemeColor.toMentionBgColor
         } else {
             // 通常色
-            cell.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.cellBgColor
-            cell.nameLabel.backgroundColor = ThemeColor.cellBgColor
-            cell.idLabel.backgroundColor = ThemeColor.cellBgColor
-            cell.dateLabel.backgroundColor = ThemeColor.cellBgColor
+            if SettingsData.isTransparentWindow {
+                cell.layer?.backgroundColor = NSColor.clear.cgColor
+                cell.nameLabel.backgroundColor = NSColor.clear
+                cell.idLabel.backgroundColor = NSColor.clear
+                cell.dateLabel.backgroundColor = NSColor.clear
+            } else {
+                cell.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+                //cell.messageView?.backgroundColor = ThemeColor.cellBgColor
+                cell.nameLabel.backgroundColor = ThemeColor.cellBgColor
+                cell.idLabel.backgroundColor = ThemeColor.cellBgColor
+                cell.dateLabel.backgroundColor = ThemeColor.cellBgColor
+            }
         }
     }
     

@@ -34,7 +34,11 @@ final class MainViewController: NSViewController {
             let bar = SlideBar()
             bar.accessToken = account.1
             bar.wantsLayer = true
-            bar.layer?.backgroundColor = NSColor.gray.cgColor
+            if SettingsData.isTransparentWindow {
+                bar.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.4).cgColor
+            } else {
+                bar.layer?.backgroundColor = NSColor.gray.cgColor
+            }
             barList.append(bar)
             self.view.addSubview(bar)
         }

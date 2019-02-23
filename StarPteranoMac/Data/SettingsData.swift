@@ -488,21 +488,6 @@ final class SettingsData {
         }
     }
     
-    // 絵文字キーボードサイズ
-    static var emojiKeyboardHeight: CGFloat {
-        get {
-            let value = defaults.double(forKey: "emojiKeyboardHeight")
-            if value > 0 {
-                return CGFloat(value)
-            }
-            let defaultSize: CGFloat = 250
-            return defaultSize
-        }
-        set(newValue) {
-            defaults.set(newValue, forKey: "emojiKeyboardHeight")
-        }
-    }
-    
     // 絶対時間表示
     static var useAbsoluteTime: Bool {
         get {
@@ -516,6 +501,40 @@ final class SettingsData {
                 defaults.set("ON", forKey: "useAbsoluteTime")
             } else {
                 defaults.removeObject(forKey: "useAbsoluteTime")
+            }
+        }
+    }
+    
+    // ウィンドウを透明化
+    private static var _isTransparentWindow: Bool?
+    static var isTransparentWindow: Bool {
+        get {
+            if let cache = self._isTransparentWindow {
+                return cache
+            }
+            if let string = defaults.string(forKey: "isTransparentWindow") {
+                let result = (string == "ON")
+                self._isTransparentWindow = result
+                return result
+            }
+            self._isTransparentWindow = false
+            return false
+        }
+        set(newValue) {
+            if newValue != isTransparentWindow {
+                DispatchQueue.main.async {
+                    MainWindow.window?.close()
+                    DispatchQueue.main.async {
+                        MainWindow.show()
+                    }
+                }
+            }
+            self._isTransparentWindow = newValue
+            
+            if newValue {
+                defaults.set("ON", forKey: "isTransparentWindow")
+            } else {
+                defaults.removeObject(forKey: "isTransparentWindow")
             }
         }
     }

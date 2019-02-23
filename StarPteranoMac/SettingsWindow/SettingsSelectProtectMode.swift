@@ -16,7 +16,7 @@ final class SettingsSelectProtectMode {
                 if let view = subVC.view.viewWithTag(123) {
                     view.removeFromSuperview()
                 } else {
-                    subVC.view.addSubview(ProtectModeView(hostName: hostName, accessToken: accessToken, y: subVC.tootVC.view.frame.minY, callback: callback))
+                    subVC.view.addSubview(ProtectModeView(y: subVC.tootVC.view.frame.minY, callback: callback))
                 }
                 break
             }
@@ -35,7 +35,7 @@ final class ProtectModeView: NSView {
     private let directButton = NSButton()
     private let callback: ((SettingsData.ProtectMode)->Void)
     
-    init(hostName: String, accessToken: String, y: CGFloat, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
+    init(y: CGFloat, callback: @escaping ((SettingsData.ProtectMode)->Void)) {
         self.callback = callback
         
         super.init(frame: NSRect(x: 0, y: y - 160, width: 150, height: 160))
