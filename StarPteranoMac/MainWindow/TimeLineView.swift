@@ -303,6 +303,7 @@ final class TimeLineView: NSTableView {
     private var streamingObject: MastodonStreaming?
     private var waitingStatusList: [AnalyzeJson.ContentData] = []
     private var waitingIdDict: [String: Bool] = [:]
+    private var streamingTimer: Timer?
     @objc func streaming(streamingType: String) {
         guard let url = URL(string: "wss://\(hostName)/api/v1/streaming/?access_token=\(accessToken)&stream=\(streamingType)") else { return }
         
@@ -319,6 +320,18 @@ final class TimeLineView: NSTableView {
                         homeLocalTlView.analyzeStreamingData(string: string, isMerge: true)
                     }
                 }
+            }
+            
+            // 再接続タイマー
+            if #available(OSX 10.12, *) {
+                self?.streamingTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] (timer) in
+                    if self == nil { return }
+                    if self?.streamingObject == nil {
+                        self?.streaming(streamingType: streamingType)
+                    } else if self?.streamingObject?.isConnected == false {
+                        self?.startStreaming()
+                    }
+                })
             }
         })
     }
