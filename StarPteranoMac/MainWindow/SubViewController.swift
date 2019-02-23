@@ -84,6 +84,10 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                             okName: I18n.get("BUTTON_ADD"),
                             cancelName: I18n.get("BUTTON_CANCEL"),
                             view: popUp)
+        
+        if let item = self.selectedItem {
+            addTab(mode: item)
+        }
     }
     
     func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
@@ -187,51 +191,24 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         doMenu(title: menuItem.title)
     }
     
+    private var selectedItem: SettingsData.TLMode?
     private func doMenu(title: String) {
-        /*
-        func setTimeLineViewController(mode: SettingsData.TLMode) {
-            let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
-            
-            let type: TimeLineViewController.TimeLineType
-            if mode == .local { type = .local }
-            else if mode == .homeLocal { type = .homeLocal }
-            else if mode == .federation { type = .federation }
-            else { type = .home }
-            
-            let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
-            scrollView.documentView = vc.view
-            
-            self.children.first?.removeFromParent()
-            self.addChild(vc)
-            
-            TimeLineViewManager.set(key: key, vc: vc)
-            
-            SettingsData.setTlMode(key: hostName + "," + accessToken, modes: [mode])
-        }
-        
-        func setTimeLineViewController(vc: TimeLineViewController) {
-            scrollView.documentView = vc.view
-            
-            self.children.first?.removeFromParent()
-            self.addChild(vc)
-        }*/
-        
         if title == I18n.get("ACTION_HOME") {
-            addTab(mode: .home)
+            selectedItem = .home
         } else if title == I18n.get("ACTION_LOCAL") {
-            addTab(mode: .local)
+            selectedItem = .local
         } else if title == I18n.get("ACTION_HOMELOCAL") {
-            addTab(mode: .homeLocal)
+            selectedItem = .homeLocal
         } else if title == I18n.get("ACTION_FEDERATION") {
-            addTab(mode: .federation)
+            selectedItem = .federation
         } else if title == I18n.get("ACTION_MENTIONS") {
             //
         } else if title == I18n.get("ACTION_NOTIFICATIONS") {
             //
         } else if title == I18n.get("ACTION_DM") {
-            addTab(mode: .dm)
+            selectedItem = .dm
         } else if title == I18n.get("ACTION_FAVORITES") {
-            addTab(mode: .favorites)
+            selectedItem = .favorites
         }
     }
     
