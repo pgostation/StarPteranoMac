@@ -53,6 +53,8 @@
 		12C044FC2220FFAA00BE3A50 /* NotifySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044FB2220FFAA00BE3A50 /* NotifySettingsViewController.swift */; };
 		12C044FE2220FFB700BE3A50 /* SearchSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044FD2220FFB700BE3A50 /* SearchSettingsViewController.swift */; };
 		12C045002220FFC300BE3A50 /* DetailSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044FF2220FFC300BE3A50 /* DetailSettingsViewController.swift */; };
+		12C04502222229D600BE3A50 /* SubTimeLineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C04501222229D600BE3A50 /* SubTimeLineViewController.swift */; };
+		12C0450422222C5A00BE3A50 /* BreadCrumbListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C0450322222C5A00BE3A50 /* BreadCrumbListView.swift */; };
 		12CFB10D221849560066CC42 /* LYTabView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; };
 		12CFB10E221849560066CC42 /* LYTabView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 12CFB10C221849560066CC42 /* LYTabView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12DF0D2C221C408A006A8C0B /* ImageUpload.swift */; };
@@ -125,6 +127,8 @@
 		12C044FB2220FFAA00BE3A50 /* NotifySettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifySettingsViewController.swift; sourceTree = "<group>"; };
 		12C044FD2220FFB700BE3A50 /* SearchSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSettingsViewController.swift; sourceTree = "<group>"; };
 		12C044FF2220FFC300BE3A50 /* DetailSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailSettingsViewController.swift; sourceTree = "<group>"; };
+		12C04501222229D600BE3A50 /* SubTimeLineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubTimeLineViewController.swift; sourceTree = "<group>"; };
+		12C0450322222C5A00BE3A50 /* BreadCrumbListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadCrumbListView.swift; sourceTree = "<group>"; };
 		12CFB108221847B70066CC42 /* KPCTabsControl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = KPCTabsControl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12CFB10C221849560066CC42 /* LYTabView.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LYTabView.framework; path = Carthage/Build/Mac/LYTabView.framework; sourceTree = "<group>"; };
 		12DF0D2C221C408A006A8C0B /* ImageUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUpload.swift; sourceTree = "<group>"; };
@@ -210,6 +214,8 @@
 				128751B72184817D00BC8828 /* TimeLineViewModel.swift */,
 				128751C52184A37300BC8828 /* TimeLineViewCell.swift */,
 				129E89D522145DC300D3D13B /* CardView.swift */,
+				12C04501222229D600BE3A50 /* SubTimeLineViewController.swift */,
+				12C0450322222C5A00BE3A50 /* BreadCrumbListView.swift */,
 			);
 			path = MainWindow;
 			sourceTree = "<group>";
@@ -484,6 +490,7 @@
 				12C044F82220FF8E00BE3A50 /* GeneralSettingsViewController.swift in Sources */,
 				128751B22184811600BC8828 /* AnalyzeJson.swift in Sources */,
 				12C044FE2220FFB700BE3A50 /* SearchSettingsViewController.swift in Sources */,
+				12C04502222229D600BE3A50 /* SubTimeLineViewController.swift in Sources */,
 				1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */,
 				1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */,
 				128751CB2184BD4E00BC8828 /* ImageWindow.swift in Sources */,
@@ -494,6 +501,7 @@
 				128751D12185445A00BC8828 /* TootView.swift in Sources */,
 				129E89D622145DC300D3D13B /* CardView.swift in Sources */,
 				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
+				12C0450422222C5A00BE3A50 /* BreadCrumbListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

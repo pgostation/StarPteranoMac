@@ -67,14 +67,6 @@ final class TimeLineViewController: NSViewController {
             self.view = view
         }
         
-        if self.type == .home {
-            let homeLocalKey = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: .homeLocal, option: nil)
-            if TimeLineViewManager.get(key: homeLocalKey) == nil {
-                let homeLocalVC = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .homeLocal)
-                TimeLineViewManager.set(key: homeLocalKey, vc: homeLocalVC)
-            }
-        }
-        
         (self.view as? TimeLineView)?.startStreaming()
     }
     

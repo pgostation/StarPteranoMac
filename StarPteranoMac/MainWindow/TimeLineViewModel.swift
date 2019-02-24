@@ -29,6 +29,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 }
             } else {
                 selectedAccountId = nil
+                inReplyToTootId = nil
+                inReplyToAccountId = nil
             }
             _selectedRow = newValue
         }
@@ -339,12 +341,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     let accountData = timelineView.accountList[timelineView.option ?? ""]
                     let cell = ProfileViewCell(accountData: accountData, isTemp: true)
                     cell.layout()
-                    return cell.frame.height
+                    return max(cell.frame.height, 1)
                 }
             }
         }
         
-        if row == list.count {
+        if row >= list.count {
             // AutoPagerize用セルの高さ
             return 300
         }
@@ -432,7 +434,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 var tmpOffset: CGFloat = 0
                 for media in mediaData {
                     if let width = media.width, let height = media.height, width > 0 {
-                        let maxSize: CGFloat = min(400, tableView.frame.width - 70)
+                        let maxSize: CGFloat = min(400, 600 / CGFloat(mediaData.count), tableView.frame.width - 70)
                         if height > width {
                             tmpOffset += maxSize
                         } else {
@@ -1041,7 +1043,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 
                 let iconSize = cell.isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
                 
-                // アイコンのタップジェスチャー
+                // アイコンのクリック処理
                 let coverButton = NSButton()
                 coverButton.isTransparent = true
                 coverButton.target = cell
@@ -1054,6 +1056,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                               y: height - (cell.isMiniView == .superMini ? 12 - iconSize / 2 : (cell.isMiniView != .normal ? 6 : 10)) - iconSize,
                                               width: iconSize,
                                               height: iconSize)
+                
+                let pressGesture = NSPressGestureRecognizer(target: cell, action: #selector(cell.pressAccountAction(_:)))
+                cell.iconView?.addGestureRecognizer(pressGesture)
             }
         }
         
@@ -1110,26 +1115,34 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 func addImageView(withPlayButton: Bool) {
                     let imageView = MyImageView()
                     
-                    imageView.wantsLayer = true
-                    imageView.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.3).cgColor
-                    //imageView.clipsToBounds = true
-                    imageView.layer?.borderColor = NSColor.gray.withAlphaComponent(0.2).cgColor
-                    imageView.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
                     imageView.imageScaling = .scaleProportionallyUpOrDown
                     
                     // 画像読み込み
                     let isPreview = !(isDetailTimeline && row == selectedRow)
-                    ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image, url in
-                        guard let cell = cell else { return }
-                        guard let imageView = imageView else { return }
-                        imageView.image = image
-                        imageView.animates = false
-                        imageView.layer?.backgroundColor = nil
-                        cell.needsLayout = true
+                    if SettingsData.isLoadPreviewImage {
+                        ImageCache.image(urlStr: media.preview_url, isTemp: true, isSmall: false, isPreview: isPreview) { [weak cell, weak imageView] image, url in
+                            guard let cell = cell else { return }
+                            guard let imageView = imageView else { return }
+                            imageView.image = image
+                            imageView.animates = false
+                            imageView.layer?.backgroundColor = nil
+                            cell.needsLayout = true
+                        }
+                    } else {
+                        
                     }
                     cell.imageViews.append(imageView)
                     
                     let imageParentView = NSView()
+                    imageParentView.wantsLayer = true
+                    if SettingsData.isLoadPreviewImage {
+                        imageParentView.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.3).cgColor
+                        imageParentView.layer?.borderColor = NSColor.gray.withAlphaComponent(0.3).cgColor
+                    } else {
+                        imageParentView.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.3).cgColor
+                        imageParentView.layer?.borderColor = ThemeColor.nameColor.withAlphaComponent(0.8).cgColor
+                    }
+                    imageParentView.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
                     imageParentView.addSubview(imageView)
                     cell.addSubview(imageParentView)
                     cell.imageParentViews.append(imageParentView)

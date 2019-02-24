@@ -324,14 +324,18 @@ final class TimeLineView: NSTableView {
             
             // 再接続タイマー
             if #available(OSX 10.12, *) {
-                self?.streamingTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] (timer) in
-                    if self == nil { return }
-                    if self?.streamingObject == nil {
-                        self?.streaming(streamingType: streamingType)
-                    } else if self?.streamingObject?.isConnected == false {
-                        self?.startStreaming()
+                if self?.streamingTimer == nil {
+                    DispatchQueue.main.async {
+                        self?.streamingTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] (timer) in
+                            if self == nil { return }
+                            if self?.streamingObject == nil {
+                                self?.streaming(streamingType: streamingType)
+                            } else if self?.streamingObject?.isConnected == false {
+                                self?.startStreaming()
+                            }
+                        })
                     }
-                })
+                }
             }
         })
     }

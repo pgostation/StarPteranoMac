@@ -36,7 +36,7 @@ final class ImageViewController: NSViewController {
             let rate = 1500 / max(1, smallImage.size.width + smallImage.size.height)
             imageView.frame = NSRect(x: 0, y: 0, width: rate * smallImage.size.width, height: rate * smallImage.size.height)
         } else {
-            imageView.frame = NSRect(x: 0, y: 0, width: 400, height: 400)
+            imageView.frame = NSRect(x: 0, y: 0, width: 500, height: 500)
         }
         
         if imagesUrls.count <= 1 {

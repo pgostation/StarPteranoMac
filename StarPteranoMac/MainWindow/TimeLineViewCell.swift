@@ -19,7 +19,7 @@ final class TimeLineViewCell: NSView {
     // 基本ビュー
     let lineLayer = CALayer()
     var iconView: NSImageView?
-    let nameLabel = MyTextField()
+    let nameLabel = ClickableTextField()
     let idLabel = MyTextField()
     let dateLabel = MyTextField()
     var messageView: TimeLineViewModel.MyTextView?
@@ -126,9 +126,9 @@ final class TimeLineViewCell: NSView {
         
         if SettingsData.isNameTappable {
             // アカウント名のタップジェスチャー
-            //let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountAction))
-            //self.nameLabel.addGestureRecognizer(tapGesture)
-            //self.nameLabel.isUserInteractionEnabled = true
+            nameLabel.addTarget { [weak self] in
+                self?.tapAccountAction()
+            }
         }
     }
     
@@ -252,17 +252,29 @@ final class TimeLineViewCell: NSView {
             if let timelineView = accountTimeLineViewController.view as? TimeLineView, let accountData = self.accountData {
                 timelineView.accountList.updateValue(accountData, forKey: accountId)
             }
-            tableView?.vc?.addChild(accountTimeLineViewController)
-            tableView?.addSubview(accountTimeLineViewController.view)
-            accountTimeLineViewController.view.frame = CGRect(x: self.frame.width,
+            
+            let subTimeLineViewController = SubTimeLineViewController(name: self.nameLabel.attributedStringValue, icon: self.iconView?.image, timelineVC: accountTimeLineViewController)
+            
+            var targetSubVC: SubViewController? = nil
+            for subVC in MainViewController.instance?.subVCList ?? [] {
+                if self.tableView?.hostName == subVC.tootVC.hostName && self.tableView?.accessToken == subVC.tootVC.accessToken {
+                    targetSubVC = subVC
+                    break
+                }
+            }
+            
+            targetSubVC?.addChild(subTimeLineViewController)
+            targetSubVC?.view.addSubview(subTimeLineViewController.view)
+            
+            subTimeLineViewController.view.frame = CGRect(x: self.frame.width,
                                                               y: 0,
                                                               width: self.frame.width,
-                                                              height: tableView?.frame.height ?? 0)
+                                                              height: (targetSubVC?.view.frame.height ?? 100) - 22)
             
             let animation = NSViewAnimation(duration: 0.3, animationCurve: NSAnimation.Curve.easeIn)
-            let frame = accountTimeLineViewController.view.frame
+            let frame = subTimeLineViewController.view.frame
             let animationDict: [NSViewAnimation.Key: Any] = [
-                NSViewAnimation.Key.target: self,
+                NSViewAnimation.Key.target: subTimeLineViewController.view,
                 NSViewAnimation.Key.startFrame: frame,
                 NSViewAnimation.Key.endFrame: NSRect(x: 0, y: frame.minY, width: frame.width, height: frame.height)]
             animation.viewAnimations = [animationDict]
@@ -806,7 +818,7 @@ final class TimeLineViewCell: NSView {
         for imageParentView in self.imageParentViews {
             guard let imageView = imageParentView.subviews.first as? NSImageView else { continue }
             if isDetailMode, let image = imageView.image {
-                let maxSize: CGFloat = min(400, self.frame.width - 80)
+                let maxSize: CGFloat = min(400, 600 / CGFloat(self.imageParentViews.count), self.frame.width - 80)
                 var imageWidth: CGFloat = 0
                 var imageHeight: CGFloat = isDetailMode ? maxSize : 80
                 let size = image.size

@@ -25,8 +25,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         self.view = NSView()
         
-        self.view.addSubview(tabView)
         self.view.addSubview(tootVC.view)
+        self.view.addSubview(tabView)
         self.view.addSubview(scrollView)
         
         setProperties()
@@ -230,6 +230,12 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                   y: 0,
                                   width: self.view.frame.width,
                                   height: self.view.frame.height - 20 - tootVC.view.frame.height - 22)
+        
+        for subview in self.view.subviews {
+            if subview is SubTimeLineView {
+                subview.frame = scrollView.documentView!.frame
+            }
+        }
         
         // 絵文字キーボード
         if let emojiView = self.view.viewWithTag(3948) {
