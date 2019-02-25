@@ -13,6 +13,7 @@ import APNGKit
 final class EmojiView: NSView, NSTextFieldDelegate {
     private let hostName: String
     private let accessToken: String
+    private let closeButton = NSButton()
     private let spaceButton = NSButton()
     private let searchField = NSTextField()
     private var emojiScrollView: EmojiInputScrollView! = nil
@@ -31,14 +32,19 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         
         self.emojiScrollView = EmojiInputScrollView(hostName: hostName, accessToken: accessToken, emojiScrollContentView: emojiScrollContentView)
         
+        self.addSubview(closeButton)
         self.addSubview(spaceButton)
         self.addSubview(searchField)
         self.addSubview(emojiScrollView)
         emojiScrollView.contentView = emojiScrollClipView
         emojiScrollClipView.documentView = emojiScrollContentView
         
+        closeButton.target = self
+        closeButton.action = #selector(closeAction)
+        
         spaceButton.target = self
         spaceButton.action = #selector(spaceAction)
+        
         searchField.delegate = self
         
         setProperties()
@@ -54,12 +60,12 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         
         self.emojiScrollView.backgroundColor = ThemeColor.viewBgColor
         
+        closeButton.title = "✖️"
+        
         spaceButton.title = I18n.get("BUTTON_SPACEKEY")
         //spaceButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
         //spaceButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        //spaceButton.backgroundColor = ThemeColor.opaqueButtonsBgColor
         //spaceButton.clipsToBounds = true
-        spaceButton.layer?.cornerRadius = 10
         
         searchField.placeholderString = I18n.get("SEARCH_PLACEHOLDER")
     }
@@ -102,6 +108,10 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         textView.deleteBackward(nil)
     }
     
+    @objc func closeAction() {
+        self.removeFromSuperview()
+    }
+    
     // キャレット直前の文字を返す
     static func getCarretBeforeChar(textView: NSTextView) -> Character? {
         let currentRange = textView.selectedRange()
@@ -121,12 +131,17 @@ final class EmojiView: NSView, NSTextFieldDelegate {
     }
     
     override func layout() {
-        self.spaceButton.frame = NSRect(x: 10,
+        self.closeButton.frame = NSRect(x: 10,
+                                        y: self.frame.height - 27,
+                                        width: 25,
+                                        height: 25)
+        
+        self.spaceButton.frame = NSRect(x: 40,
                                         y: self.frame.height - 27,
                                         width: 50,
                                         height: 25)
         
-        self.searchField.frame = NSRect(x: 70,
+        self.searchField.frame = NSRect(x: 100,
                                         y: self.frame.height - 27,
                                         width: 150,
                                         height: 25)
