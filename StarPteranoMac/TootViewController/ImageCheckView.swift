@@ -11,6 +11,7 @@ import SDWebImage
 import AVKit
 
 final class ImageCheckView: NSView {
+    private let closeButton = NSButton()
     let nsfwSw = NSButton()
     var urls: [URL] = []
     private var imageViews: [NSView] = []
@@ -23,10 +24,26 @@ final class ImageCheckView: NSView {
     init() {
         super.init(frame: NSRect.init(x: 0, y: 0, width: 0, height: 0))
         
+        self.addSubview(closeButton)
         self.addSubview(nsfwSw)
         
+        closeButton.target = self
+        closeButton.action = #selector(closeAction)
+        
+        setProperties()
+    }
+    
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setProperties() {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        self.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
+        self.layer?.borderColor = NSColor.gray.cgColor
+        
+        closeButton.title = "✖️"
         
         let attributedTitle = NSMutableAttributedString(string: I18n.get("BUTTON_NSFW"))
         attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor], range: NSRange.init(location: 0, length: attributedTitle.length))
@@ -37,8 +54,8 @@ final class ImageCheckView: NSView {
         }
     }
     
-    required init?(coder decoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    @objc func closeAction() {
+        self.removeFromSuperview()
     }
     
     func add(imageUrl: URL) {
@@ -72,10 +89,6 @@ final class ImageCheckView: NSView {
         
         let deleteButton = NSButton()
         deleteButton.title = I18n.get("BUTTON_DELETE_IMAGE")
-        deleteButton.wantsLayer = true
-        deleteButton.layer?.backgroundColor = ThemeColor.opaqueButtonsBgColor.cgColor
-        //deleteButton.clipsToBounds = true
-        deleteButton.layer?.cornerRadius = 12
         self.addSubview(deleteButton)
         self.deleteButtons.append(deleteButton)
         deleteButton.target = self
@@ -146,7 +159,12 @@ final class ImageCheckView: NSView {
         self.frame.size.width = min(300, (self.superview?.frame.width ?? 300))
         self.frame.size.height = height
         
-        nsfwSw.frame = CGRect(x: 10,
+        closeButton.frame = CGRect(x: 6,
+                                   y: height - 30,
+                                   width: 24,
+                                   height: 24)
+        
+        nsfwSw.frame = CGRect(x: 40,
                               y: height - 30,
                               width: 150,
                               height: 20)

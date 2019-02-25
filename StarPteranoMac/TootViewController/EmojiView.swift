@@ -57,6 +57,8 @@ final class EmojiView: NSView, NSTextFieldDelegate {
     private func setProperties() {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        self.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
+        self.layer?.borderColor = NSColor.gray.cgColor
         
         self.emojiScrollView.backgroundColor = ThemeColor.viewBgColor
         
