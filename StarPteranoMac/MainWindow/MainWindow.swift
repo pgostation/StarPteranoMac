@@ -77,7 +77,15 @@ final class MainWindow: NSWindow {
     
     override func keyDown(with event: NSEvent) {
         if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
-            if let tlView = tlVC.view as? TimeLineView {
+            if let lastVC = tlVC.parent?.children.last as? SubTimeLineViewController {
+                // 会話ビューなどを開いている場合
+                if let tlVC = lastVC.children.first as? TimeLineViewController {
+                    if let tlView = tlVC.view as? TimeLineView {
+                        tlView.myKeyDown(keyCode: event.keyCode)
+                    }
+                }
+            } else if let tlView = tlVC.view as? TimeLineView {
+                // タイムライン
                 tlView.myKeyDown(keyCode: event.keyCode)
             }
         }

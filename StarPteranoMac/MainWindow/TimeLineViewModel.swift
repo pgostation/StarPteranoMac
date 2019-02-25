@@ -1451,6 +1451,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     
     // セル選択時の処理
     private var isAnimating = false
+    private var inDoubleClick = false
     func selectRow(timelineView: TimeLineView, row: Int, notSelect: Bool = false) {
         var index = row
         
@@ -1479,7 +1480,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         if !notSelect && self.selectedRow == row {
-            // 何もしない
+            if self.inDoubleClick {
+                gotoDetailView(timelineView: timelineView, row: row)
+            }
+        
+            self.inDoubleClick = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.inDoubleClick = false
+            }
         } else {
             self.selectedRow = row
             if index < list.count && index >= 0 {

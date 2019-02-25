@@ -130,11 +130,6 @@ final class TimeLineViewCell: NSView {
                 self?.tapAccountAction()
             }
         }
-        
-        // ダブルクリックジェスチャー
-        let doubleTapGesture = NSClickGestureRecognizer(target: self, action: #selector(doubleClick(_:)))
-        doubleTapGesture.numberOfClicksRequired = 2
-        self.addGestureRecognizer(doubleTapGesture)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -303,11 +298,6 @@ final class TimeLineViewCell: NSView {
                 }
             }
         }
-    }
-    
-    // ダブルクリックした時の処理
-    @objc func doubleClick(_ gesture: NSGestureRecognizer?) {
-        self.tableView?.model.gotoDetailView(timelineView: self.tableView!, row: self.indexPath!)
     }
     
     // リプライボタンをクリックした時の処理
