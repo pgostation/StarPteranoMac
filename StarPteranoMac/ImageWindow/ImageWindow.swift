@@ -45,6 +45,7 @@ final class ImageWindow: NSPanel {
         if self.frame.width > 0 {
             self.contentViewController?.view.frame = NSRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height - 20)
             (self.contentViewController as? ImageViewController)?.layout()
+            (self.contentViewController as? MyPlayerViewController)?.view.layout()
         }
     }
     

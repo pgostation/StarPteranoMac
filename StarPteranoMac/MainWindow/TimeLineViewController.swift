@@ -69,7 +69,7 @@ final class TimeLineViewController: NSViewController {
             var sumHeight: CGFloat = 0
             for i in 0..<view.numberOfRows {
                 if i > 10 {
-                    sumHeight += 50
+                    sumHeight += 150
                 } else {
                     sumHeight += view.model.tableView(view, heightOfRow: i)
                 }

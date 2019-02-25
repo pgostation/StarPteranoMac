@@ -1211,7 +1211,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                 
                                 if index < cell.imageViews.count {
                                     cell.layout()
-                                    playerLayer.frame = cell.imageViews[index].frame
+                                    playerLayer.frame = cell.imageParentViews[index].frame
                                 }
                                 
                                 // 再生

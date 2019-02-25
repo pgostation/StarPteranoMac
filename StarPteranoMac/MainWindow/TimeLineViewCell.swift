@@ -574,13 +574,25 @@ final class TimeLineViewCell: NSView {
                     NSWorkspace.shared.open(url)
                 } else if imageTypes[index] == "video" || imageTypes[index] == "gifv" {
                     // 動画
+                    let smallFrame = self.imageViews[index].frame
                     MovieCache.movie(urlStr: imageUrls[index]) { [weak self] player, queuePlayer, looper in
                         DispatchQueue.main.async {
-                            //waitIndicator.removeFromSuperview()
-                            
                             if let player = player {
                                 let viewController = MyPlayerViewController()
                                 viewController.player = player
+                                
+                                let rate = 1200 / max(smallFrame.width + smallFrame.height, 100)
+                                let frame = NSRect(x: 0, y: 0, width: rate * smallFrame.width, height: rate * smallFrame.height)
+                                viewController.view.frame = frame
+                                ImageWindow(contentViewController: viewController).show()
+                                
+                                // レイヤーの追加
+                                let playerLayer = AVPlayerLayer(player: player)
+                                viewController.view.layer?.addSublayer(playerLayer)
+                                viewController.movieLayer = playerLayer
+                                playerLayer.frame = frame
+                                
+                                // 再生
                                 ImageWindow(contentViewController: viewController).show()
                                 player.play()
                             } else {
@@ -589,7 +601,19 @@ final class TimeLineViewCell: NSView {
                                         let viewController = MyPlayerViewController()
                                         viewController.player = queuePlayer
                                         self?.looper = looper
+                                        
+                                        let rate = 1200 / max(smallFrame.width + smallFrame.height, 100)
+                                        let frame = NSRect(x: 0, y: 0, width: rate * smallFrame.width, height: rate * smallFrame.height)
+                                        viewController.view.frame = frame
                                         ImageWindow(contentViewController: viewController).show()
+                                        
+                                        // レイヤーの追加
+                                        let playerLayer = AVPlayerLayer(player: player)
+                                        viewController.view.layer?.addSublayer(playerLayer)
+                                        viewController.movieLayer = playerLayer
+                                        playerLayer.frame = frame
+                                        
+                                        // 再生
                                         queuePlayer.play()
                                     }
                                 }
