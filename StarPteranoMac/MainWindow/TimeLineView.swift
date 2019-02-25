@@ -232,9 +232,9 @@ final class TimeLineView: NSTableView {
                                 strongSelf.model.change(tableView: strongSelf, addList: [contentData], accountList: strongSelf.accountList)
                             }
                         }
-                        //DispatchQueue.main.sync {
+                        DispatchQueue.main.sync {
                             strongSelf.reloadData()
-                        //}
+                        }
                     }
                 } catch {
                 }
@@ -634,17 +634,16 @@ final class TimeLineView: NSTableView {
         switch keyCode {
         case 126, 40: // up arrow, k
             if let selectedRow = model.selectedRow {
-                model.selectRow(timelineView: self, row: max(0, selectedRow - 1))
+                model.selectRow(timelineView: self, row: max(0, selectedRow - 1), notSelect: true)
             } else {
-                model.selectRow(timelineView: self, row: 0)
+                model.selectRow(timelineView: self, row: 0, notSelect: true)
             }
         case 125, 38: // down arrow, l
             if let selectedRow = model.selectedRow {
-                model.selectRow(timelineView: self, row: selectedRow + 1)
+                model.selectRow(timelineView: self, row: selectedRow + 1, notSelect: true)
             } else {
-                model.selectRow(timelineView: self, row: 0)
+                model.selectRow(timelineView: self, row: 0, notSelect: true)
             }
-            model.selectRow(timelineView: self, row: model.selectedRow ?? 0)
         case 48: //tab
             if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                 let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField

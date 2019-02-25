@@ -333,16 +333,16 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         var index = row
         
-        if let timelineView = tableView as? TimeLineView {
-            if timelineView.type == .user {
-                index -= 1
-                if index < 0 {
-                    // プロフィール表示用セルの高さ
-                    let accountData = timelineView.accountList[timelineView.option ?? ""]
-                    let cell = ProfileViewCell(accountData: accountData, isTemp: true)
-                    cell.layout()
-                    return max(cell.frame.height, 1)
-                }
+        guard let tableView = tableView as? TimeLineView else { return 1 }
+        
+        if tableView.type == .user {
+            index -= 1
+            if index < 0 {
+                // プロフィール表示用セルの高さ
+                let accountData = tableView.accountList[tableView.option ?? ""]
+                let cell = ProfileViewCell(accountData: accountData, isTemp: true)
+                cell.layout()
+                return max(cell.frame.height, 1)
             }
         }
         
@@ -351,11 +351,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             return 300
         }
         
-        /*if index < self.animationCellsCount {
-         return 1
-         }*/
-        
-        let isSelected = SettingsData.isMiniView == .full || (!SettingsData.tapDetailMode && row == self.selectedRow)
+        let isSelected = (SettingsData.isMiniView == .full || row == self.selectedRow)
         
         if SettingsData.isMiniView == .miniView && !isSelected {
             return 23 + SettingsData.fontSize * 1.5
@@ -1093,6 +1089,10 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 cell.detailDateLabel?.stringValue = dateFormatter.string(from: date)
                 cell.detailDateLabel?.textColor = ThemeColor.dateColor
                 cell.detailDateLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                cell.detailDateLabel?.isBordered = false
+                cell.detailDateLabel?.isEditable = false
+                cell.detailDateLabel?.isSelectable = false
+                cell.detailDateLabel?.drawsBackground = false
                 //cell.detailDateLabel?.textAlignment = .right
                 cell.addSubview(cell.detailDateLabel!)
             } else {
@@ -1449,6 +1449,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         selectRow(timelineView: timelineView, row: row)
     }
     
+    // セル選択時の処理
+    private var isAnimating = false
     func selectRow(timelineView: TimeLineView, row: Int, notSelect: Bool = false) {
         var index = row
         
@@ -1462,9 +1464,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
          MainViewController.instance?.view.needsLayout = true
          }*/
         
-        // 入力フィールドからフォーカスを外す
-        DispatchQueue.main.async {
-            MainViewController.instance?.quickResignFirstResponder()
+        if !notSelect {
+            // 入力フィールドからフォーカスを外す
+            DispatchQueue.main.async {
+                MainViewController.instance?.quickResignFirstResponder()
+            }
         }
         
         if timelineView.type == .user {
@@ -1474,71 +1478,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
-        if SettingsData.tapDetailMode || self.selectedRow == row {
-            if self.isDetailTimeline { return } // すでに詳細表示画面
-            
-            /*
-             // 連打防止
-             if self.isAnimating { return }
-             self.isAnimating = true
-             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-             self.isAnimating = false
-             }
-             
-             // トゥート詳細画面に移動
-             let (_, data, _, _) = getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
-             let mentionsData = getMentionsData(data: data)
-             let viewController = TimeLineViewController(type: TimeLineViewController.TimeLineType.mentions, option: nil, mentions: (mentionsData, accountList))
-             UIUtils.getFrontViewController()?.addChildViewController(viewController)
-             UIUtils.getFrontViewController()?.view.addSubview(viewController.view)
-             viewController.view.frame = CGRect(x: UIScreen.main.bounds.width,
-             y: 0,
-             width: UIScreen.main.bounds.width,
-             height: UIScreen.main.bounds.height)
-             UIView.animate(withDuration: 0.3) {
-             viewController.view.frame.origin.x = 0
-             }
-             
-             // ステータスの内容を更新する(お気に入りの数とか)
-             let isMerge = data.isMerge
-             guard let url = URL(string: "https://\((tableView as? TimeLineView)?.hostName ?? "")/api/v1/statuses/\(data.id ?? "-")") else { return }
-             try? MastodonRequest.get(url: url, accessToken: (tableView as? TimeLineView)?.accessToken ?? "") { [weak self] (data, response, error) in
-             guard let strongSelf = self else { return }
-             guard let data = data else { return }
-             do {
-             if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
-             var acct = ""
-             let contentData = AnalyzeJson.analyzeJson(view: tableView as? TimeLineView, model: strongSelf, json: responseJson, acct: &acct, isMerge: isMerge)
-             let contentList = [contentData]
-             
-             // 詳細ビューと元のビューの両方に反映する
-             strongSelf.change(tableView: tableView as! TimeLineView, addList: contentList, accountList: strongSelf.accountList)
-             if let tlView = viewController.view as? TimeLineView {
-             tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
-             }
-             }
-             } catch { }
-             }*/
+        if !notSelect && self.selectedRow == row {
+            // 何もしない
         } else {
-            // セルを拡大して表示
-            /*
-             var indexPaths: [IndexPath] = [indexPath]
-             if let selectedRow = self.selectedRow, selectedRow < min(self.list.count, self.cellCount) {
-             let oldPath = IndexPath(row: selectedRow, section: 0)
-             indexPaths.append(oldPath)
-             
-             if oldPath.row < row {
-             // 高さのずれを吸収
-             let oldHeight = self.tableView(tableView, heightForRowAt: oldPath)
-             self.selectedRow = indexPath.row
-             let newHeight = self.tableView(tableView, heightForRowAt: oldPath)
-             
-             DispatchQueue.main.async {
-             tableView.contentOffset.y = max(0, tableView.contentOffset.y + newHeight - oldHeight + 40)
-             }
-             }
-             }*/
-            
             self.selectedRow = row
             if index < list.count && index >= 0 {
                 let data = list[index]
@@ -1547,10 +1489,6 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             } else {
                 self.selectedAccountId = nil
             }
-            
-            //timelineView.reloadRows(at: indexPaths, with: UITableViewRowAnimation.none)
-            
-            //timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
             
             timelineView.reloadData()
             
@@ -1571,6 +1509,78 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     timelineView.scrollRowToVisible(row)
                 }
             }
+        }
+    }
+    
+    // 詳細画面に移動
+    func gotoDetailView(timelineView: TimeLineView, row: Int) {
+        let index = row
+        
+        if self.isDetailTimeline { return } // すでに詳細表示画面
+        
+        // 連打防止
+        if self.isAnimating { return }
+        self.isAnimating = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.isAnimating = false
+        }
+        
+        // トゥート詳細画面に移動
+        let (_, data, _, _) = getMessageViewAndData(tableView: timelineView, index: index, row: row, add: true, callback: nil)
+        let mentionsData = getMentionsData(data: data)
+        let viewController = TimeLineViewController(hostName: timelineView.hostName,
+                                                    accessToken: timelineView.accessToken,
+                                                    type: TimeLineViewController.TimeLineType.mentions,
+                                                    option: nil,
+                                                    mentions: (mentionsData, accountList))
+        
+        let title = NSAttributedString(string: I18n.get("SUBTIMELINE_RELATIONS"))
+        let subTimeLineViewController = SubTimeLineViewController(name: title, icon: nil, timelineVC: viewController)
+        
+        var targetSubVC: SubViewController? = nil
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            if timelineView.hostName == subVC.tootVC.hostName && timelineView.accessToken == subVC.tootVC.accessToken {
+                targetSubVC = subVC
+                break
+            }
+        }
+        
+        targetSubVC?.addChild(subTimeLineViewController)
+        targetSubVC?.view.addSubview(subTimeLineViewController.view)
+        
+        subTimeLineViewController.view.frame = CGRect(x: timelineView.frame.width,
+                                                      y: 0,
+                                                      width: timelineView.frame.width,
+                                                      height: (targetSubVC?.view.frame.height ?? 100) - 22)
+        
+        let animation = NSViewAnimation(duration: 0.3, animationCurve: NSAnimation.Curve.easeIn)
+        let frame = subTimeLineViewController.view.frame
+        let animationDict: [NSViewAnimation.Key: Any] = [
+            NSViewAnimation.Key.target: subTimeLineViewController.view,
+            NSViewAnimation.Key.startFrame: frame,
+            NSViewAnimation.Key.endFrame: NSRect(x: 0, y: frame.minY, width: frame.width, height: frame.height)]
+        animation.viewAnimations = [animationDict]
+        animation.start()
+        
+        // ステータスの内容を更新する(お気に入りの数とか)
+        let isMerge = data.isMerge
+        guard let url = URL(string: "https://\(timelineView.hostName)/api/v1/statuses/\(data.id ?? "-")") else { return }
+        try? MastodonRequest.get(url: url, accessToken: timelineView.accessToken) { [weak self] (data, response, error) in
+            guard let strongSelf = self else { return }
+            guard let data = data else { return }
+            do {
+                if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                    var acct = ""
+                    let contentData = AnalyzeJson.analyzeJson(view: timelineView, model: strongSelf, json: responseJson, acct: &acct, isMerge: isMerge)
+                    let contentList = [contentData]
+                    
+                    // 詳細ビューと元のビューの両方に反映する
+                    strongSelf.change(tableView: timelineView, addList: contentList, accountList: strongSelf.accountList)
+                    if let tlView = viewController.view as? TimeLineView {
+                        tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
+                    }
+                }
+            } catch { }
         }
     }
     
@@ -1595,11 +1605,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         override func mouseDown(with event: NSEvent) {
             guard let cell = self.superview as? TimeLineViewCell else { return }
             
-            if let tableView = cell.tableView, let indexPath = cell.indexPath, tableView.model.selectedRow != indexPath {
+            if let tableView = cell.tableView, let indexPath = cell.indexPath {
                 // セル選択時の処理を実行
                 tableView.model.selectRow(timelineView: tableView, row: indexPath)
-            } else {
-                super.mouseDown(with: event)
+                if tableView.model.selectedRow == indexPath {
+                    super.mouseDown(with: event)
+                }
             }
         }
     }

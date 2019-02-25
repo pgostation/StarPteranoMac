@@ -143,6 +143,7 @@
 "BUTTON_SHOW_MORE" = "もっと見る";
 "BUTTON_HIDE_REDO" = "やっぱり隠す";
 "BOOSTED_BY_%@" = "🔁 %@";
+"SUBTIMELINE_RELATIONS" = "💬会話";
 
 // 公開範囲
 "TITLE_PROTECTMODE" = "公開範囲";

@@ -29,7 +29,6 @@ final class TimeLineViewController: NSViewController {
     let type: TimeLineType
     private let option: String? // user指定時はユーザID、タグ指定時はタグ
     private let mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? // typeに.mentions指定時のみ有効
-    private let closeButton = NSButton()
     
     init(hostName: String, accessToken: String, type: TimeLineType, option: String? = nil, mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? = nil) {
         self.hostName = hostName
@@ -50,17 +49,6 @@ final class TimeLineViewController: NSViewController {
             let view = TimeLineView(hostName: hostName, accessToken: accessToken, type: self.type, option: self.option, mentions: mentions)
             view.vc = self
             self.view = view
-            
-            // 閉じるボタンを追加
-            closeButton.title = "×"
-            //closeButton.titleLabel?.font = NSFont.boldSystemFont(ofSize: 32)
-            //closeButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
-            closeButton.wantsLayer = true
-            closeButton.layer?.backgroundColor = ThemeColor.mainButtonsBgColor.cgColor
-            closeButton.layer?.borderColor = ThemeColor.buttonBorderColor.cgColor
-            closeButton.layer?.borderWidth = 1
-            closeButton.action = #selector(self.closeAction)
-            self.view.addSubview(closeButton)
         } else {
             let view = TimeLineView(hostName: hostName, accessToken: accessToken, type: self.type, option: self.option, mentions: mentions)
             view.vc = self
@@ -80,15 +68,14 @@ final class TimeLineViewController: NSViewController {
         if let frame = self.view.superview?.frame, let view = self.view as? TimeLineView {
             var sumHeight: CGFloat = 0
             for i in 0..<view.numberOfRows {
-                sumHeight += view.model.tableView(view, heightOfRow: i)
+                if i > 10 {
+                    sumHeight += 50
+                } else {
+                    sumHeight += view.model.tableView(view, heightOfRow: i)
+                }
             }
             
-            view.frame = NSRect(x: 0, y: 0, width: max(120, frame.width), height: sumHeight)
-            
-            self.closeButton.frame = CGRect(x: 0,
-                                            y: sumHeight - 20,
-                                            width: 20,
-                                            height: 20)
+            view.frame = NSRect(x: 0, y: 0, width: frame.width, height: sumHeight)
         }
     }
 }

@@ -125,11 +125,16 @@ final class TimeLineViewCell: NSView {
         self.layer?.addSublayer(self.lineLayer)
         
         if SettingsData.isNameTappable {
-            // アカウント名のタップジェスチャー
+            // アカウント名のタップ処理
             nameLabel.addTarget { [weak self] in
                 self?.tapAccountAction()
             }
         }
+        
+        // ダブルクリックジェスチャー
+        let doubleTapGesture = NSClickGestureRecognizer(target: self, action: #selector(doubleClick(_:)))
+        doubleTapGesture.numberOfClicksRequired = 2
+        self.addGestureRecognizer(doubleTapGesture)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -300,7 +305,12 @@ final class TimeLineViewCell: NSView {
         }
     }
     
-    // リプライボタンをタップした時の処理
+    // ダブルクリックした時の処理
+    @objc func doubleClick(_ gesture: NSGestureRecognizer?) {
+        self.tableView?.model.gotoDetailView(timelineView: self.tableView!, row: self.indexPath!)
+    }
+    
+    // リプライボタンをクリックした時の処理
     @objc func replyAction() {
         if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {
             Dialog.show(message: I18n.get("ALERT_TEXT_EXISTS"))
@@ -725,7 +735,7 @@ final class TimeLineViewCell: NSView {
         }
         let screenBounds = self.frame
         let height = screenBounds.height
-        let isDetailMode = !SettingsData.tapDetailMode && self.showDetail
+        let isDetailMode = self.showDetail
         let isMiniView = isDetailMode ? .normal : self.isMiniView
         let iconSize = isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
         
@@ -781,9 +791,11 @@ final class TimeLineViewCell: NSView {
             if isMiniView == .superMini {
                 y = -0
             } else if let spolerTextLabel = self.spolerTextLabel {
-                y = height - (spolerTextLabel.frame.minY - 20)
+                y = height - spolerTextLabel.frame.minY - 20
+            } else if let detailDateLabel = self.detailDateLabel {
+                y = height - detailDateLabel.frame.minY
             } else {
-                y = self.detailDateLabel?.frame.minY ?? ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
+                y = ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: height - y - messageView.frame.height,

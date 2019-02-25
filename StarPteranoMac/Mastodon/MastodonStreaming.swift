@@ -27,6 +27,10 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
         self.socket.delegate = self
         self.socket.pongDelegate = self
         self.socket.connect()
+        
+        DispatchQueue.global().asyncAfter(deadline: .now() + 30) { [weak self] in
+            self?.isConnecting = false
+        }
     }
     
     deinit {

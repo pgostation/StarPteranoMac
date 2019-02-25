@@ -68,7 +68,7 @@ final class SubTimeLineView: NSView {
             self.frame = CGRect(x: 0,
                                 y: 0,
                                 width: superFrame.width,
-                                height: superFrame.height - 22 - (tootView?.frame.height ?? 0) - 24)
+                                height: superFrame.height - 22 - (tootView?.frame.height ?? 0) - 22)
         }
         
         self.closeButton.frame = NSRect(x: 0,
