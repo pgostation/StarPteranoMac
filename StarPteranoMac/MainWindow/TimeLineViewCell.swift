@@ -608,7 +608,7 @@ final class TimeLineViewCell: NSView {
                                         ImageWindow(contentViewController: viewController).show()
                                         
                                         // レイヤーの追加
-                                        let playerLayer = AVPlayerLayer(player: player)
+                                        let playerLayer = AVPlayerLayer(player: queuePlayer)
                                         viewController.view.layer?.addSublayer(playerLayer)
                                         viewController.movieLayer = playerLayer
                                         playerLayer.frame = frame
