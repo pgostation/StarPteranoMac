@@ -94,7 +94,6 @@
 "BUTTON_LOAD_PREVIEW" = "画像プレビューを読み込む";
 "BUTTON_USE_ANIMATION" = "カスタム絵文字のアニメーション";
 "BUTTON_ABSOLUTE_TIME" = "絶対時間表示";
-"BUTTON_FAVORITE_DIALOG" = "お気に入り時に確認表示";
 "BUTTON_TRANSPARENT_WINDOW" = "透過ウィンドウ";
 "BUTTON_FORCE_DARKMODE" = "常にダークモード";
 

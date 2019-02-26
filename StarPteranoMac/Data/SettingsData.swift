@@ -441,24 +441,6 @@ final class SettingsData {
         }
     }
     
-    // お気に入りの確認を行うかどうか
-    static var showFavDialog: Bool {
-        get {
-            if let string = defaults.string(forKey: "showFavDialog") {
-                let value = (string == "ON")
-                return value
-            }
-            return true
-        }
-        set(newValue) {
-            if newValue {
-                defaults.removeObject(forKey: "showFavDialog")
-            } else {
-                defaults.set("OFF", forKey: "showFavDialog")
-            }
-        }
-    }
-    
     // 絶対時間表示
     static var useAbsoluteTime: Bool {
         get {

@@ -25,8 +25,6 @@ final class UISettingsViewController: NSViewController {
         view.useAnimationButton.target = self
         view.useAbsoluteTimeButton.action = #selector(useAbsoluteTimeAction(_:))
         view.useAbsoluteTimeButton.target = self
-        view.favDialogButton.action = #selector(favDialogAction(_:))
-        view.favDialogButton.target = self
         view.transparentButton.action = #selector(transparentAction(_:))
         view.transparentButton.target = self
         view.darkmodeButton.action = #selector(darkmodeAction(_:))
@@ -60,10 +58,6 @@ final class UISettingsViewController: NSViewController {
         SettingsData.useAbsoluteTime = (sender.state == .on)
     }
     
-    @objc func favDialogAction(_ sender: NSButton) {
-        SettingsData.showFavDialog = (sender.state == .on)
-    }
-    
     @objc func transparentAction(_ sender: NSButton) {
         SettingsData.isTransparentWindow = (sender.state == .on)
     }
@@ -82,7 +76,6 @@ final class UISettingsView: NSView {
     let loadPreviewButton = NSButton()
     let useAnimationButton = NSButton()
     let useAbsoluteTimeButton = NSButton()
-    let favDialogButton = NSButton()
     let transparentButton = NSButton()
     let darkmodeButton = NSButton()
     
@@ -97,7 +90,6 @@ final class UISettingsView: NSView {
         self.addSubview(loadPreviewButton)
         self.addSubview(useAnimationButton)
         self.addSubview(useAbsoluteTimeButton)
-        self.addSubview(favDialogButton)
         self.addSubview(transparentButton)
         self.addSubview(darkmodeButton)
         
@@ -135,10 +127,6 @@ final class UISettingsView: NSView {
         useAbsoluteTimeButton.title = I18n.get("BUTTON_ABSOLUTE_TIME")
         setCheckboxStyle(button: useAbsoluteTimeButton)
         useAbsoluteTimeButton.state = SettingsData.useAbsoluteTime ? .on : .off
-        
-        favDialogButton.title = I18n.get("BUTTON_FAVORITE_DIALOG")
-        setCheckboxStyle(button: favDialogButton)
-        favDialogButton.state = SettingsData.showFavDialog ? .on : .off
         
         transparentButton.title = I18n.get("BUTTON_TRANSPARENT_WINDOW")
         setCheckboxStyle(button: transparentButton)
@@ -188,18 +176,13 @@ final class UISettingsView: NSView {
                                              width: 200,
                                              height: 20)
         
-        favDialogButton.frame = NSRect(x: 30,
-                                       y: SettingsWindow.contentRect.height - 300,
-                                       width: 200,
-                                       height: 20)
-        
         transparentButton.frame = NSRect(x: 30,
-                                         y: SettingsWindow.contentRect.height - 350,
+                                         y: SettingsWindow.contentRect.height - 300,
                                          width: 200,
                                          height: 20)
         
         darkmodeButton.frame = NSRect(x: 30,
-                                         y: SettingsWindow.contentRect.height - 400,
+                                         y: SettingsWindow.contentRect.height - 350,
                                          width: 200,
                                          height: 20)
     }
