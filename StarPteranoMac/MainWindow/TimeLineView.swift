@@ -634,15 +634,15 @@ final class TimeLineView: NSTableView {
         switch keyCode {
         case 126, 40: // up arrow, k
             if let selectedRow = model.selectedRow {
-                model.selectRow(timelineView: self, row: max(0, selectedRow - 1), notSelect: true)
+                model.selectRow(timelineView: self, row: max(0, selectedRow - 1), notSelect: false)
             } else {
-                model.selectRow(timelineView: self, row: 0, notSelect: true)
+                model.selectRow(timelineView: self, row: 0, notSelect: false)
             }
         case 125, 38: // down arrow, l
             if let selectedRow = model.selectedRow {
-                model.selectRow(timelineView: self, row: selectedRow + 1, notSelect: true)
+                model.selectRow(timelineView: self, row: selectedRow + 1, notSelect: false)
             } else {
-                model.selectRow(timelineView: self, row: 0, notSelect: true)
+                model.selectRow(timelineView: self, row: 0, notSelect: false)
             }
         case 48: //tab
             if let tlVC = TimeLineViewManager.getLastSelectedTLView() {

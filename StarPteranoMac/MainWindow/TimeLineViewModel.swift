@@ -1507,14 +1507,18 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                     rect.size.height += remain
                     rect.origin.y = (rect.origin.y - remain / 2)
                 }
-                if !timelineView.visibleRect.contains(timelineView.rect(ofRow: row)) {
-                    timelineView.scrollToVisible(rect)
+                if !notSelect {
+                    if !timelineView.visibleRect.contains(timelineView.rect(ofRow: row)) {
+                        timelineView.scrollToVisible(rect)
+                    }
                 }
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                if let row = self.selectedRow {
-                    timelineView.scrollRowToVisible(row)
+            if !notSelect {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    if let row = self.selectedRow {
+                        timelineView.scrollRowToVisible(row)
+                    }
                 }
             }
         }
