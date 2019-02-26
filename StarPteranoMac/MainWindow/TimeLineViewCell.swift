@@ -393,8 +393,16 @@ final class TimeLineViewCell: NSView {
     
     // 「・・・」ボタンをタップした時の処理
     @objc func setDetailButton(_ popUp: NSPopUpButton) {
+        popUp.isBordered = false
+        
         let menu = NSMenu()
         popUp.menu = menu
+        
+        //
+        let emptyItem = NSMenuItem(title: I18n.get("…"),
+                                      action: nil,
+                                      keyEquivalent: "")
+        menu.addItem(emptyItem)
         
         // 選択解除
         let deselectItem = NSMenuItem(title: I18n.get("ACTION_DESELECT"),
@@ -945,9 +953,9 @@ final class TimeLineViewCell: NSView {
                                                 height: 20)
             
             self.detailButton?.frame = CGRect(x: 230,
-                                              y: top - 50,
-                                              width: 80,
-                                              height: 40)
+                                              y: top - 40,
+                                              width: 30,
+                                              height: 30)
             
             if let applicationLabel = self.applicationLabel {
                 applicationLabel.frame = CGRect(x: screenBounds.width - applicationLabel.frame.width - 2,

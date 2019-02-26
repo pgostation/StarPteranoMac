@@ -1,0 +1,166 @@
+/* 
+  Localizable.strings
+  StarPteranoMac
+
+  Created by takayoshi on 2018/10/23.
+  Copyright © 2018 pgostation. All rights reserved.
+*/
+
+// 基本
+"BUTTON_ADD" = "追加";
+"BUTTON_CANCEL" = "キャンセル";
+
+// Main Window
+"APPLICATION_NAME" = "星プテラノ";
+
+// Application Menu
+"About StarPterano" = "星プテラノについて";
+"Preferences…" = "環境設定…";
+"Hide StarPterano" = "星プテラノを隠す";
+"Hide Others" = "ほかを隠す";
+"Show All" = "すべてを表示";
+"Quit StarPterano" = "星プテラノを終了";
+
+// File Menu
+"File" = "ファイル";
+"Close" = "閉じる";
+
+// Edit Menu
+"Edit" = "編集";
+"Undo" = "取り消す";
+"Redo" = "やり直す";
+"Cut" = "カット";
+"Copy" = "コピー";
+"Paste" = "ペースト";
+"Select All" = "すべてを選択";
+
+// View Menu
+"View" = "表示";
+"Mini View" = "ミニビュー";
+"Compact View" = "コンパクトビュー";
+"Standard View" = "標準ビュー";
+"Full View" = "フルビュー";
+"Larger" = "拡大";
+"Smaller" = "縮小";
+
+// Toot Menu
+"Toot" = "トゥート";
+"New Toot" = "新規トゥート";
+"Now Playing" = "iTunesの曲名を挿入";
+"Now Browsing" = "Safariの情報を挿入";
+"Add Image…" = "画像を追加…";
+"Scheduled Toot…" = "予約投稿…";
+
+// Tool Menu
+"Tool" = "ツール";
+"Edit Profile…" = "プロフィール編集…";
+
+// Window Menu
+"Window" = "ウインドウ";
+
+// Help Menu
+"Help" = "ヘルプ";
+
+// 設定画面
+"TITLE_PREFERENCES" = "環境設定";
+"SETTINGS_ACCOUNT" = "アカウント";
+"SETTINGS_GENERAL" = "一般";
+"SETTINGS_UI" = "UI";
+"SETTINGS_NOTIFICATIONS" = "通知";
+"SETTINGS_SEARCH" = "検索";
+"SETTINGS_DETAIL" = "詳細";
+
+// アカウント設定
+"BUTTON_DELETE" = "削除";
+
+// ログイン
+"PLACEHOLDER_INPUT_DOMAIN" = "ドメインを入力 (ex：mastodon.social)";
+"BUTTON_MASTODON_OAUTH" = "マストドン サーバーで認証";
+"ALERT_INPUT_DOMAIN" = "ドメインが入力されていません";
+"PLACEHOLDER_INPUT_CODE" = "コードを入力";
+"BUTTON_ENTER_CODE" = "コードを登録";
+"ALERT_INPUT_CODE_FAILURE" = "不正なコードのようです";
+"REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";
+
+// 一般設定
+"SETTINGS_PROTECTMODE" = "デフォルト公開範囲";
+"BUTTON_USESTREAMING" = "ストリーミングを使用";
+"BUTTON_DEFAULT_NSFW" = "メディアをデフォルトで閲覧注意";
+"BUTTON_CLEARCACHE" = "キャッシュをクリア";
+
+// UI設定
+"BUTTON_USING_COLOR" = "選択したセルに色をつける";
+"LABEL_ICONSIZE" = "アイコンサイズ";
+"BUTTON_LOAD_PREVIEW" = "画像プレビューを読み込む";
+"BUTTON_USE_ANIMATION" = "カスタム絵文字のアニメーション";
+"BUTTON_ABSOLUTE_TIME" = "絶対時間表示";
+"BUTTON_TRANSPARENT_WINDOW" = "透過ウィンドウ";
+"BUTTON_FORCE_DARKMODE" = "常にダークモード";
+
+// 通知設定
+"BUTTON_NOTIFY_MENTION" = "返信を通知する";
+"BUTTON_NOTIFY_FAVORITE" = "お気に入りを通知する";
+"BUTTON_NOTIFY_BOOST" = "ブーストを通知する";
+"BUTTON_NOTIFY_FOLLOW" = "フォローを通知する";
+
+// 詳細アクション
+"ACTION_OPEN_WITH_BROWSER" = "ブラウザで開く";
+"ACTION_DELETE_TOOT" = "このトゥートを削除";
+"ALERT_DELETE_TOOT_FAILURE" = "トゥートの削除に失敗しました";
+"ACTION_COPY_TOOT" = "トゥートをコピー";
+"ACTION_REPORT_TOOT" = "このトゥートを通報する";
+"ALERT_INPUT_REPORT_REASON" = "通報理由を入力";
+"BUTTON_REPORT" = "通報";
+"ALERT_REASON_IS_NIL" = "理由が入力されていません";
+"ALERT_REPORT_TOOT_FAILURE" = "通報に失敗しました";
+"ACTION_DESELECT" = "選択を解除";
+
+// 何分前
+"DATETIME_NOW" = "今";
+"DATETIME_%D_SECS_AGO" = "%d秒";
+"DATETIME_%D_MINS_AGO" = "%d分";
+"DATETIME_%D_HOURS_AGO" = "%d時間";
+"DATETIME_%D_HOURS_HALF_AGO" = "%d時間半";
+"DATETIME_%D_DAYS_AGO" = "%d日";
+"DATETIME_%D_YEARS_AGO" = "%d年";
+
+// タイムライン変更
+"ACTION_HOME" = "ホーム";
+"ACTION_LOCAL" = "ローカル";
+"ACTION_HOMELOCAL" = "ローカル+ホーム";
+"ACTION_FEDERATION" = "連合";
+"ACTION_LIST" = "リスト";
+"ACTION_NOTIFICATIONS" = "通知";
+"ACTION_MENTIONS" = "返信";
+"ACTION_DM" = "DM";
+"ACTION_FAVORITES" = "お気に入り";
+"ACTION_SEARCH" = "検索";
+"ACTION_USERS" = "ユーザー指定…";
+"ALERT_ADD_TAB" = "タブの追加";
+
+// タイムライン画面
+"BUTTON_SHOW_MORE" = "もっと見る";
+"BUTTON_HIDE_REDO" = "やっぱり隠す";
+"BOOSTED_BY_%@" = "🔁 %@";
+"SUBTIMELINE_RELATIONS" = "💬会話";
+
+// 公開範囲
+"TITLE_PROTECTMODE" = "公開範囲";
+"PROTECTMODE_PUBLIC" = "🌐 公開";
+"PROTECTMODE_UNLISTED" = "🔓 未収載";
+"PROTECTMODE_PRIVATE" = "🔐 フォロワー限定";
+"PROTECTMODE_DIRECT" = "✉️ ダイレクト";
+
+// 絵文字キーボード
+"BUTTON_SPACEKEY" = "空白";
+"SEARCH_PLACEHOLDER" = "検索";
+
+// 画像確認画面
+"BUTTON_DELETE_IMAGE" = "削除";
+"BUTTON_NSFW" = "閲覧注意";
+
+// 通知
+"NOTIFY_MENTION" = "返信されました";
+"NOTIFY_FAV" = "お気に入りされました";
+"NOTIFY_BOOST" = "ブーストされました";
+"NOTIFY_FOLLOW" = "フォローされました";

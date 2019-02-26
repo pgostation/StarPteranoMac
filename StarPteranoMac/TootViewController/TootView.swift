@@ -10,9 +10,6 @@ import Cocoa
 
 final class TootView: NSView {
     // 下書き保存
-    static var savedText: String?
-    static var savedSpoilerText: String?
-    static var savedImages: [URL] = []
     static var inReplyToId: String? = nil
     static var scheduledDate: Date?
     

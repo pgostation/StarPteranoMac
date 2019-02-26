@@ -79,13 +79,23 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         let visibility = view.protectMode.rawValue
         let nsfw = (!view.spoilerTextField.isHidden) || view.imageCheckView.nsfwSw.state == .on
         
+        // 投稿内容を空にする
+        view.textField.string = ""
+        view.spoilerTextField.string = ""
+        view.textCountLabel.stringValue = ""
+        TootView.inReplyToId = nil
+        TootView.scheduledDate = nil
+        
         if view.imageCheckView.urls.count > 0 {
+            let imageCheckView = view.imageCheckView
+            view.imageCheckView.urls = []
+            view.imageCheckView.closeAction()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 // 画像をアップロードしてから投稿
                 let group = DispatchGroup()
                 
                 var idList: [String] = []
-                for url in view.imageCheckView.urls {
+                for url in imageCheckView.urls {
                     group.enter()
                     let lowUrlStr = url.absoluteString.lowercased()
                     if lowUrlStr.contains(".mp4") || lowUrlStr.contains(".m4v") || lowUrlStr.contains(".mov") {
@@ -104,7 +114,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
                         })
                     } else {
                         // 静止画
-                        ImageUpload.upload(httpMethod: "POST", imageUrl: url, count: view.imageCheckView.urls.count,  hostName: self.hostName, accessToken: self.accessToken, callback: { json in
+                        ImageUpload.upload(httpMethod: "POST", imageUrl: url, count: imageCheckView.urls.count,  hostName: self.hostName, accessToken: self.accessToken, callback: { json in
                             if let json = json {
                                 if let id = json["id"] as? String {
                                     idList.append(id)
@@ -168,19 +178,6 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
             } else {
                 if let response = response as? HTTPURLResponse {
                     if response.statusCode == 200 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            //TootView.isTooted = true
-                            TootView.savedText = nil
-                            TootView.savedSpoilerText = nil
-                            TootView.savedImages = []
-                            TootView.inReplyToId = nil
-                            //TootView.inReplyToContent = nil
-                            TootView.scheduledDate = nil
-                            /*if let view = self.view as? TootView {
-                                view.tootButton.setTitle(I18n.get("BUTTON_TOOT"), for: .normal)
-                            }*/
-                        }
-                        
                         // 最近使用したハッシュタグに追加
                         do {
                             if let responseJson = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [String: Any] {

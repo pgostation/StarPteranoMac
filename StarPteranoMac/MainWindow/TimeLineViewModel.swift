@@ -688,7 +688,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             strongSelf.setCellColor(cell: cell)
             if cell?.isMiniView != .normal && strongSelf.selectedRow != row {
                 //(messageView as? NSTextField)?.numberOfLines = 1
-                (messageView as? NSTextView)?.sizeToFit()
+                messageView.sizeToFit()
             }
             let y = cell.isMiniView == .superMini ? -9 : cell.detailDateLabel?.frame.maxY ?? cell.spolerTextLabel?.frame.maxY ?? ((cell.isMiniView != .normal ? -9 : 5) + SettingsData.fontSize)
             messageView.frame.origin.y = y
@@ -756,12 +756,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                                 }
                                 let apngView = NSImageView()
                                 apngView.sd_setImage(with: localUrl, completed: { (image, error, type, url) in
-                                    if SettingsData.isTransparentWindow {
-                                        apngView.layer?.backgroundColor = NSColor.clear.cgColor
-                                    } else {
-                                        apngView.wantsLayer = true
-                                        apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-                                    }
+                                    apngView.wantsLayer = true
+                                    apngView.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
                                     apngView.frame = CGRect(x: rect.origin.x,
                                                             y: rect.origin.y + 3,
                                                             width: rect.size.width,
