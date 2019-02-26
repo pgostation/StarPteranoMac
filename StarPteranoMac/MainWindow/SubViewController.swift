@@ -14,6 +14,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     private let accessToken: String
     let tootVC: TootViewController
     private let tabView = LYTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+    private let tabCoverView = CoverView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {
@@ -27,6 +28,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         self.view.addSubview(tootVC.view)
         self.view.addSubview(tabView)
+        self.view.addSubview(tabCoverView)
         self.view.addSubview(scrollView)
         
         setProperties()
@@ -226,6 +228,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                width: self.view.frame.width,
                                height: 20)
         
+        tabCoverView.frame = tabView.frame
+        
         scrollView.frame = NSRect(x: 0,
                                   y: 0,
                                   width: self.view.frame.width,
@@ -255,6 +259,21 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                           y: scrollView.frame.height - height,
                                           width: imageCheckView.frame.width,
                                           height: height)
+        }
+    }
+    
+    final class CoverView: NSView {
+        override func mouseDown(with event: NSEvent) {
+            super.mouseDown(with: event)
+            
+            for subview in self.superview?.subviews ?? [] {
+                if let scrollview = subview as? NSScrollView {
+                    if let tlView = scrollview.documentView as? TimeLineView {
+                        tlView.selectedDate = Date()
+                        break
+                    }
+                }
+            }
         }
     }
 }
