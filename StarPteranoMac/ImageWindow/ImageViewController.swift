@@ -107,14 +107,18 @@ final class ImageViewController: NSViewController {
     private func reloadImage() {
         if selectedIndex == 0 {
             leftButton.title = "|<"
+            leftButton.alphaValue = 0.5
         } else {
             leftButton.title = "<"
+            leftButton.alphaValue = 1.0
         }
         
         if selectedIndex == imagesUrls.count - 1 {
             rightButton.title = ">|"
+            rightButton.alphaValue = 0.5
         } else {
             rightButton.title = ">"
+            rightButton.alphaValue = 1.0
         }
         
         let index = selectedIndex

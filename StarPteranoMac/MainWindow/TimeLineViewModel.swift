@@ -329,7 +329,9 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     
     // 行の高さを返す
     private var heightCacheWidth: CGFloat = 0
+    private var oldHeightCacheWidth: CGFloat = 0
     private var heightCache: [Int: CGFloat] = [:]
+    private var oldHeightCache: [Int: CGFloat] = [:]
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         var index = row
         
@@ -340,7 +342,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if index < 0 {
                 // プロフィール表示用セルの高さ
                 let accountData = tableView.accountList[tableView.option ?? ""]
-                let cell = ProfileViewCell(accountData: accountData, isTemp: true)
+                let cell = ProfileViewCell(accountData: accountData, isTemp: true, hostName: tableView.hostName, accessToken: tableView.accessToken)
+                cell.timelineView = tableView
                 cell.layout()
                 return max(cell.frame.height, 1)
             }
@@ -362,6 +365,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         // キャッシュを使う
         if heightCacheWidth != tableView.frame.width {
+            oldHeightCache = heightCache
+            oldHeightCacheWidth = heightCacheWidth
             heightCache = [:]
             heightCacheWidth = tableView.frame.width
         }
@@ -369,6 +374,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             let data = list[index]
             if let idStr = data.id, let id = Int(idStr) {
                 if let height = heightCache[id] {
+                    return height
+                }
+            }
+        }
+        if !isSelected && oldHeightCache.count > 0 && oldHeightCacheWidth == tableView.frame.width {
+            let data = list[index]
+            if let idStr = data.id, let id = Int(idStr) {
+                if let height = oldHeightCache[id] {
                     return height
                 }
             }
@@ -641,7 +654,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
                 // プロフィール表示用セル
                 let accountData = timelineView.accountList[timelineView.option ?? ""]
                 let isTemp = (self.list.count == 0)
-                let cell = ProfileViewCell(accountData: accountData, isTemp: isTemp)
+                let cell = ProfileViewCell(accountData: accountData, isTemp: isTemp, hostName: timelineView.hostName, accessToken: timelineView.accessToken)
                 cell.timelineView = tableView as? TimeLineView
                 return cell
             }

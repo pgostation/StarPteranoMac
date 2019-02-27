@@ -70,6 +70,11 @@ final class TimeLineView: NSTableView {
         }
     }
     
+    // タイムラインを消去
+    func clear() {
+        self.model.clear()
+    }
+    
     // タイムラインを初回取得/手動更新
     private var isManualLoading = false
     @objc func refresh() {

@@ -44,4 +44,17 @@ final class TimeLineViewManager {
         
         return selected
     }
+    
+    // 選択中のTLのSubTLViewを返す
+    static func getLastSelectedSubTLView() -> SubTimeLineViewController? {
+        let selectedVC = getLastSelectedTLView()
+        
+        for vc in selectedVC?.children.reversed() ?? [] {
+            if let vc = vc as? SubTimeLineViewController {
+                return vc
+            }
+        }
+        
+        return nil
+    }
 }

@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import CoreGraphics
 
 final class ImageUtils {
     private static let scale = NSScreen.main?.backingScaleFactor ?? 1
@@ -122,6 +123,39 @@ final class ImageUtils {
         flippedImage.shortcode = (image as? EmojiImage)?.shortcode
         
         return flippedImage
+    }
+    
+    // 指定色のNSImageを作成 (面倒なことしてるのは、CoreGraphicsを使いたかっただけなのです)
+    static func colorImage(color: NSColor) -> NSImage? {
+        guard let offscreenRep = NSBitmapImageRep(
+            bitmapDataPlanes: nil,
+            pixelsWide: 1, // 1px width
+            pixelsHigh: 1, // 1px height
+            bitsPerSample: 8, // 8*4 = 32bitColor
+            samplesPerPixel: 4, //RGBA
+            hasAlpha: true,
+            isPlanar: false,
+            colorSpaceName: NSColorSpaceName.deviceRGB,
+            bytesPerRow: 0,
+            bitsPerPixel: 0) else {
+                return nil
+        }
+        
+        let image: NSImage
+        do {
+            let g = NSGraphicsContext(bitmapImageRep: offscreenRep)
+            NSGraphicsContext.saveGraphicsState()
+            NSGraphicsContext.current = g
+            let context = g?.cgContext
+            
+            color.set()
+            context?.fill(NSRect(x: 0, y: 0, width: 1, height: 1))
+            image = NSImage(size: NSSize(width: 1, height: 1))
+            image.addRepresentation(offscreenRep)
+            NSGraphicsContext.restoreGraphicsState()
+        }
+        
+        return image
     }
     
     // 画像の最大ピクセル数
