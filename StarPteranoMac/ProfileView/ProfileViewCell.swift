@@ -62,13 +62,6 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         self.uri = accountData?.acct ?? ""
         self.urlStr = accountData?.url ?? ""
         
-        // フォロー関係かどうかを取得
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
-            if self?.actionButton.alphaValue == 0 {
-                self?.getRelationship()
-            }
-        }
-        
         // ヘッダ画像
         self.addSubview(headerImageView)
         
@@ -115,6 +108,17 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         actionButton.action = #selector(tapActionButton(_:))
         mediaOnlyButton.target = self
         mediaOnlyButton.action = #selector(mediaOnlyAction)
+        
+        // フォロー関係かどうかを取得
+        if ProfileViewCell.cacheRelationships["\( self.hostName),\(self.id)"] == nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                if self?.actionButton.alphaValue == 0 {
+                    self?.getRelationship()
+                }
+            }
+        } else {
+            getRelationship()
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -347,8 +351,19 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         iconCoverButton.isTransparent = true
     }
     
+    static func clearCache() {
+        cacheRelationships = [:]
+    }
+    
     // フォロー関係かどうかを取得
-    private func getRelationship() {
+    private static var cacheRelationships: [String: AnalyzeJson.RelationshipData] = [:]
+    private func getRelationship(force: Bool = false) {
+        if !force, let cachedData = ProfileViewCell.cacheRelationships["\(self.hostName),\(self.id)"] {
+            self.relationshipData = cachedData
+            setRelationshipStr()
+            return
+        }
+        
         let url = URL(string: "https://\(self.hostName)/api/v1/accounts/relationships?id=\(self.id)")!
         
         try? MastodonRequest.get(url: url, accessToken: self.accessToken) { [weak self] (data, response, error) in
@@ -357,63 +372,72 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                     let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: Any]]
                     
                     if let responseJson = responseJson?.first {
-                        self?.relationshipData = AnalyzeJson.analyzeRelationshipJson(json: responseJson)
+                        let relationshipData = AnalyzeJson.analyzeRelationshipJson(json: responseJson)
+                        self?.relationshipData = relationshipData
                         
-                        if let relationshipData = self?.relationshipData {
-                            DispatchQueue.main.async {
-                                var text = ""
-                                
-                                // フォロー関連
-                                if relationshipData.following == 1 && relationshipData.followed_by == 1 {
-                                    text += I18n.get("RELATIONSHIP_FOLLOWING_AND_FOLLOWED")
-                                }
-                                else if relationshipData.following == 1 {
-                                    text += I18n.get("RELATIONSHIP_FOLLOWING")
-                                }
-                                else if relationshipData.followed_by == 1 {
-                                    text += I18n.get("RELATIONSHIP_FOLLOWED")
-                                }
-                                if relationshipData.requested == 1 {
-                                    text += I18n.get("RELATIONSHIP_REQUESTED")
-                                }
-                                /*if relationshipData.endorsed == 1 {
-                                 text += I18n.get("RELATIONSHIP_ENDORSED")
-                                 }*/
-                                
-                                // ミュート
-                                if relationshipData.muting == 1 {
-                                    text += I18n.get("RELATIONSHIP_MUTING")
-                                }
-                                if relationshipData.muting_notifications == 1 {
-                                    text += I18n.get("RELATIONSHIP_MUTING_NOTIFICATION")
-                                }
-                                if relationshipData.following == 1 && relationshipData.showing_reblogs == 0 {
-                                    text += I18n.get("RELATIONSHIP_HIDE_BOOST")
-                                }
-                                
-                                // ブロック
-                                if relationshipData.domain_blocking == 1 {
-                                    text += I18n.get("RELATIONSHIP_DOMAIN_BLOCKING")
-                                }
-                                if relationshipData.blocking == 1 {
-                                    text += I18n.get("RELATIONSHIP_BLOCKING")
-                                }
-                                
-                                // 最後の改行を取り除く
-                                if text.count > 0 {
-                                    text = String(text.prefix(text.count - 1))
-                                }
-                                
-                                self?.relationshipLabel.stringValue = text
-                                
-                                self?.actionButton.alphaValue = 1
-                                
-                                self?.needsLayout = true
-                            }
+                        self?.setRelationshipStr()
+                        
+                        if let strongSelf = self {
+                            ProfileViewCell.cacheRelationships["\(strongSelf.hostName),\(strongSelf.id)"] = relationshipData
                         }
                     }
                 } catch {
                 }
+            }
+        }
+    }
+    
+    private func setRelationshipStr() {
+        if let relationshipData = self.relationshipData {
+            DispatchQueue.main.async {
+                var text = ""
+                
+                // フォロー関連
+                if relationshipData.following == 1 && relationshipData.followed_by == 1 {
+                    text += I18n.get("RELATIONSHIP_FOLLOWING_AND_FOLLOWED")
+                }
+                else if relationshipData.following == 1 {
+                    text += I18n.get("RELATIONSHIP_FOLLOWING")
+                }
+                else if relationshipData.followed_by == 1 {
+                    text += I18n.get("RELATIONSHIP_FOLLOWED")
+                }
+                if relationshipData.requested == 1 {
+                    text += I18n.get("RELATIONSHIP_REQUESTED")
+                }
+                /*if relationshipData.endorsed == 1 {
+                 text += I18n.get("RELATIONSHIP_ENDORSED")
+                 }*/
+                
+                // ミュート
+                if relationshipData.muting == 1 {
+                    text += I18n.get("RELATIONSHIP_MUTING")
+                }
+                if relationshipData.muting_notifications == 1 {
+                    text += I18n.get("RELATIONSHIP_MUTING_NOTIFICATION")
+                }
+                if relationshipData.following == 1 && relationshipData.showing_reblogs == 0 {
+                    text += I18n.get("RELATIONSHIP_HIDE_BOOST")
+                }
+                
+                // ブロック
+                if relationshipData.domain_blocking == 1 {
+                    text += I18n.get("RELATIONSHIP_DOMAIN_BLOCKING")
+                }
+                if relationshipData.blocking == 1 {
+                    text += I18n.get("RELATIONSHIP_BLOCKING")
+                }
+                
+                // 最後の改行を取り除く
+                if text.count > 0 {
+                    text = String(text.prefix(text.count - 1))
+                }
+                
+                self.relationshipLabel.stringValue = text
+                
+                self.actionButton.alphaValue = 1
+                
+                self.needsLayout = true
             }
         }
     }
@@ -441,6 +465,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 style: MyAlertAction.Style.destructive,
                 handler: { _ in
                     ProfileAction.unfollow(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
             }))
             
             if relationshipData.showing_reblogs == 1 {
@@ -450,6 +475,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                     style: MyAlertAction.Style.defaultValue,
                     handler: { _ in
                         ProfileAction.hideBoost(id: id, hostName: hostName, accessToken: accessToken)
+                        ProfileViewCell.clearCache()
                 }))
             } else {
                 // ブーストを表示する
@@ -458,6 +484,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                     style: MyAlertAction.Style.defaultValue,
                     handler: { _ in
                         ProfileAction.showBoost(id: id, hostName: hostName, accessToken: accessToken)
+                        ProfileViewCell.clearCache()
                 }))
             }
         } else {
@@ -468,6 +495,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                     style: MyAlertAction.Style.defaultValue,
                     handler: { _ in
                         ProfileAction.remoteFollow(uri: uri, hostName: hostName, accessToken: accessToken)
+                        ProfileViewCell.clearCache()
                 }))
             } else {
                 // フォローする
@@ -476,6 +504,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                     style: MyAlertAction.Style.defaultValue,
                     handler: { _ in
                         ProfileAction.follow(id: id, hostName: hostName, accessToken: accessToken)
+                        ProfileViewCell.clearCache()
                 }))
             }
         }
@@ -487,6 +516,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 style: MyAlertAction.Style.destructive,
                 handler: { _ in
                     ProfileAction.unblock(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
             }))
         } else {
             // ブロックする
@@ -495,6 +525,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 style: MyAlertAction.Style.destructive,
                 handler: { _ in
                     ProfileAction.block(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
             }))
         }
         
@@ -505,6 +536,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 style: MyAlertAction.Style.destructive,
                 handler: { _ in
                     ProfileAction.unmute(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
             }))
         } else {
             // ミュートする
@@ -513,6 +545,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 style: MyAlertAction.Style.destructive,
                 handler: { _ in
                     ProfileAction.mute(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
             }))
         }
         

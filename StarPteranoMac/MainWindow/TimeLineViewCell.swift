@@ -241,6 +241,8 @@ final class TimeLineViewCell: NSView {
             TimeLineViewCell.doubleTapFlag = false
         }
         
+        ProfileViewCell.clearCache()
+        
         self.tableView?.selectedDate = Date()
         
         if let accountId = self.accountId {
