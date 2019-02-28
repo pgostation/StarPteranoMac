@@ -76,7 +76,7 @@ final class MainViewController: NSViewController {
             }
         }
         
-        if size.width - sum > 0 {
+        do {
             // 選択中のカラムの幅を変化させる
             var selectedIndex = -1
             var lastDate = Date(timeIntervalSince1970: 0)
@@ -95,35 +95,6 @@ final class MainViewController: NSViewController {
                 // 最も大きい幅の項目の幅を変化させる
                 if maxIndex != -1 {
                     widthList[maxIndex] = max(48, widthList[maxIndex] + (size.width - sum))
-                }
-            }
-        } else {
-            // 未選択のカラムの幅を変化させる
-            var selectedIndex = -1
-            var lastDate = Date(timeIntervalSince1970: 0)
-            for (index, subVC) in self.subVCList.enumerated() {
-                if let timelineView = subVC.scrollView.documentView as? TimeLineView {
-                    if timelineView.selectedDate > lastDate {
-                        selectedIndex = index
-                        lastDate = timelineView.selectedDate
-                    }
-                }
-            }
-            
-            var remain = size.width - sum
-            if selectedIndex != -1 {
-                for index in 0..<self.subVCList.count {
-                    if index == selectedIndex { continue }
-                    let newWidth = max(48, widthList[index] + (remain))
-                    remain += widthList[index] - newWidth
-                    widthList[index] = newWidth
-                }
-            }
-            
-            if remain != 0{
-                // 最も大きい幅の項目の幅を変化させる
-                if maxIndex != -1 {
-                    widthList[maxIndex] = max(48, widthList[maxIndex] + remain)
                 }
             }
         }
