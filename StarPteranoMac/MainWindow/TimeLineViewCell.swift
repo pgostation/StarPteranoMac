@@ -241,6 +241,8 @@ final class TimeLineViewCell: NSView {
             TimeLineViewCell.doubleTapFlag = false
         }
         
+        self.tableView?.selectedDate = Date()
+        
         if let accountId = self.accountId {
             if let timelineView = self.superview as? TimeLineView {
                 if timelineView.option == accountId {
@@ -286,6 +288,8 @@ final class TimeLineViewCell: NSView {
     @objc func pressAccountAction(_ gesture: NSGestureRecognizer?) {
         if let gesture = gesture, gesture.state != .began { return }
         
+        self.tableView?.selectedDate = Date()
+        
         // @IDを入力する
         DispatchQueue.main.async {
             if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
@@ -302,6 +306,8 @@ final class TimeLineViewCell: NSView {
     
     // リプライボタンをクリックした時の処理
     @objc func replyAction() {
+        self.tableView?.selectedDate = Date()
+        
         if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {
             Dialog.show(message: I18n.get("ALERT_TEXT_EXISTS"))
         } else {
@@ -379,6 +385,8 @@ final class TimeLineViewCell: NSView {
     
     // ブーストボタンをタップした時の処理
     @objc func boostAction() {
+        self.tableView?.selectedDate = Date()
+        
         self.boostButton?.isHidden = true
         
         tableView?.boostAction(id: self.reblog_id ?? self.id, isBoosted: self.isBoosted)
@@ -386,12 +394,14 @@ final class TimeLineViewCell: NSView {
     
     // お気に入りボタンをタップした時の処理
     @objc func favoriteAction() {
+        self.tableView?.selectedDate = Date()
+        
         self.favoriteButton?.isHidden = true
         
         tableView?.favoriteAction(id: self.reblog_id ?? self.id, isFaved: self.isFaved)
     }
     
-    // 「・・・」ボタンをタップした時の処理
+    // 「・・・」ボタンの作成処理
     @objc func setDetailButton(_ popUp: NSPopUpButton) {
         popUp.isBordered = false
         

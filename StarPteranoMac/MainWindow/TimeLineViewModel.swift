@@ -364,7 +364,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         }
         
         // キャッシュを使う
-        if heightCacheWidth != tableView.frame.width {
+        if heightCacheWidth != tableView.frame.width && oldHeightCacheWidth != tableView.frame.width {
             oldHeightCache = heightCache
             oldHeightCacheWidth = heightCacheWidth
             heightCache = [:]
@@ -469,7 +469,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         let height = max(55, messageView.frame.height + 36 + reblogOffset + imagesOffset + detailOffset)
         
         if row != selectedRow, let idStr = data.id, let id = Int(idStr) {
-            heightCache[id] = height
+            if oldHeightCacheWidth == tableView.frame.width {
+                oldHeightCache[id] = height
+            } else {
+                heightCache[id] = height
+            }
         }
         
         return height
@@ -1524,10 +1528,8 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
             
             if !notSelect {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    if let row = self.selectedRow {
-                        timelineView.scrollRowToVisible(row)
-                    }
+                if Thread.isMainThread {
+                    timelineView.scrollRowToVisible(self.selectedRow ?? row)
                 }
             }
         }

@@ -39,6 +39,18 @@ final class TimeLineViewManager {
                     date = view.selectedDate
                     selected = vc
                 }
+                for subTlVc in vc.parent?.children ?? [] {
+                    if let subTlVc = subTlVc as? SubTimeLineViewController {
+                        if let view = subTlVc.view as? SubTimeLineView {
+                            if let tlView = view.scrollView.documentView as? TimeLineView {
+                                if tlView.selectedDate > date! {
+                                    date = tlView.selectedDate
+                                    selected = vc
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         
@@ -49,7 +61,7 @@ final class TimeLineViewManager {
     static func getLastSelectedSubTLView() -> SubTimeLineViewController? {
         let selectedVC = getLastSelectedTLView()
         
-        for vc in selectedVC?.children.reversed() ?? [] {
+        for vc in selectedVC?.parent?.children.reversed() ?? [] {
             if let vc = vc as? SubTimeLineViewController {
                 return vc
             }

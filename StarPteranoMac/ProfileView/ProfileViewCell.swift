@@ -23,6 +23,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
     
     // メインの表示
     let iconView = NSImageView()
+    let iconCoverButton = NSButton()
     let nameLabel = NSTextField()
     let idLabel = NSTextField()
     let noteLabel = NSTextView()
@@ -106,9 +107,9 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         let followersTapGesture2 = NSClickGestureRecognizer(target: self, action: #selector(followersTapAction))
         followerCountTitle.addGestureRecognizer(followersTapGesture2)
         
-        // タップで全画面表示
-        let tapGesture = NSClickGestureRecognizer(target: self, action: #selector(tapIconAction))
-        iconView.addGestureRecognizer(tapGesture)
+        // クリックでアイコンをウィンドウ表示
+        iconCoverButton.target = self
+        iconCoverButton.action = #selector(tapIconAction)
         
         actionButton.target = self
         actionButton.action = #selector(tapActionButton(_:))
@@ -127,7 +128,8 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         guard let data = data else { return }
         
         // ヘッダ画像
-        headerImageView.image = ImageUtils.colorImage(color: ThemeColor.mainButtonsBgColor)
+        headerImageView.wantsLayer = true
+        headerImageView.layer?.backgroundColor = NSColor.gray.cgColor
         ImageCache.image(urlStr: data.header ?? data.header_static, isTemp: true, isSmall: false) { [weak self] (image, localUrl) in
             guard let strongSelf = self else { return }
             if image.size.width <= 1 && image.size.height <= 1 { return }
@@ -143,13 +145,19 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
             ImageCache.image(urlStr: data.avatar ?? data.avatar_static, isTemp: false, isSmall: true) { [weak self] (image, localUrl) in
                 if self == nil { return }
                 self?.iconView.image = image
+                self?.iconView.wantsLayer = true
                 self?.iconView.layer?.cornerRadius = 8
                 self?.addSubview(self!.iconView)
+                self?.addSubview(self!.iconCoverButton)
                 
                 self?.iconView.frame = CGRect(x: 5,
                                               y: self!.frame.height - 5 - 70,
                                               width: 70,
                                               height: 70)
+                self?.iconCoverButton.frame = CGRect(x: 5,
+                                                     y: self!.frame.height - 5 - 70,
+                                                     width: 70,
+                                                     height: 70)
             }
         }
         
@@ -323,6 +331,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         actionButton.alphaValue = 0
         
         relationshipLabel.textColor = ThemeColor.contrastColor
+        relationshipLabel.wantsLayer = true
         relationshipLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         relationshipLabel.layer?.shadowColor = ThemeColor.viewBgColor.cgColor
         relationshipLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
@@ -334,6 +343,8 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         relationshipLabel.isSelectable = false
         relationshipLabel.isEditable = false
         relationshipLabel.drawsBackground = false
+        
+        iconCoverButton.isTransparent = true
     }
     
     // フォロー関係かどうかを取得
@@ -519,12 +530,14 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         
         // Safariで表示
         alertController.addAction(MyAlertAction(
-            title: I18n.get("ACTION_OPEN_WITH_WEBBROWSER"),
+            title: I18n.get("ACTION_OPEN_WITH_BROWSER"),
             style: MyAlertAction.Style.defaultValue,
             handler: { _ in
                 guard let url = URL(string: self.urlStr) else { return }
                 NSWorkspace.shared.open(url)
         }))
+        
+        alertController.view.layout()
         
         TimeLineViewManager.getLastSelectedSubTLView()?.present(
             alertController,
@@ -584,7 +597,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         var top: CGFloat = 0
         
         // 数の表示
-        let countsWidth = screenBounds.width / 3.5
+        let countsWidth = min(150, screenBounds.width / 3.5)
         statusCountTitle.frame = CGRect(x: 5,
                                         y: top + SettingsData.fontSize,
                                         width: countsWidth - 5,
@@ -623,19 +636,20 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         for index in (0..<serviceLabels.count).reversed() {
             let label = serviceLabels[index]
             let textView = urlLabels[index]
+            let width = min(600, screenBounds.width)
             
             label.frame.size.width = screenBounds.width * 0.4
             label.sizeToFit()
             label.frame = CGRect(x: 2,
                                  y: top,
-                                 width: screenBounds.width * 0.4 - 2,
+                                 width: width * 0.4 - 2,
                                  height: label.frame.height)
             
-            textView.frame.size.width = screenBounds.width * 0.6
+            textView.frame.size.width = width * 0.6
             textView.sizeToFit()
-            textView.frame = CGRect(x: screenBounds.width * 0.4,
+            textView.frame = CGRect(x: width * 0.4,
                                     y: top,
-                                    width: screenBounds.width * 0.6,
+                                    width: width * 0.6,
                                     height: textView.frame.height)
             
             let height = max(label.frame.height, textView.frame.height)
@@ -651,12 +665,12 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                                  width: screenBounds.width - 80,
                                  height: 24)
         
-        noteLabel.frame.size.width = screenBounds.width - 80
+        noteLabel.frame.size.width = min(595, screenBounds.width) - 80
         noteLabel.sizeToFit()
         noteLabel.frame = CGRect(x: 80,
                                  y: dateLabel.frame.maxY + 5,
                                  width: noteLabel.frame.width,
-                                 height: noteLabel.frame.height)
+                                 height: max(80, noteLabel.frame.height))
         
         idLabel.frame = CGRect(x: 80,
                                y: noteLabel.frame.maxY + 5,
@@ -670,14 +684,14 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                                  width: nameLabel.frame.width,
                                  height: nameLabel.frame.height)
         
-        iconView.frame = CGRect(x: 5,
-                                y: nameLabel.frame.maxY - 75,
-                                width: 70,
-                                height: 70)
+        iconView.frame = CGRect(x: 10,
+                                y: nameLabel.frame.maxY - 65,
+                                width: 60,
+                                height: 60)
         
         // フォロー関係表示
         actionButton.frame = CGRect(x: 20,
-                                    y: nameLabel.frame.maxY - 130,
+                                    y: nameLabel.frame.maxY - 115,
                                     width: 40,
                                     height: 40)
         
@@ -692,9 +706,9 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         
         // ヘッダ画像
         let imageHeight = max(100, self.frame.height - dateLabel.frame.minY + 5)
-        headerImageView.frame = CGRect(x: -200,
+        headerImageView.frame = CGRect(x: 0,
                                        y: self.frame.height - imageHeight,
-                                       width: screenBounds.width + 400,
+                                       width: min(600, screenBounds.width),
                                        height: imageHeight)
     }
 }

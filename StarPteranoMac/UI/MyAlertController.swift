@@ -11,8 +11,6 @@
 import Cocoa
 
 final class MyAlertController: NSViewController {
-    private var actions: [MyAlertAction] = []
-    
     init(title: String?, message: String?) {
         super.init(nibName: nil, bundle: nil)
         
@@ -25,7 +23,16 @@ final class MyAlertController: NSViewController {
     }
     
     func addAction(_ action: MyAlertAction) {
-        actions.append(action)
+        guard let view = self.view as? MyAlertView else { return }
+        
+        let button = view.addAction(action: action)
+        
+        button.target = self
+        button.action = #selector(execAction(_:))
+    }
+    
+    @objc func execAction(_ sender: MyAlertButton) {
+        sender.alertAction.handler(true)
     }
 }
 
@@ -37,7 +44,53 @@ private class MyAlertView: NSView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func addAction(action: MyAlertAction) -> MyAlertButton {
+        let actionButton = MyAlertButton(action: action)
+        
+        let attributedTitle = NSMutableAttributedString(string: action.title)
+        if action.style == .defaultValue {
+            attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.blue],
+                                          range: NSRange(location: 0, length: attributedTitle.length))
+        } else {
+            attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : NSColor.red],
+                                          range: NSRange(location: 0, length: attributedTitle.length))
+        }
+        actionButton.attributedTitle = attributedTitle
+        
+        self.addSubview(actionButton)
+        self.needsLayout = true
+        
+        return actionButton
+    }
+    
+    override func layout() {
+        var top: CGFloat = 20
+        
+        for subview in self.subviews.reversed() {
+            subview.frame = NSRect(x: 25, y: top, width: 150, height: 30)
+            
+            top += 30
+        }
+        
+        self.frame = NSRect(x: 0, y: 0, width: 160, height: top + 10)
+    }
 }
+
+final class MyAlertButton: NSButton {
+    let alertAction: MyAlertAction
+    
+    init(action: MyAlertAction) {
+        self.alertAction = action
+        
+        super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 
 final class MyAlertAction {
     enum Style {
