@@ -36,8 +36,10 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
     // 数の表示
     let followingCountTitle = NSTextField()
     let followingCountLabel = NSTextField()
+    let followingButton = NSButton()
     let followerCountTitle = NSTextField()
     let followerCountLabel = NSTextField()
+    let followerButton = NSButton()
     let statusCountTitle = NSTextField()
     let statusCountLabel = NSTextField()
     
@@ -74,8 +76,10 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         // 数の表示
         self.addSubview(followingCountTitle)
         self.addSubview(followingCountLabel)
+        self.addSubview(followingButton)
         self.addSubview(followerCountTitle)
         self.addSubview(followerCountLabel)
+        self.addSubview(followerButton)
         self.addSubview(statusCountTitle)
         self.addSubview(statusCountLabel)
         
@@ -88,17 +92,11 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         setProperties(data: accountData)
         
         // タップジェスチャー
-        let followingTapGesture = NSClickGestureRecognizer(target: self, action: #selector(followingTapAction))
-        followingCountLabel.addGestureRecognizer(followingTapGesture)
+        followingButton.target = self
+        followingButton.action = #selector(followingTapAction)
         
-        let followingTapGesture2 = NSClickGestureRecognizer(target: self, action: #selector(followingTapAction))
-        followingCountTitle.addGestureRecognizer(followingTapGesture2)
-        
-        let followersTapGesture = NSClickGestureRecognizer(target: self, action: #selector(followersTapAction))
-        followerCountLabel.addGestureRecognizer(followersTapGesture)
-        
-        let followersTapGesture2 = NSClickGestureRecognizer(target: self, action: #selector(followersTapAction))
-        followerCountTitle.addGestureRecognizer(followersTapGesture2)
+        followerButton.target = self
+        followerButton.action = #selector(followersTapAction)
         
         // クリックでアイコンをウィンドウ表示
         iconCoverButton.target = self
@@ -348,6 +346,8 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         relationshipLabel.isEditable = false
         relationshipLabel.drawsBackground = false
         
+        followingButton.isTransparent = true
+        followerButton.isTransparent = true
         iconCoverButton.isTransparent = true
     }
     
@@ -585,6 +585,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         if let subVC = TimeLineViewManager.getLastSelectedSubTLView() {
             subVC.addChild(vc)
             subVC.view.addSubview(vc.view)
+            vc.view.needsLayout = true
         }
     }
     
@@ -593,6 +594,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         if let subVC = TimeLineViewManager.getLastSelectedSubTLView() {
             subVC.addChild(vc)
             subVC.view.addSubview(vc.view)
+            vc.view.needsLayout = true
         }
     }
     
@@ -653,6 +655,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                                            y: top,
                                            width: countsWidth,
                                            height: SettingsData.fontSize * 2)
+        followingButton.frame = followingCountLabel.frame
         
         followerCountTitle.frame = CGRect(x: countsWidth * 2.5,
                                           y: top + SettingsData.fontSize,
@@ -662,6 +665,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                                           y: top,
                                           width: countsWidth,
                                           height: SettingsData.fontSize * 2)
+        followerButton.frame = followerCountLabel.frame
         
         top = SettingsData.fontSize * 3
         

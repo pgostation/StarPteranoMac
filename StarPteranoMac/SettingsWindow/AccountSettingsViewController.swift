@@ -341,7 +341,7 @@ private final class AccountView: NSView {
         hostLabel.fontSize = 14
         hostLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
         
-        idLabel.string = account.1
+        idLabel.string = SettingsData.accountUsername(accessToken: account.1)
         idLabel.foregroundColor = NSColor.darkGray.cgColor
         idLabel.fontSize = 14
         idLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
