@@ -267,6 +267,14 @@ final class TimeLineViewCell: NSView {
                 }
             }
             
+            // 複数のサブTLを開かないようにする
+            for subVC in targetSubVC?.children ?? [] {
+                if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                    subVC.removeFromParent()
+                    subVC.view.removeFromSuperview()
+                }
+            }
+            
             targetSubVC?.addChild(subTimeLineViewController)
             targetSubVC?.view.addSubview(subTimeLineViewController.view)
             
@@ -926,9 +934,9 @@ final class TimeLineViewCell: NSView {
             var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
             
             if let cardView = self.cardView, !cardView.isHidden {
-                cardView.frame.origin.y = top - 200
-                cardView.frame.origin.x = 10
-                cardView.frame.size.width =  self.frame.width - 20
+                cardView.frame.origin.y = top - 150
+                cardView.frame.origin.x = 30
+                cardView.frame.size.width =  min(400, self.frame.width - 40)
                 cardView.layout()
                 
                 top = cardView.frame.minY - 5
@@ -997,9 +1005,9 @@ final class TimeLineViewCell: NSView {
         } else {
             if let cardView = self.cardView {
                 let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8 + imagesOffset)
-                cardView.frame.origin.y = top - 200
-                cardView.frame.origin.x = 10
-                cardView.frame.size.width =  self.frame.width - 20
+                cardView.frame.origin.y = top - 150
+                cardView.frame.origin.x = 30
+                cardView.frame.size.width = min(400, self.frame.width - 40)
                 cardView.layout()
             }
         }

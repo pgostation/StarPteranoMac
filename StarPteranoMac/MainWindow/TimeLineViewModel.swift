@@ -409,11 +409,11 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if SettingsData.instanceVersion(hostName: (tableView as? TimeLineView)?.hostName ?? "") >= 2.6 {
                 if data.card != nil || CardView.hasCard(id: data.id ?? "") == true {
                     // card表示用
-                    detailOffset += 200
+                    detailOffset += 150
                 }
             } else {
                 // card表示用
-                detailOffset += 200
+                detailOffset += 150
             }
         }
         
@@ -1565,6 +1565,14 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if timelineView.hostName == subVC.tootVC.hostName && timelineView.accessToken == subVC.tootVC.accessToken {
                 targetSubVC = subVC
                 break
+            }
+        }
+        
+        // 複数のサブTLを開かないようにする
+        for subVC in targetSubVC?.children ?? [] {
+            if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                subVC.removeFromParent()
+                subVC.view.removeFromSuperview()
             }
         }
         

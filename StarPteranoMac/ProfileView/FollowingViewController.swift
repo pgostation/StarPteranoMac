@@ -133,6 +133,7 @@ final class FollowingViewController: NSViewController {
 }
 
 private final class FollowingView: NSView {
+    let scrollView = NSScrollView()
     let tableView: FollowingTableView
     let closeButton = NSButton()
     
@@ -141,8 +142,10 @@ private final class FollowingView: NSView {
         
         super.init(frame: NSRect(x: 0, y: 0, width: 10, height: 10))
         
-        self.addSubview(tableView)
+        self.addSubview(scrollView)
         self.addSubview(closeButton)
+        
+        scrollView.documentView = tableView
         
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
@@ -157,9 +160,15 @@ private final class FollowingView: NSView {
     
     override func layout() {
         if let superview = self.superview {
-            self.frame.size = superview.frame.size
+            let width = min(400, superview.frame.width)
+            self.frame = NSRect(x: superview.frame.width - width,
+                                y: 0,
+                                width: width,
+                                height: superview.frame.height)
             
-            self.tableView.frame.size = superview.frame.size
+            self.scrollView.frame.size = NSSize(width: self.frame.size.width,
+                                                height: self.frame.size.height - 20)
+            tableView.frame.size.width = self.frame.size.width
         }
         
         closeButton.frame = CGRect(x: 0,

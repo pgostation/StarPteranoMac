@@ -65,9 +65,10 @@ final class SubTimeLineView: NSView {
     override func layout() {
         if let superFrame = self.superview?.frame {
             let tootView = self.superview?.subviews.first as? TootView
-            self.frame = CGRect(x: 0,
+            let width = min(400, superFrame.width)
+            self.frame = NSRect(x: superFrame.width - width,
                                 y: 0,
-                                width: superFrame.width,
+                                width: width,
                                 height: superFrame.height - 22 - (tootView?.frame.height ?? 0) - 20)
         }
         

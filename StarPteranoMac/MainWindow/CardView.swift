@@ -30,7 +30,7 @@ final class CardView: NSView {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        let rect = CGRect(x: -200, y: 0, width: 200, height: 195)
+        let rect = CGRect(x: -200, y: 0, width: 200, height: 145)
         super.init(frame: rect)
         
         self.addSubview(imageView)
@@ -61,7 +61,7 @@ final class CardView: NSView {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        let rect = CGRect(x: -200, y: 0, width: 200, height: 195)
+        let rect = CGRect(x: -200, y: 0, width: 200, height: 145)
         super.init(frame: rect)
         
         self.addSubview(imageView)
