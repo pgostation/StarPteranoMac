@@ -83,6 +83,9 @@ final class ImageCache {
                             memCache = [:]
                         }
                     }
+                    
+                    // 最終アクセス時刻を更新
+                    try? fileManager.setAttributes([FileAttributeKey.modificationDate : Date()], ofItemAtPath: url.path)
                 }
             }
             return
@@ -125,16 +128,15 @@ final class ImageCache {
                         try? data.write(to: fileUrl)
                         
                         // ストレージの古いファイルを削除する
-                        if isTemp {
-                            let cacheDirUrl = URL(fileURLWithPath: cacheDir)
-                            let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-                            let nowDate = Date()
-                            for url in urls ?? [] {
-                                if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
-                                    if let fileDate = attr[FileAttributeKey.creationDate] as? Date {
-                                        if nowDate.timeIntervalSince(fileDate) > 86400 {
-                                            try? fileManager.removeItem(at: url)
-                                        }
+                        let cacheDirUrl = URL(fileURLWithPath: cacheDir)
+                        let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+                        let nowDate = Date()
+                        for url in urls ?? [] {
+                            if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
+                                if let fileDate = attr[FileAttributeKey.modificationDate] as? Date {
+                                    let time: Double = isTemp ? 3600 * 8 : 86400 * 30
+                                    if nowDate.timeIntervalSince(fileDate) > time {
+                                        try? fileManager.removeItem(at: url)
                                     }
                                 }
                             }
