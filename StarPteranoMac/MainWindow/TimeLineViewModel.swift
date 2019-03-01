@@ -823,23 +823,27 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             if data.spoiler_text != nil && data.spoiler_text != "" {
                 messageView.isHidden = true
             }
-            cell.spolerTextLabel = NSTextView()
-            cell.spolerTextLabel?.textColor = ThemeColor.messageColor
-            cell.spolerTextLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-            let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: { [weak cell] in
-                guard let cell = cell else { return }
-                if cell.id == id {
-                    let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: nil)
-                    cell.spolerTextLabel?.textStorage?.append(attributedText)
-                    cell.layout()
-                }
-            })
-            cell.spolerTextLabel?.textStorage?.append(attributedText)
-            //cell.spolerTextLabel?.numberOfLines = 0
-            //cell.spolerTextLabel?.lineBreakMode = .byCharWrapping
-            cell.spolerTextLabel?.frame.size.width = tableView.frame.width - 70
-            cell.spolerTextLabel?.sizeToFit()
-            cell.addSubview(cell.spolerTextLabel!)
+            if data.spoiler_text != nil {
+                cell.spolerTextLabel = NSTextView()
+                cell.spolerTextLabel?.textColor = ThemeColor.messageColor
+                cell.spolerTextLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: { [weak cell] in
+                    guard let cell = cell else { return }
+                    if cell.id == id {
+                        let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: nil)
+                        cell.spolerTextLabel?.textStorage?.append(attributedText)
+                        cell.layout()
+                    }
+                })
+                cell.spolerTextLabel?.textStorage?.append(attributedText)
+                //cell.spolerTextLabel?.numberOfLines = 0
+                //cell.spolerTextLabel?.lineBreakMode = .byCharWrapping
+                cell.spolerTextLabel?.frame.size.width = tableView.frame.width - 70
+                cell.spolerTextLabel?.sizeToFit()
+                cell.spolerTextLabel?.drawsBackground = false
+                cell.spolerTextLabel?.isEditable = false
+                cell.addSubview(cell.spolerTextLabel!)
+            }
         }
         
         func barColor(color: NSColor) {
@@ -1309,7 +1313,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             
             if let id = data.id, id != "" && TimeLineViewCell.showMoreList.contains(id) {
                 // すでに解除済み
-                cell.showMoreAction(forceShow: true)
+                cell.showMore(forceShow: true)
             }
         }
         

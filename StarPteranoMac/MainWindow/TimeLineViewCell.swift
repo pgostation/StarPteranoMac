@@ -561,7 +561,11 @@ final class TimeLineViewCell: NSView {
     }
     
     // もっと見る
-    @objc func showMoreAction(forceShow: Bool = true) {
+    @objc func showMoreAction() {
+        showMore(forceShow: false)
+    }
+    
+    func showMore(forceShow: Bool) {
         if !forceShow && TimeLineViewCell.showMoreList.contains(self.id) {
             // やっぱり隠す
             for (index, data) in TimeLineViewCell.showMoreList.enumerated() {
@@ -832,8 +836,8 @@ final class TimeLineViewCell: NSView {
             let y: CGFloat
             if isMiniView == .superMini {
                 y = -0
-            } else if let spolerTextLabel = self.spolerTextLabel {
-                y = height - spolerTextLabel.frame.minY - 20
+            } else if let showMoreButton = self.showMoreButton {
+                y = height - showMoreButton.frame.minY
             } else if let detailDateLabel = self.detailDateLabel {
                 y = height - detailDateLabel.frame.minY
             } else {
