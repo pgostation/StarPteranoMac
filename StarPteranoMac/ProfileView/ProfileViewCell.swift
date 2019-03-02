@@ -152,14 +152,14 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 self?.addSubview(self!.iconView)
                 self?.addSubview(self!.iconCoverButton)
                 
-                self?.iconView.frame = CGRect(x: 5,
-                                              y: self!.frame.height - 5 - 70,
-                                              width: 70,
-                                              height: 70)
-                self?.iconCoverButton.frame = CGRect(x: 5,
-                                                     y: self!.frame.height - 5 - 70,
-                                                     width: 70,
-                                                     height: 70)
+                self?.iconView.frame = CGRect(x: 10,
+                                              y: self!.frame.height - 5 - 60,
+                                              width: 60,
+                                              height: 60)
+                self?.iconCoverButton.frame = CGRect(x: 10,
+                                                     y: self!.frame.height - 5 - 60,
+                                                     width: 60,
+                                                     height: 60)
             }
         }
         

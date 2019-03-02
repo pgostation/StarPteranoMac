@@ -25,9 +25,37 @@ final class SubTimeLineViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // アニメーションで閉じる
     @objc func closeAction() {
-        self.removeFromParent()
-        self.view.removeFromSuperview()
+        let animation = NSViewAnimation(duration: 0.15, animationCurve: NSAnimation.Curve.easeOut)
+        let animationsDict: [NSViewAnimation.Key: Any] = [
+            NSViewAnimation.Key.target: self.view,
+            NSViewAnimation.Key.startFrame: self.view.frame,
+            NSViewAnimation.Key.endFrame: NSRect(x: self.view.frame.origin.x + self.view.frame.width,
+                                                 y: self.view.frame.origin.y,
+                                                 width: self.view.frame.width,
+                                                 height: self.view.frame.height),
+            ]
+        animation.viewAnimations = [animationsDict]
+        animation.start()
+        
+        DispatchQueue.main.async {
+            self.removeFromParent()
+            self.view.removeFromSuperview()
+        }
+    }
+    
+    // アニメーションで表示
+    func showAnimation(parentVC: NSViewController?) {
+        parentVC?.addChild(self)
+        parentVC?.view.addSubview(self.view)
+        
+        self.view.alphaValue = 0.25
+        for i in 1...6 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.025) {
+                self.view.alphaValue = 1.0 / 6.0 * CGFloat(i)
+            }
+        }
     }
 }
 

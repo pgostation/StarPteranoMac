@@ -289,14 +289,8 @@ final class TimeLineViewCell: NSView {
                                                               width: self.frame.width,
                                                               height: (targetSubVC?.view.frame.height ?? 100) - 22)
             
-            let animation = NSViewAnimation(duration: 0.3, animationCurve: NSAnimation.Curve.easeIn)
-            let frame = subTimeLineViewController.view.frame
-            let animationDict: [NSViewAnimation.Key: Any] = [
-                NSViewAnimation.Key.target: subTimeLineViewController.view,
-                NSViewAnimation.Key.startFrame: frame,
-                NSViewAnimation.Key.endFrame: NSRect(x: 0, y: frame.minY, width: frame.width, height: frame.height)]
-            animation.viewAnimations = [animationDict]
-            animation.start()
+            
+            subTimeLineViewController.showAnimation(parentVC: targetSubVC)
         }
     }
     

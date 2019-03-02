@@ -96,8 +96,12 @@ final class PgoTabView: NSTabView {
         attributedTitle.addAttributes( [NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor],
                                        range: NSRange(location: 0, length: attributedTitle.length))
         addButton.attributedTitle = attributedTitle
-        addButton.wantsLayer = !SettingsData.isTransparentWindow
-        addButton.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        addButton.wantsLayer = true
+        if SettingsData.isTransparentWindow {
+            addButton.layer?.backgroundColor = ThemeColor.cellBgColor.withAlphaComponent(0.3).cgColor
+        } else {
+            addButton.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        }
         addButton.isBordered = false
     }
     

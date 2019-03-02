@@ -693,6 +693,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             guard let strongSelf = self else { return }
             // あとから絵文字が読み込めた場合の更新処理
             if cell.id != id { return }
+            if index >= strongSelf.list.count { return }
             let (messageView, _, _, _) = strongSelf.getMessageViewAndData(tableView: tableView, index: index, row: row, add: true, callback: nil)
             let isHidden = cell?.messageView?.isHidden ?? false
             messageView.isHidden = isHidden
@@ -1586,22 +1587,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
             }
         }
         
-        targetSubVC?.addChild(subTimeLineViewController)
-        targetSubVC?.view.addSubview(subTimeLineViewController.view)
-        
         subTimeLineViewController.view.frame = CGRect(x: timelineView.frame.width,
                                                       y: 0,
                                                       width: timelineView.frame.width,
                                                       height: (targetSubVC?.view.frame.height ?? 100) - 22)
         
-        let animation = NSViewAnimation(duration: 0.3, animationCurve: NSAnimation.Curve.easeIn)
-        let frame = subTimeLineViewController.view.frame
-        let animationDict: [NSViewAnimation.Key: Any] = [
-            NSViewAnimation.Key.target: subTimeLineViewController.view,
-            NSViewAnimation.Key.startFrame: frame,
-            NSViewAnimation.Key.endFrame: NSRect(x: 0, y: frame.minY, width: frame.width, height: frame.height)]
-        animation.viewAnimations = [animationDict]
-        animation.start()
+        subTimeLineViewController.showAnimation(parentVC: targetSubVC)
         
         // ステータスの内容を更新する(お気に入りの数とか)
         let isMerge = data.isMerge

@@ -37,7 +37,7 @@ final class MainViewController: NSViewController {
             if SettingsData.isTransparentWindow {
                 bar.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.4).cgColor
             } else {
-                bar.layer?.backgroundColor = NSColor.gray.cgColor
+                bar.layer?.backgroundColor = NSColor.gray.withAlphaComponent(0.6).cgColor
             }
             barList.append(bar)
             self.view.addSubview(bar)
