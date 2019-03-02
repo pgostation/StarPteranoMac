@@ -108,9 +108,16 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         else if mode == .list { type = .list }
         else if mode == .favorites { type = .favorites }
         else if mode == .dm { type = .direct }
+        else if mode == .mentions { type = .notificationMentions }
+        else if mode == .notifications { type = .notifications }
         else { type = .home }
         
-        let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
+        let vc: TimeLineViewController
+        if type == .notifications || type == .notificationMentions {
+            vc = TimeLineViewManager.get(key: key) ?? NotificationViewController(hostName: hostName, accessToken: accessToken, type: type)
+        } else {
+            vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
+        }
         scrollView.documentView = vc.view
         
         self.children.first?.removeFromParent()
@@ -207,13 +214,15 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         } else if title == I18n.get("ACTION_FEDERATION") {
             selectedItem = .federation
         } else if title == I18n.get("ACTION_MENTIONS") {
-            //
+            selectedItem = .mentions
         } else if title == I18n.get("ACTION_NOTIFICATIONS") {
-            //
+            selectedItem = .notifications
         } else if title == I18n.get("ACTION_DM") {
             selectedItem = .dm
         } else if title == I18n.get("ACTION_FAVORITES") {
             selectedItem = .favorites
+        } else if title == I18n.get("ACTION_LIST") {
+            selectedItem = .list
         }
     }
     

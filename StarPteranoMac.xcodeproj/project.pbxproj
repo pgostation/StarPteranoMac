@@ -17,6 +17,9 @@
 		1243D38E2226BC22001DA334 /* MyAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D38D2226BC22001DA334 /* MyAlertController.swift */; };
 		1243D3902229FF2C001DA334 /* License.text in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38F2229FF2C001DA334 /* License.text */; };
 		1243D392222A0B4E001DA334 /* PgoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D391222A0B4E001DA334 /* PgoTabView.swift */; };
+		1243D395222A8DB3001DA334 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D394222A8DB3001DA334 /* NotificationViewController.swift */; };
+		1243D397222A8DC3001DA334 /* NotificationTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D396222A8DC3001DA334 /* NotificationTableModel.swift */; };
+		1243D399222A8DD1001DA334 /* NotificationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D398222A8DD1001DA334 /* NotificationTableCell.swift */; };
 		12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */; };
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
@@ -94,6 +97,9 @@
 		1243D38D2226BC22001DA334 /* MyAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlertController.swift; sourceTree = "<group>"; };
 		1243D38F2229FF2C001DA334 /* License.text */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = License.text; sourceTree = "<group>"; };
 		1243D391222A0B4E001DA334 /* PgoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PgoTabView.swift; sourceTree = "<group>"; };
+		1243D394222A8DB3001DA334 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		1243D396222A8DC3001DA334 /* NotificationTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableModel.swift; sourceTree = "<group>"; };
+		1243D398222A8DD1001DA334 /* NotificationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableCell.swift; sourceTree = "<group>"; };
 		12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakCounter.swift; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +168,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1243D393222A8D92001DA334 /* NotificationView */ = {
+			isa = PBXGroup;
+			children = (
+				1243D394222A8DB3001DA334 /* NotificationViewController.swift */,
+				1243D396222A8DC3001DA334 /* NotificationTableModel.swift */,
+				1243D398222A8DD1001DA334 /* NotificationTableCell.swift */,
+			);
+			path = NotificationView;
+			sourceTree = "<group>";
+		};
 		128751BD218493A000BC8828 /* TootViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +285,7 @@
 				1291FC512183EDCA009B8788 /* MainWindow */,
 				128751C021849C0E00BC8828 /* ProfileView */,
 				128751BD218493A000BC8828 /* TootViewController */,
+				1243D393222A8D92001DA334 /* NotificationView */,
 				128751C92184BD4000BC8828 /* ImageWindow */,
 				129F4335217E1CD3008E856D /* AppDelegate.swift */,
 				129F4337217E1CD4008E856D /* Assets.xcassets */,
@@ -491,12 +508,14 @@
 				1243D3842225795C001DA334 /* ProfileAction.swift in Sources */,
 				121A82402214E652008D3176 /* ClickableTextField.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
+				1243D397222A8DC3001DA334 /* NotificationTableModel.swift in Sources */,
 				128751AE2184792500BC8828 /* EmojiImage.swift in Sources */,
 				128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */,
 				128751C221849C2500BC8828 /* ProfileViewCell.swift in Sources */,
 				128751C82184B44600BC8828 /* MovieCache.swift in Sources */,
 				128751CD2184BD5C00BC8828 /* ImageViewController.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
+				1243D399222A8DD1001DA334 /* NotificationTableCell.swift in Sources */,
 				128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */,
 				12DF0D2F221C4345006A8C0B /* SettingsSelectProtectMode.swift in Sources */,
 				128751B62184817000BC8828 /* TimeLineView.swift in Sources */,
@@ -527,6 +546,7 @@
 				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
 				128751D12185445A00BC8828 /* TootView.swift in Sources */,
 				1243D38A22257983001DA334 /* ProfileEditViewController.swift in Sources */,
+				1243D395222A8DB3001DA334 /* NotificationViewController.swift in Sources */,
 				129E89D622145DC300D3D13B /* CardView.swift in Sources */,
 				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
 				12C0450422222C5A00BE3A50 /* BreadCrumbListView.swift in Sources */,

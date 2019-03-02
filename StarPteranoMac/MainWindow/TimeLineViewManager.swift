@@ -21,7 +21,7 @@ final class TimeLineViewManager {
     
     static func makeKey(hostName: String, accessToken: String, type: SettingsData.TLMode, option: String? = nil) -> String {
         switch type {
-        case.list, .users, .notifications:
+        case.list, .users:
             return hostName + "_" + accessToken + "_" + type.rawValue + "_" + (option ?? "")
         default:
             return hostName + "_" + accessToken + "_" + type.rawValue

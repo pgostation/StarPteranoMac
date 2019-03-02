@@ -297,7 +297,7 @@ private class PgoTabItemView: NSView {
     }
     
     override func layout() {
-        if self.frame.width < 18 + nameLabel.frame.width + infoLabel.frame.width {
+        if self.frame.width < 18 + nameLabel.frame.width + max(14, infoLabel.frame.width) {
             // タブの幅が狭い場合
             closeButton.frame = NSRect(x: 0, y: 2, width: 16, height: 16)
             
@@ -315,7 +315,7 @@ private class PgoTabItemView: NSView {
             
             nameLabel.frame = NSRect(x: 18,
                                      y: 0,
-                                     width: self.frame.width - 18 - infoLabel.frame.width,
+                                     width: self.frame.width - 18 - max(14, infoLabel.frame.width),
                                      height: 18)
             
             infoLabel.frame = NSRect(x: min(nameLabel.frame.maxY, self.frame.width - infoLabel.frame.width),

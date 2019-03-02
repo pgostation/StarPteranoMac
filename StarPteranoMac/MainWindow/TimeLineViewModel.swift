@@ -10,7 +10,7 @@ import Cocoa
 import AVFoundation
 import SDWebImage
 
-final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
+class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
     private var list: [AnalyzeJson.ContentData] = []
     private var accountList: [String: AnalyzeJson.AccountData] = [:]
     private var accountIdDict: [String: String] = [:]
@@ -1617,7 +1617,7 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
     }
     
     // 会話部分のデータを取り出す
-    private func getMentionsData(data: AnalyzeJson.ContentData) -> [AnalyzeJson.ContentData] {
+    func getMentionsData(data: AnalyzeJson.ContentData) -> [AnalyzeJson.ContentData] {
         var mentionContents: [AnalyzeJson.ContentData] = [data]
         
         var in_reply_to_id = data.in_reply_to_id

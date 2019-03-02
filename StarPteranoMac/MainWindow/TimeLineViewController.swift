@@ -8,7 +8,7 @@
 
 import Cocoa
 
-final class TimeLineViewController: NSViewController {
+class TimeLineViewController: NSViewController {
     enum TimeLineType {
         case home // ホーム
         case local // ローカルタイムライン
@@ -22,10 +22,12 @@ final class TimeLineViewController: NSViewController {
         case direct // ダイレクトメッセージ
         case list // リスト
         case scheduled // 予約投稿
+        case notifications // 通知一覧
+        case notificationMentions // 通知一覧(メンションのみ)
     }
     
-    private let hostName: String
-    private let accessToken: String
+    let hostName: String
+    let accessToken: String
     let type: TimeLineType
     private let option: String? // user指定時はユーザID、タグ指定時はタグ
     private let mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? // typeに.mentions指定時のみ有効
@@ -71,7 +73,11 @@ final class TimeLineViewController: NSViewController {
                 if i > 10 {
                     sumHeight += 150
                 } else {
-                    sumHeight += view.model.tableView(view, heightOfRow: i)
+                    if view is NotificationTableView {
+                        sumHeight += 200
+                    } else {
+                        sumHeight += view.model.tableView(view, heightOfRow: i)
+                    }
                 }
             }
             
