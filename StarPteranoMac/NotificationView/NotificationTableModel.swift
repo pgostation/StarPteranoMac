@@ -10,11 +10,9 @@
 
 import Cocoa
 
-final class NotificationTableModel: TimeLineViewModel {
+final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableViewDelegate {
     var useAutopagerize = true
     private var list: [AnalyzeJson.NotificationData] = []
-    private var filteredList: [AnalyzeJson.NotificationData] = []
-    weak var notificationViewController: NotificationViewController?
     
     override init() {
         super.init()
@@ -41,58 +39,23 @@ final class NotificationTableModel: TimeLineViewModel {
     }
     
     // セルの数
-    override func numberOfRows(in tableView: NSTableView) -> Int {
-        let selectedSegmentIndex = (tableView as? NotificationTableView)?.segmentControl.selectedSegment ?? 0
-        
-        self.filteredList = getFilteredList(list: self.list, selectedSegmentIndex: selectedSegmentIndex)
-        
-        return self.filteredList.count + 1 // 一番下に余白をつけるため1加える
-    }
-    
-    private func getFilteredList(list: [AnalyzeJson.NotificationData], selectedSegmentIndex: Int) -> [AnalyzeJson.NotificationData] {
-        var filteredList: [AnalyzeJson.NotificationData] = []
-        
-        for data in list {
-            switch selectedSegmentIndex {
-            case 0:
-                filteredList.append(data)
-            case 1:
-                if data.type == "mention" {
-                    filteredList.append(data)
-                }
-            case 2:
-                if data.type == "follow" {
-                    filteredList.append(data)
-                }
-            case 3:
-                if data.type == "favourite" {
-                    filteredList.append(data)
-                }
-            case 4:
-                if data.type == "reblog" {
-                    filteredList.append(data)
-                }
-            default:
-                filteredList.append(data)
-            }
-        }
-        
-        return filteredList
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return self.list.count + 1 // 一番下に余白をつけるため1加える
     }
     
     // セルの正確な高さ
     private let dummyLabel = NSTextView()
-    override func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        if row >= filteredList.count {
-            if self.useAutopagerize && self.filteredList.count > 0 {
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        if row >= list.count {
+            if self.useAutopagerize && self.list.count > 0 {
                 // Autopagerize
-                self.notificationViewController?.addOld()
+                //self.notificationViewController?.addOld()
             }
             
             return 150
         }
         
-        let data = filteredList[row]
+        let data = list[row]
         if data.type == "follow" {
             return 15 + SettingsData.fontSize * 2
         } else {
@@ -124,8 +87,8 @@ final class NotificationTableModel: TimeLineViewModel {
     }
     
     // セルの中身を設定して返す
-    override func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        if row >= filteredList.count {
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        if row >= list.count {
             let cell = NSView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
             cell.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
             return cell
@@ -133,7 +96,7 @@ final class NotificationTableModel: TimeLineViewModel {
         
         let cell = NotificationTableCell()
         
-        let data = filteredList[row]
+        let data = list[row]
         let account = data.account
         let id = data.id ?? ""
         

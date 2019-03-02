@@ -29,12 +29,7 @@ class TimeLineView: NSTableView {
         self.accessToken = accessToken
         self.type = type
         self.option = option
-        
-        if type == .notifications || type == .notificationMentions {
-            self.model = NotificationTableModel()
-        } else {
-            self.model = TimeLineViewModel()
-        }
+        self.model = TimeLineViewModel()
         
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
         

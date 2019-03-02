@@ -112,7 +112,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         else if mode == .notifications { type = .notifications }
         else { type = .home }
         
-        let vc: TimeLineViewController
+        let vc: NSViewController
         if type == .notifications || type == .notificationMentions {
             vc = TimeLineViewManager.get(key: key) ?? NotificationViewController(hostName: hostName, accessToken: accessToken, type: type)
         } else {

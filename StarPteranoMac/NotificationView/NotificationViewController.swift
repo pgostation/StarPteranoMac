@@ -10,9 +10,17 @@
 
 import Cocoa
 
-final class NotificationViewController: TimeLineViewController {
+final class NotificationViewController: NSViewController {
+    let hostName: String
+    let accessToken: String
+    let type: TimeLineViewController.TimeLineType
+    
     init(hostName: String, accessToken: String, type: TimeLineViewController.TimeLineType) {
-        super.init(hostName: hostName, accessToken: accessToken, type: type)
+        self.hostName = hostName
+        self.accessToken = accessToken
+        self.type = type
+        
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -20,12 +28,8 @@ final class NotificationViewController: TimeLineViewController {
     }
     
     override func loadView() {
-        let view = NotificationTableView(viewController: self)
+        let view = NotificationTableView(hostName: hostName, accessToken: accessToken, type: type)
         self.view = view
-        
-        // 各ボタンのターゲット登録
-        view.segmentControl.target = self
-        view.segmentControl.action = #selector(segmentChanged)
         
         // 最新のデータを取得
         addOld()
@@ -54,7 +58,7 @@ final class NotificationViewController: TimeLineViewController {
         
         var lastId: String? = nil
         if let view = self.view as? NotificationTableView {
-            lastId = (view.model as? NotificationTableModel)?.getLastId()
+            lastId = view.notificationModel.getLastId()
         }
         
         /*let waitIndicator = WaitIndicator()
@@ -86,7 +90,7 @@ final class NotificationViewController: TimeLineViewController {
                     if let responseJson = responseJson {
                         if responseJson.count == 0 {
                             if let view = self?.view as? NotificationTableView {
-                                (view.model as? NotificationTableModel)?.useAutopagerize = false
+                                view.notificationModel.useAutopagerize = false
                             }
                             return
                         }
@@ -127,11 +131,11 @@ final class NotificationViewController: TimeLineViewController {
                         DispatchQueue.main.async {
                             guard let view = self?.view as? NotificationTableView else { return }
                             // 表示を更新
-                            (view.model as? NotificationTableModel)?.change(addList: list)
+                            view.notificationModel.change(addList: list)
                             view.reloadData()
                             
                             // 新着マークを表示
-                            if let created_at = (view.model as? NotificationTableModel)?.getNewestCreatedAt() {
+                            if let created_at = view.notificationModel.getNewestCreatedAt() {
                                 let date = DecodeToot.decodeTime(text: created_at)
                                 let lastDate = SettingsData.newestNotifyDate(accessToken: strongSelf.accessToken)
                                 if lastDate == nil || date > lastDate! {
@@ -149,32 +153,20 @@ final class NotificationViewController: TimeLineViewController {
             }
         })
     }
-    
-    private var lastSelectedSegmentIndex = 0
-    @objc func segmentChanged() {
-        guard let view = self.view as? NotificationTableView else { return }
-        
-        self.lastSelectedSegmentIndex = view.segmentControl.selectedSegment
-        
-        view.reloadData()
-    }
 }
 
 final class NotificationTableView: TimeLineView {
-    let segmentControl = NSSegmentedControl()
+    let notificationModel = NotificationTableModel()
     
-    init(viewController: NotificationViewController) {
-        super.init(hostName: viewController.hostName,
-                   accessToken: viewController.accessToken,
+    init(hostName: String, accessToken: String, type: TimeLineViewController.TimeLineType) {
+        super.init(hostName: hostName,
+                   accessToken: accessToken,
                    type: TimeLineViewController.TimeLineType.notifications,
                    option: nil,
                    mentions: nil)
         
-        if viewController.type == .notifications {
-            self.addSubview(segmentControl)
-        }
-        
-        (model as? NotificationTableModel)?.notificationViewController = viewController
+        self.delegate = notificationModel
+        self.dataSource = notificationModel
         
         setProperties()
     }
@@ -191,40 +183,14 @@ final class NotificationTableView: TimeLineView {
         } else {
             self.backgroundColor = ThemeColor.viewBgColor
         }
-        
-        // セグメントコントロール
-        segmentControl.setLabel(I18n.get("NOTIFY_SEG_ALL"), forSegment: 0)
-        segmentControl.setLabel(I18n.get("NOTIFY_SEG_MENTION"), forSegment: 1)
-        segmentControl.setLabel(I18n.get("NOTIFY_SEG_FOLLOW"), forSegment: 2)
-        segmentControl.setLabel(I18n.get("NOTIFY_SEG_FAV"), forSegment: 3)
-        segmentControl.setLabel(I18n.get("NOTIFY_SEG_BOOST"), forSegment: 4)
-        segmentControl.selectedSegment = 0
     }
     
     override func layout() {
         let screenBounds = self.superview?.bounds ?? self.bounds
         
-        let segAllWidth = min(360, screenBounds.width)
-        let segWidth = segAllWidth / CGFloat(segmentControl.segmentCount)
-        for i in 0..<segmentControl.segmentCount {
-            segmentControl.setWidth(segWidth - 0.5, forSegment: i)
-        }
-        
-        if segmentControl.superview != nil {
-            segmentControl.frame = CGRect(x: screenBounds.width / 2 - segAllWidth / 2,
-                                          y: screenBounds.height - 36,
-                                          width: segAllWidth,
-                                          height: 30)
-            
-            self.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: screenBounds.width,
-                                     height: screenBounds.height - 42)
-        } else {
-            self.frame = CGRect(x: 0,
-                                     y: 0,
-                                     width: screenBounds.width,
-                                     height: screenBounds.height)
-        }
+        self.frame = CGRect(x: 0,
+                            y: 0,
+                            width: screenBounds.width,
+                            height: screenBounds.height)
     }
 }

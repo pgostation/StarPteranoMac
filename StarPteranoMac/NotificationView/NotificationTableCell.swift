@@ -197,12 +197,14 @@ final class NotificationTableCell: NSView {
                 
                 DispatchQueue.main.async {
                     // トゥート詳細画面に移動
-                    guard let mentionsData = self.tableView?.model.getMentionsData(data: data) else { return }
+                    guard let timelineView = TimeLineViewManager.getLastSelectedTLView()?.view as? TimeLineView else { return }
+                    let model = timelineView.model
+                    let mentionsData = model.getMentionsData(data: data)
                     let viewController = TimeLineViewController(hostName: self.tableView?.hostName ?? "",
                                                                 accessToken: self.tableView?.accessToken ?? "",
                                                                 type: TimeLineViewController.TimeLineType.mentions,
                                                                 option: nil,
-                                                                mentions: (mentionsData, self.tableView?.accountList ?? [:]))
+                                                                mentions: (mentionsData, timelineView.accountList))
                     
                     let title = NSAttributedString(string: I18n.get("SUBTIMELINE_RELATIONS"))
                     let subTimeLineViewController = SubTimeLineViewController(name: title, icon: nil, timelineVC: viewController)

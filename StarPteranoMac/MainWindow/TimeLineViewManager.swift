@@ -9,13 +9,13 @@
 import Cocoa
 
 final class TimeLineViewManager {
-    private static var list: [String: TimeLineViewController] = [:]
+    private static var list: [String: NSViewController] = [:]
     
-    static func get(key: String) -> TimeLineViewController? {
+    static func get(key: String) -> NSViewController? {
         return list[key]
     }
     
-    static func set(key: String, vc: TimeLineViewController) {
+    static func set(key: String, vc: NSViewController) {
         list[key] = vc
     }
     
@@ -29,9 +29,9 @@ final class TimeLineViewManager {
     }
     
     // 選択中のTLを返す
-    static func getLastSelectedTLView() -> TimeLineViewController? {
+    static func getLastSelectedTLView() -> NSViewController? {
         var date: Date? = nil
-        var selected: TimeLineViewController? = nil
+        var selected: NSViewController? = nil
         
         for vc in list.values {
             if let view = vc.view as? TimeLineView {
