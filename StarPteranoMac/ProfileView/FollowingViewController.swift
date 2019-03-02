@@ -317,8 +317,8 @@ private final class FollowingTableCell: NSView {
     // 基本ビュー
     let lineLayer = CALayer()
     let iconView = NSImageView()
-    let nameLabel = NSTextField()
-    let idLabel = NSTextField()
+    let nameLabel = MyTextField()
+    let idLabel = MyTextField()
     
     var followButton = NSButton()
     

@@ -13,7 +13,7 @@ import Cocoa
 final class BreadCrumbListView: NSView {
     let name: NSAttributedString
     let icon: NSImage?
-    let nameLabel = NSTextField()
+    let nameLabel = MyTextField()
     let iconView = NSImageView()
     
     init(name: NSAttributedString, icon: NSImage?) {

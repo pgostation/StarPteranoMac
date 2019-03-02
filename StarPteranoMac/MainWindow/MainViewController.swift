@@ -53,6 +53,9 @@ final class MainViewController: NSViewController {
             if let view = subVC.scrollView.documentView as? TimeLineView {
                 view.reloadData()
             }
+            if let tabView = subVC.view.viewWithTag(5823) as? PgoTabView {
+                tabView.refresh()
+            }
             if let tootView = subVC.tootVC.view as? TootView {
                 tootView.refresh()
             }
@@ -124,6 +127,13 @@ final class MainViewController: NSViewController {
     // テキスト入力フィールドからフォーカスを外す
     func quickResignFirstResponder() {
         MainWindow.window?.makeFirstResponder(nil)
+    }
+    
+    // タブバーの太字を全て解除
+    func unboldAll() {
+        for subVC in self.subVCList {
+            (subVC.view.viewWithTag(5823) as? PgoTabView)?.bold = false
+        }
     }
 }
 

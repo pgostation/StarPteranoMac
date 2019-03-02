@@ -1474,6 +1474,12 @@ final class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDeleg
         
         if !notSelect {
             timelineView.selectedDate = Date()
+            if let tabView = (timelineView.superview?.superview?.superview?.viewWithTag(5823) as? PgoTabView) {
+                if !tabView.bold {
+                    MainViewController.instance?.unboldAll()
+                    tabView.bold = true
+                }
+            }
         }
         
         // 選択中のカラムの幅を広げる

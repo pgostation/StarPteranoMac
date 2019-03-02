@@ -7,13 +7,12 @@
 //
 
 import Cocoa
-import LYTabView
 
 final class SubViewController: NSViewController, NSTabViewDelegate {
     private let hostName: String
     private let accessToken: String
     let tootVC: TootViewController
-    private let tabView = LYTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+    private let tabView = PgoTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     private let tabCoverView = CoverView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
     
@@ -28,7 +27,11 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         self.view.addSubview(tootVC.view)
         self.view.addSubview(tabView)
-        self.view.addSubview(tabCoverView)
+        DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self.view.addSubview(self.tabCoverView)
+            }
+        }
         self.view.addSubview(scrollView)
         
         setProperties()
@@ -61,10 +64,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         tabView.autoresizesSubviews = true
         tabView.delegate = self
         
-        tabView.tabBarView.hideIfOnlyOneTabExists = false
-        
-        tabView.tabBarView.addNewTabButtonAction = #selector(newTabAction)
-        tabView.tabBarView.addNewTabButtonTarget = self
+        tabView.addNewTabButtonAction = #selector(newTabAction)
+        tabView.addNewTabButtonTarget = self
         
         //scrollView.scrollerStyle = .legacy
         scrollView.hasVerticalScroller = true
@@ -72,7 +73,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     }
     
     private func addTab(mode: SettingsData.TLMode) {
-        let item = NSTabViewItem(identifier: mode.rawValue)
+        let item = PgoTabItem(identifier: mode.rawValue)
         item.label = I18n.get("ACTION_" + mode.rawValue.uppercased())
         item.identifier = mode.rawValue
         tabView.addTabViewItem(item)
@@ -124,7 +125,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     func tabViewDidChangeNumberOfTabViewItems(_ tabView: NSTabView) {
         var modes: [SettingsData.TLMode] = []
         
-        for item in tabView.tabViewItems {
+        for item in (tabView as? PgoTabView)?.items ?? [] {
             guard let mode = SettingsData.TLMode(rawValue: item.identifier as! String) else { continue }
             modes.append(mode)
         }
@@ -269,6 +270,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                 if let scrollview = subview as? NSScrollView {
                     if let tlView = scrollview.documentView as? TimeLineView {
                         tlView.selectedDate = Date()
+                        MainViewController.instance?.unboldAll()
+                        (self.superview?.viewWithTag(5823) as? PgoTabView)?.bold = true
                         break
                     }
                 }

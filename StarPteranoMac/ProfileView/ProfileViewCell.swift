@@ -24,30 +24,30 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
     // メインの表示
     let iconView = NSImageView()
     let iconCoverButton = NSButton()
-    let nameLabel = NSTextField()
-    let idLabel = NSTextField()
+    let nameLabel = MyTextField()
+    let idLabel = MyTextField()
     let noteLabel = NSTextView()
-    let dateLabel = NSTextField()
+    let dateLabel = MyTextField()
     
     // 追加分の表示
     var serviceLabels: [NSTextField] = []
     var urlLabels: [NSTextView] = []
     
     // 数の表示
-    let followingCountTitle = NSTextField()
-    let followingCountLabel = NSTextField()
+    let followingCountTitle = MyTextField()
+    let followingCountLabel = MyTextField()
     let followingButton = NSButton()
-    let followerCountTitle = NSTextField()
-    let followerCountLabel = NSTextField()
+    let followerCountTitle = MyTextField()
+    let followerCountLabel = MyTextField()
     let followerButton = NSButton()
-    let statusCountTitle = NSTextField()
-    let statusCountLabel = NSTextField()
+    let statusCountTitle = MyTextField()
+    let statusCountLabel = MyTextField()
     
     // メディアのみ表示
     let mediaOnlyButton = NSButton()
     
     // フォローしているか、フォローされているか、ミュート、ブロック状態の表示
-    let relationshipLabel = NSTextField()
+    let relationshipLabel = MyTextField()
     
     // アクションボタン
     //  フォローしたり、アンフォローしたり、ブロックしたり、ミュートしたり、リストに入れたり、ブラウザで開いたりする
@@ -228,7 +228,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         
         // 追加分の表示
         for field in data.fields ?? [] {
-            let nameLabel = NSTextField()
+            let nameLabel = MyTextField()
             nameLabel.stringValue = field["name"] as? String ?? ""
             nameLabel.textColor = ThemeColor.idColor
             nameLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)

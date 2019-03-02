@@ -18,4 +18,8 @@ final class ClickableTextField: NSTextField {
     override func mouseUp(with event: NSEvent) {
         self.callback?()
     }
+    
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: NSCursor.pointingHand)
+    }
 }

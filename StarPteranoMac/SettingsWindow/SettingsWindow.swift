@@ -23,6 +23,7 @@ final class SettingsWindow: NSWindow {
         if let window = self.window {
             window.setIsVisible(true)
             window.center()
+            window.makeKeyAndOrderFront(nil)
             return
         }
         

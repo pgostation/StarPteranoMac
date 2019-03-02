@@ -244,6 +244,12 @@ final class TimeLineViewCell: NSView {
         ProfileViewCell.clearCache()
         
         self.tableView?.selectedDate = Date()
+        if let tabView = (tableView?.superview?.superview?.viewWithTag(5823) as? PgoTabView) {
+            if !tabView.bold {
+                MainViewController.instance?.unboldAll()
+                tabView.bold = true
+            }
+        }
         
         if let accountId = self.accountId {
             if let timelineView = self.superview as? TimeLineView {

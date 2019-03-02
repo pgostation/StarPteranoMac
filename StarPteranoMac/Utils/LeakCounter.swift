@@ -12,4 +12,7 @@ class MyImageView: NSImageView {
 }
 
 class MyTextField: NSTextField {
+    override func resetCursorRects() {
+        addCursorRect(bounds, cursor: NSCursor.arrow)
+    }
 }

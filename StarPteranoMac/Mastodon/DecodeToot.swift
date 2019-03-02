@@ -287,7 +287,7 @@ final class DecodeToot {
                                                 do {
                                                     let rangeCharacters = data.0
                                                     
-                                                    let tmpLabel = NSTextField()
+                                                    let tmpLabel = MyTextField()
                                                     tmpLabel.font = tmpLabel.font
                                                     
                                                     let prevString = attributedText.attributedSubstring(from: NSRange.init(location: 0, length: max(0, rangeCharacters.location - 1)))
