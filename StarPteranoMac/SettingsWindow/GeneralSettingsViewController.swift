@@ -21,8 +21,6 @@ final class GeneralSettingsViewController: NSViewController {
         view.useStreamingButton.target = self
         view.defaultNSFWButton.action = #selector(defaultNSFWAction(_:))
         view.defaultNSFWButton.target = self
-        view.clearCacheButton.action = #selector(clearCacheAction)
-        view.clearCacheButton.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -54,17 +52,12 @@ final class GeneralSettingsViewController: NSViewController {
             MainWindow.show()
         }
     }
-    
-    @objc func clearCacheAction() {
-        //####
-    }
 }
 
 final class GeneralSettingsView: NSView {
     let protectModeButton = NSButton()
     let useStreamingButton = NSButton()
     let defaultNSFWButton = NSButton()
-    let clearCacheButton = NSButton()
     
     init() {
         super.init(frame: SettingsWindow.contentRect)
@@ -72,7 +65,6 @@ final class GeneralSettingsView: NSView {
         self.addSubview(protectModeButton)
         self.addSubview(useStreamingButton)
         self.addSubview(defaultNSFWButton)
-        self.addSubview(clearCacheButton)
         
         setProperties()
     }
@@ -110,9 +102,6 @@ final class GeneralSettingsView: NSView {
         defaultNSFWButton.title = I18n.get("BUTTON_DEFAULT_NSFW")
         setCheckboxStyle(button: defaultNSFWButton)
         defaultNSFWButton.state = SettingsData.defaultNSFW ? .on : .off
-        
-        clearCacheButton.title = I18n.get("BUTTON_CLEARCACHE")
-        setButtonStyle(button: clearCacheButton)
     }
     
     override func layout() {
@@ -137,10 +126,5 @@ final class GeneralSettingsView: NSView {
                                          y: SettingsWindow.contentRect.height - 150 + 5,
                                          width: 200,
                                          height: 20)
-        
-        clearCacheButton.frame = NSRect(x: 30,
-                                        y: SettingsWindow.contentRect.height - 200,
-                                        width: 200,
-                                        height: 35)
     }
 }

@@ -15,6 +15,7 @@
 		1243D38A22257983001DA334 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D38922257983001DA334 /* ProfileEditViewController.swift */; };
 		1243D38C2225798F001DA334 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D38B2225798F001DA334 /* ProfileEditView.swift */; };
 		1243D38E2226BC22001DA334 /* MyAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D38D2226BC22001DA334 /* MyAlertController.swift */; };
+		1243D3902229FF2C001DA334 /* License.text in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38F2229FF2C001DA334 /* License.text */; };
 		12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */; };
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
@@ -93,6 +94,7 @@
 		1243D38922257983001DA334 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		1243D38B2225798F001DA334 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		1243D38D2226BC22001DA334 /* MyAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAlertController.swift; sourceTree = "<group>"; };
+		1243D38F2229FF2C001DA334 /* License.text */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = License.text; sourceTree = "<group>"; };
 		12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakCounter.swift; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				12C044FD2220FFB700BE3A50 /* SearchSettingsViewController.swift */,
 				12C044FF2220FFC300BE3A50 /* DetailSettingsViewController.swift */,
 				12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */,
+				1243D38F2229FF2C001DA334 /* License.text */,
 			);
 			path = SettingsWindow;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */,
 				1243D37F22256E5E001DA334 /* Localizable.strings in Resources */,
 				129F433B217E1CD4008E856D /* MainMenu.xib in Resources */,
+				1243D3902229FF2C001DA334 /* License.text in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

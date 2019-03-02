@@ -50,6 +50,9 @@ final class Dialog {
         textField.stringValue = defaultText ?? ""
         alert.accessoryView = textField
         
+        alert.addButton(withTitle: okName)
+        alert.addButton(withTitle: cancelName)
+        
         if let window = window {
             alert.beginSheetModal(for: window, completionHandler: { result in
                 callback(textField, result == .alertFirstButtonReturn)
@@ -61,10 +64,12 @@ final class Dialog {
     }
     
     // View付きのダイアログを表示
-    static func showWithView(message: String, window: NSWindow? = nil, okName: String, cancelName: String, view: NSView) {
+    static func showWithView(message: String, window: NSWindow? = nil, okName: String, view: NSView) {
         let alert = NSAlert()
         alert.messageText = message
         alert.accessoryView = view
+        
+        alert.addButton(withTitle: okName)
         
         if let window = window {
             alert.beginSheetModal(for: window, completionHandler: nil)

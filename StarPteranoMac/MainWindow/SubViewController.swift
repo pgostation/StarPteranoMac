@@ -85,7 +85,6 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             
         Dialog.showWithView(message: I18n.get("ALERT_ADD_TAB"),
                             okName: I18n.get("BUTTON_ADD"),
-                            cancelName: I18n.get("BUTTON_CANCEL"),
                             view: popUp)
         
         if let item = self.selectedItem {
