@@ -538,113 +538,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             }
         }
         
-        /*
-         if let id = data.id, row != selectedRow {
-         if self.oldCacheDict[id] != nil {
-         if let textView = self.oldCacheDict[id]?.0 as? MyTextView {
-         textView.cachingFlag = false
-         }
-         self.oldCacheDict[id] = nil
-         }
-         if self.cacheDict[id] != nil {
-         if let textView = self.cacheDict[id]?.0 as? MyTextView {
-         textView.cachingFlag = false
-         }
-         self.cacheDict[id] = nil
-         }
-         self.cacheDict[id] = (messageView, data, isContinue)
-         
-         // 破棄候補を破棄して、キャッシュを破棄候補に移す
-         if self.cacheDict.count > 10 {
-         // キャッシュ中フラグを倒す
-         for data in self.oldCacheDict {
-         if let textView = data.value.0 as? MyTextView {
-         textView.cachingFlag = false
-         }
-         }
-         
-         self.oldCacheDict = self.cacheDict
-         self.cacheDict = [:]
-         }
-         }*/
-        
         let trueHasCard = hasCard && (data.spoiler_text == nil || data.spoiler_text == "") && (data.card != nil || CardView.hasCard(id: data.id ?? "") == true)
         
         return (messageView, data, isContinue, trueHasCard)
     }
-    
-    /*
-     // NSTextViewをリサイクル
-     private var cacheTextView: [MyTextView] = []
-     private func dequeueReusableTextView() -> MyTextView {
-     for view in self.cacheTextView {
-     if view.cachingFlag == false {
-     if let index = self.cacheTextView.firstIndex(of: view) {
-     self.cacheTextView.remove(at: index)
-     }
-     view.isHidden = false
-     return view
-     }
-     }
-     
-     let msgView = MyTextView()
-     msgView.model = self
-     msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
-     msgView.textContainer?.lineBreakMode = .byCharWrapping
-     //msgView.isOpaque = true
-     //msgView.isScrollEnabled = false
-     msgView.isEditable = false
-     msgView.delegate = self // URLタップ用
-     
-     // URL以外の場所タップ用
-     let tapGensture = NSClickGestureRecognizer(target: self, action: #selector(tapTextViewAction(_:)))
-     msgView.addGestureRecognizer(tapGensture)
-     
-     return msgView
-     }
-     
-     // キャッシュの色を再設定する
-     func recolorCache() {
-     for view in self.cacheTextView {
-     view.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
-     }
-     
-     for data in self.cacheDict {
-     if let textView = data.value.0 as? MyTextView {
-     textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-     textView.textColor = ThemeColor.messageColor
-     textView.backgroundColor = ThemeColor.cellBgColor
-     }
-     }
-     for data in self.oldCacheDict {
-     if let textView = data.value.0 as? MyTextView {
-     textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
-     textView.textColor = ThemeColor.messageColor
-     textView.backgroundColor = ThemeColor.cellBgColor
-     }
-     }
-     }
-     
-     class MyTextView: NSTextView {
-     weak var model: TimeLineViewModel?
-     var cachingFlag = false
-     
-     override func removeFromSuperview() {
-     super.removeFromSuperview()
-     
-     if model?.cacheTextView.contains(self) == false {
-     model?.cacheTextView.append(self)
-     }
-     }
-     
-     override func addSubview(_ view: NSView) {
-     super.addSubview(view)
-     
-     if let index = model?.cacheTextView.firstIndex(of: self) {
-     model?.cacheTextView.remove(at: index)
-     }
-     }
-     }*/
     
     // セルを返す
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -827,7 +724,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 messageView.isHidden = true
             }
             if data.spoiler_text != nil {
-                cell.spolerTextLabel = NSTextView()
+                cell.spolerTextLabel = MyTextView()
                 cell.spolerTextLabel?.textColor = ThemeColor.messageColor
                 cell.spolerTextLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
                 let attributedText = DecodeToot.decodeName(name: data.spoiler_text ?? "", emojis: data.emojis, callback: { [weak cell] in
@@ -845,6 +742,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.spolerTextLabel?.sizeToFit()
                 cell.spolerTextLabel?.drawsBackground = false
                 cell.spolerTextLabel?.isEditable = false
+                cell.spolerTextLabel?.delegate = self
                 cell.addSubview(cell.spolerTextLabel!)
             }
         }
