@@ -13,6 +13,7 @@ import Cocoa
 final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableViewDelegate {
     var useAutopagerize = true
     private var list: [AnalyzeJson.NotificationData] = []
+    weak var viewController: NotificationViewController?
     
     override init() {
         super.init()
@@ -49,7 +50,7 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
         if row >= list.count {
             if self.useAutopagerize && self.list.count > 0 {
                 // Autopagerize
-                //self.notificationViewController?.addOld()
+                self.viewController?.addOld()
             }
             
             return 150

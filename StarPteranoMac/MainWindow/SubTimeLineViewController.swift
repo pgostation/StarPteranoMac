@@ -50,11 +50,33 @@ final class SubTimeLineViewController: NSViewController {
         parentVC?.addChild(self)
         parentVC?.view.addSubview(self.view)
         
+        self.view.alphaValue = 1
+        self.view.layout()
+        
+        let endFrame = self.view.frame
+        self.view.frame = NSRect(x: self.view.frame.origin.x + self.view.frame.width,
+                                 y: self.view.frame.origin.y,
+                                 width: self.view.frame.width,
+                                 height: self.view.frame.height)
+        
         self.view.alphaValue = 0.25
-        for i in 1...6 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.025) {
-                self.view.alphaValue = 1.0 / 6.0 * CGFloat(i)
-            }
+        let animation = NSViewAnimation(duration: 0.15, animationCurve: NSAnimation.Curve.easeIn)
+        let animationsDict: [NSViewAnimation.Key: Any] = [
+            NSViewAnimation.Key.target: self.view,
+            NSViewAnimation.Key.startFrame: self.view.frame,
+            NSViewAnimation.Key.endFrame: endFrame,
+            ]
+        animation.viewAnimations = [animationsDict]
+        animation.start()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            self.view.alphaValue = 0.5
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+            self.view.alphaValue = 0.75
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            self.view.alphaValue = 1
         }
     }
 }
@@ -85,13 +107,15 @@ final class SubTimeLineView: NSView {
     private func setProperties() {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        self.layer?.borderColor = ThemeColor.viewBgColor.cgColor
+        self.layer?.borderWidth = 1
         
         self.closeButton.title = "✖️"
         self.closeButton.isBordered = false
     }
     
     override func layout() {
-        if let superFrame = self.superview?.frame {
+        if let superFrame = self.superview?.frame, self.alphaValue == 1 {
             let tootView = self.superview?.subviews.first as? TootView
             let width = min(400, superFrame.width)
             self.frame = NSRect(x: superFrame.width - width,

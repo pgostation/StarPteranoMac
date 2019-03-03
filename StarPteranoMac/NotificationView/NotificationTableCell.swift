@@ -23,9 +23,11 @@ final class NotificationTableCell: NSView {
     var statusLabel = NSTextView()
     let imageViews = [NSImageView(), NSImageView(), NSImageView(), NSImageView()]
     
-    //var followButton: UIButton?
     let replyButton = NSButton()
     let favoriteButton = NSButton()
+    
+    let statusCoverButton = NSButton()
+    let iconCoverButton = NSButton()
     
     var accountId: String?
     var date: Date = Date()
@@ -52,6 +54,8 @@ final class NotificationTableCell: NSView {
         }
         self.addSubview(replyButton)
         self.addSubview(favoriteButton)
+        self.addSubview(statusCoverButton)
+        self.addSubview(iconCoverButton)
         self.wantsLayer = true
         self.layer?.addSublayer(self.lineLayer)
         
@@ -75,20 +79,35 @@ final class NotificationTableCell: NSView {
         
         self.nameLabel.textColor = ThemeColor.nameColor
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
-        self.nameLabel.backgroundColor = ThemeColor.cellBgColor
+        self.nameLabel.isBordered = false
+        self.nameLabel.isEditable = false
+        self.nameLabel.isSelectable = false
+        self.nameLabel.drawsBackground = false
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.idLabel.backgroundColor = ThemeColor.cellBgColor
+        self.idLabel.isBordered = false
+        self.idLabel.isEditable = false
+        self.idLabel.isSelectable = false
+        self.idLabel.drawsBackground = false
         
         self.dateLabel.textColor = ThemeColor.dateColor
         self.dateLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.dateLabel.alignment = .right
         self.dateLabel.backgroundColor = ThemeColor.cellBgColor
+        self.dateLabel.isBordered = false
+        self.dateLabel.isEditable = false
+        self.dateLabel.isSelectable = false
+        self.dateLabel.drawsBackground = false
         
         self.notificationLabel.textColor = ThemeColor.idColor
         self.notificationLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         self.notificationLabel.backgroundColor = ThemeColor.cellBgColor
+        self.notificationLabel.isBordered = false
+        self.notificationLabel.isEditable = false
+        self.notificationLabel.isSelectable = false
+        self.notificationLabel.drawsBackground = false
         
         self.statusLabel.textColor = ThemeColor.idColor
         self.statusLabel.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
@@ -101,10 +120,12 @@ final class NotificationTableCell: NSView {
         self.replyButton.title = "↩︎"
         self.replyButton.target = self
         self.replyButton.action = #selector(self.replyAction)
+        self.replyButton.isBordered = false
         
         self.favoriteButton.title = "★"
         self.favoriteButton.target = self
         self.favoriteButton.action = #selector(self.favoriteAction)
+        self.favoriteButton.isBordered = false
         
         // タイマーで5秒ごとに時刻を更新
         if #available(OSX 10.12, *) {
@@ -117,28 +138,16 @@ final class NotificationTableCell: NSView {
             })
         }
         
-        /*
-        // トゥートのタップジェスチャー
-        //let tapStatusGesture = UITapGestureRecognizer(target: self, action: #selector(tapStatusAction))
-        //self.statusLabel.addGestureRecognizer(tapStatusGesture)
+        // トゥートのクリック
+        statusCoverButton.isTransparent = true
+        statusCoverButton.target = self
+        statusCoverButton.action = #selector(tapStatusAction)
         
-        // 画像のタップジェスチャー
-        for imageView in self.imageViews {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapStatusAction))
-            imageView.addGestureRecognizer(tapGesture)
-            imageView.isUserInteractionEnabled = true
-        }
-        
-        // アイコンのタップジェスチャー
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountAction))
-        self.iconView.addGestureRecognizer(tapGesture)
-        self.iconView.isUserInteractionEnabled = true
-        
-        if SettingsData.isNameTappable {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountAction))
-            self.nameLabel.addGestureRecognizer(tapGesture)
-            self.nameLabel.isUserInteractionEnabled = true
-        }*/
+        // アイコンのクリック
+        iconCoverButton.isTransparent = true
+        iconCoverButton.target = self
+        iconCoverButton.action = #selector(tapAccountAction)
+ 
     }
     
     // リプライボタンをクリックした時の処理
@@ -176,13 +185,68 @@ final class NotificationTableCell: NSView {
         }
     }
     
-    // お気に入りボタンをタップした時の処理
+    // お気に入りボタンをクリックした時の処理
     @objc func favoriteAction() {
         self.tableView?.selectedDate = Date()
         
         self.favoriteButton.isHidden = true
         
         tableView?.favoriteAction(id: self.id, isFaved: self.isFaved)
+    }
+    
+    // アイコン部分をクリックした時の処理
+    @objc func tapAccountAction() {
+        ProfileViewCell.clearCache()
+        
+        self.tableView?.selectedDate = Date()
+        if let tabView = (tableView?.superview?.superview?.viewWithTag(5823) as? PgoTabView) {
+            if !tabView.bold {
+                MainViewController.instance?.unboldAll()
+                tabView.bold = true
+            }
+        }
+        
+        if let accountId = self.accountId {
+            if let timelineView = self.superview as? TimeLineView {
+                if timelineView.option == accountId {
+                    return
+                }
+            }
+            
+            let accountTimeLineViewController = TimeLineViewController(hostName: tableView?.hostName ?? "", accessToken: tableView?.accessToken ?? "", type: TimeLineViewController.TimeLineType.user, option: accountId)
+            if let timelineView = accountTimeLineViewController.view as? TimeLineView, let accountData = self.accountData {
+                timelineView.accountList.updateValue(accountData, forKey: accountId)
+            }
+            
+            let subTimeLineViewController = SubTimeLineViewController(name: self.nameLabel.attributedStringValue, icon: self.iconView.image, timelineVC: accountTimeLineViewController)
+            
+            var targetSubVC: SubViewController? = nil
+            for subVC in MainViewController.instance?.subVCList ?? [] {
+                if self.tableView?.hostName == subVC.tootVC.hostName && self.tableView?.accessToken == subVC.tootVC.accessToken {
+                    targetSubVC = subVC
+                    break
+                }
+            }
+            
+            // 複数のサブTLを開かないようにする
+            for subVC in targetSubVC?.children ?? [] {
+                if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                    subVC.removeFromParent()
+                    subVC.view.removeFromSuperview()
+                }
+            }
+            
+            targetSubVC?.addChild(subTimeLineViewController)
+            targetSubVC?.view.addSubview(subTimeLineViewController.view)
+            
+            subTimeLineViewController.view.frame = CGRect(x: self.frame.width,
+                                                          y: 0,
+                                                          width: self.frame.width,
+                                                          height: (targetSubVC?.view.frame.height ?? 100) - 22)
+            
+            
+            subTimeLineViewController.showAnimation(parentVC: targetSubVC)
+        }
     }
     
     // トゥート部分をタップした時の処理
@@ -306,64 +370,80 @@ final class NotificationTableCell: NSView {
     override func layout() {
         let screenBounds = tableView?.bounds ?? self.bounds
         
+        self.frame.size.width = screenBounds.width
+        
         self.lineLayer.frame = CGRect(x: 0,
                                       y: 0,
                                       width: screenBounds.width,
                                       height: 1 / (NSScreen.main?.backingScaleFactor ?? 1))
         
-        self.iconView.frame = CGRect(x: 8,
-                                     y: 10,
-                                     width: SettingsData.iconSize,
-                                     height: SettingsData.iconSize)
-        
+        var top: CGFloat = 0
         let left = SettingsData.iconSize + 16
-        self.nameLabel.frame = CGRect(x: left,
-                                      y: 7,
-                                      width: self.nameLabel.frame.width,
-                                      height: SettingsData.fontSize + 1)
         
-        let idWidth = screenBounds.width - (self.nameLabel.frame.width + left + 45 + 5)
-        self.idLabel.frame = CGRect(x: left + self.nameLabel.frame.width + 5,
-                                    y: 7,
-                                    width: idWidth,
-                                    height: SettingsData.fontSize)
+        if !self.replyButton.isHidden {
+            self.replyButton.frame = CGRect(x: left + 10,
+                                            y: top + 3,
+                                            width: 24,
+                                            height: 24)
+            
+            self.favoriteButton.frame = CGRect(x: left + 100,
+                                               y: top + 3,
+                                               width: 24,
+                                               height: 24)
+            top += 30
+        }
         
-        self.dateLabel.frame = CGRect(x: screenBounds.width - 50,
-                                      y: 7,
-                                      width: 45,
-                                      height: SettingsData.fontSize)
-        
-        self.notificationLabel.frame = CGRect(x: left,
-                                              y: 10 + SettingsData.fontSize,
-                                              width: screenBounds.width - left,
-                                              height: SettingsData.fontSize + 2)
-        
-        self.statusLabel.frame.size.width = screenBounds.width - left - 5
-        self.statusLabel.sizeToFit()
-        self.statusLabel.frame = CGRect(x: left,
-                                        y: self.notificationLabel.frame.maxY + 6,
-                                        width: self.statusLabel.frame.width,
-                                        height: self.statusLabel.frame.height)
-        
-        var top = self.statusLabel.frame.maxY + 5
-        for imageView in self.imageViews {
+        for imageView in self.imageViews.reversed() {
             if imageView.image != nil {
                 imageView.frame = CGRect(x: left + 5,
                                          y: top,
-                                         width: screenBounds.width - left - 10,
+                                         width: min(300, screenBounds.width - left - 10),
                                          height: 60)
                 top = imageView.frame.maxY + 5
             }
         }
         
-        self.replyButton.frame = CGRect(x: left + 10,
-                                        y: top + 3,
-                                        width: 32,
-                                        height: 32)
+        if self.statusLabel.string != "" {
+            self.statusLabel.frame.size.width = screenBounds.width - left - 5
+            self.statusLabel.sizeToFit()
+            self.statusLabel.frame = CGRect(x: left,
+                                            y: top,
+                                            width: self.statusLabel.frame.width,
+                                            height: self.statusLabel.frame.height)
+            top = statusLabel.frame.maxY + 5
+            
+            self.statusCoverButton.frame = self.statusLabel.frame
+        }
         
-        self.favoriteButton.frame = CGRect(x: left + 100,
-                                           y: top + 3,
-                                           width: 32,
-                                           height: 32)
+        self.notificationLabel.frame = CGRect(x: left,
+                                              y: top,
+                                              width: screenBounds.width - left,
+                                              height: SettingsData.fontSize * 1.5 + 2)
+        top = notificationLabel.frame.maxY
+        
+        self.nameLabel.frame = CGRect(x: left,
+                                      y: top - 1,
+                                      width: self.nameLabel.frame.width,
+                                      height: SettingsData.fontSize * 1.5 + 2)
+        
+        let idWidth = screenBounds.width - (self.nameLabel.frame.width + left + 45 + 5)
+        self.idLabel.frame = CGRect(x: left + self.nameLabel.frame.width + 5,
+                                    y: top,
+                                    width: idWidth,
+                                    height: SettingsData.fontSize * 1.5)
+        
+        self.dateLabel.frame = CGRect(x: screenBounds.width - 50,
+                                      y: top,
+                                      width: 45,
+                                      height: SettingsData.fontSize * 1.5)
+        
+        top = dateLabel.frame.maxY
+        
+        self.iconView.frame = CGRect(x: 8,
+                                     y: top - SettingsData.iconSize - 5,
+                                     width: SettingsData.iconSize,
+                                     height: SettingsData.iconSize)
+        
+        self.iconCoverButton.frame = self.iconView.frame
     }
 }

@@ -257,8 +257,22 @@ final class NormalPNGFileList {
         userDefault?.set(true, forKey: urlStr)
     }
     
+    static func addAnime(urlStr: String?) {
+        guard let urlStr = urlStr else { return }
+        if userDefault?.bool(forKey: urlStr) == false {
+            return
+        }
+        
+        userDefault?.set(false, forKey: urlStr)
+    }
+    
     static func isNormal(urlStr: String?) -> Bool {
         guard let urlStr = urlStr else { return true }
         return userDefault?.bool(forKey: urlStr) == true
+    }
+    
+    static func isAnime(urlStr: String?) -> Bool {
+        guard let urlStr = urlStr else { return true }
+        return userDefault?.bool(forKey: urlStr) == false
     }
 }

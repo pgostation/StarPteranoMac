@@ -256,60 +256,70 @@ final class DecodeToot {
                 let attachment = NSTextAttachment()
                 attachment.bounds = CGRect(x: 0, y: -3, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
                 var execCallback = false
-                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image, url in
+                ImageCache.image(urlStr: url, isTemp: false, isSmall: true, shortcode: shortcode) { image, localUrl in
                     if execCallback {
                         callback?()
                     } else {
-                        attachment.image = ImageUtils.flipped(image)
+                        if NormalPNGFileList.isAnime(urlStr: url) && SettingsData.useAnimation {
+                            let dummyImage = EmojiImage(size: NSSize(width: 0, height: 0))
+                            dummyImage.shortcode = shortcode
+                            attachment.image = dummyImage
+                        } else {
+                            attachment.image = ImageUtils.flipped(image)
+                        }
                         if image.size.width > 0 {
                             attachment.bounds.size = CGSize(width: SettingsData.fontSize + 6, height: image.size.height / image.size.width * (SettingsData.fontSize + 6))
                         }
                     }
                     
                     // カスタム絵文字のアニメーション
-                    DispatchQueue.main.async {
-                        if let textField = textField, !NormalPNGFileList.isNormal(urlStr: emoji["url"] as? String) {
-                            let attributedText = textField.attributedStringValue
-                            let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: NSTextStorage(attributedString: attributedText))
-                            
-                            for data in list {
-                                for emoji in emojis {
-                                    if emoji["shortcode"] as? String == data.1 {
-                                        let urlStr = emoji["url"] as? String
-                                        APNGImageCache.image(urlStr: urlStr) { image, localUrl in
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                                if image.frameCount <= 1 {
-                                                    NormalPNGFileList.add(urlStr: urlStr)
-                                                    return
-                                                }
-                                                
-                                                let rect: CGRect
-                                                do {
-                                                    let rangeCharacters = data.0
+                    if SettingsData.useAnimation {
+                        DispatchQueue.main.async {
+                            if let textField = textField, !NormalPNGFileList.isNormal(urlStr: emoji["url"] as? String) {
+                                let attributedText = textField.attributedStringValue
+                                let list = DecodeToot.getEmojiList(attributedText: attributedText, textStorage: NSTextStorage(attributedString: attributedText))
+                                
+                                for data in list {
+                                    for emoji in emojis {
+                                        if emoji["shortcode"] as? String == data.1 {
+                                            let urlStr = emoji["url"] as? String
+                                            APNGImageCache.image(urlStr: urlStr) { image, localUrl in
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                    if image.frameCount <= 1 {
+                                                        NormalPNGFileList.add(urlStr: urlStr)
+                                                        return
+                                                    } else {
+                                                        NormalPNGFileList.addAnime(urlStr: urlStr)
+                                                    }
                                                     
-                                                    let tmpLabel = MyTextField()
-                                                    tmpLabel.font = tmpLabel.font
+                                                    let rect: CGRect
+                                                    do {
+                                                        let rangeCharacters = data.0
+                                                        
+                                                        let tmpLabel = MyTextField()
+                                                        tmpLabel.font = tmpLabel.font
+                                                        
+                                                        let prevString = attributedText.attributedSubstring(from: NSRange.init(location: 0, length: max(0, rangeCharacters.location - 1)))
+                                                        tmpLabel.attributedStringValue = prevString
+                                                        tmpLabel.sizeToFit()
+                                                        
+                                                        rect = CGRect(x: tmpLabel.frame.maxX, y: 0, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
+                                                    }
                                                     
-                                                    let prevString = attributedText.attributedSubstring(from: NSRange.init(location: 0, length: max(0, rangeCharacters.location - 1)))
-                                                    tmpLabel.attributedStringValue = prevString
-                                                    tmpLabel.sizeToFit()
-                                                    
-                                                    rect = CGRect(x: tmpLabel.frame.maxX, y: 0, width: SettingsData.fontSize + 6, height: SettingsData.fontSize + 6)
-                                                }
-                                                
-                                                if textField.superview != nil {
-                                                    let apngView = NSImageView()
-                                                    apngView.sd_setImage(with: localUrl, completed: { (_, _, _, _) in
-                                                        //apngView.tag = 5555
-                                                        apngView.wantsLayer = true
-                                                        apngView.layer?.backgroundColor = textField.layer?.backgroundColor
-                                                        apngView.frame = rect
-                                                        textField.addSubview(apngView)
-                                                    })
+                                                    if textField.superview != nil {
+                                                        let apngView = NSImageView()
+                                                        apngView.sd_setImage(with: localUrl, completed: { (_, _, _, _) in
+                                                            //apngView.tag = 5555
+                                                            apngView.wantsLayer = true
+                                                            apngView.layer?.backgroundColor = textField.layer?.backgroundColor
+                                                            apngView.frame = rect
+                                                            textField.addSubview(apngView)
+                                                        })
+                                                    }
                                                 }
                                             }
+                                            break
                                         }
-                                        break
                                     }
                                 }
                             }

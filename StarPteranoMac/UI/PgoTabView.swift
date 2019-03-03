@@ -378,7 +378,7 @@ private class PgoTabItemView: NSView {
         
         let options: NSTrackingArea.Options = [
             .mouseEnteredAndExited,
-            .activeAlways
+            .activeInKeyWindow
         ]
         let trackingArea = NSTrackingArea(rect: bounds,
                                           options: options,

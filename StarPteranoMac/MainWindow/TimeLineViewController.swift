@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class TimeLineViewController: NSViewController {
+final class TimeLineViewController: NSViewController {
     enum TimeLineType {
         case home // ホーム
         case local // ローカルタイムライン
@@ -73,11 +73,7 @@ class TimeLineViewController: NSViewController {
                 if i > 10 {
                     sumHeight += 150
                 } else {
-                    if view is NotificationTableView {
-                        sumHeight += 200
-                    } else {
-                        sumHeight += view.model.tableView(view, heightOfRow: i)
-                    }
+                    sumHeight += view.model.tableView(view, heightOfRow: i)
                 }
             }
             

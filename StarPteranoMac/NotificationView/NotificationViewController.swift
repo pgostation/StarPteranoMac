@@ -31,40 +31,36 @@ final class NotificationViewController: NSViewController {
         let view = NotificationTableView(hostName: hostName, accessToken: accessToken, type: type)
         self.view = view
         
+        view.notificationModel.viewController = self
+        
         // 最新のデータを取得
         addOld()
     }
     
-    /*
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear() {
+        super.viewDidAppear()
         
-        guard let view = self.view as? NotificationView else { return }
+        guard let view = self.view as? NotificationTableView else { return }
         
         // 通知の既読設定
-        if let created_at = view.tableView.model.getNewestCreatedAt() {
+        if let created_at = view.notificationModel.getNewestCreatedAt() {
             let date = DecodeToot.decodeTime(text: created_at)
-            let lastDate = SettingsData.newestNotifyDate(accessToken: SettingsData.accessToken)
+            let lastDate = SettingsData.newestNotifyDate(accessToken: accessToken)
             if lastDate == nil || date > lastDate! {
-                SettingsData.newestNotifyDate(accessToken: SettingsData.accessToken, date: date)
+                SettingsData.newestNotifyDate(accessToken: accessToken, date: date)
             }
         }
-    }*/
+    }
     
-    private var count = 0
+    private var lastDate = Date(timeInterval: -2, since: Date())
     func addOld() {
-        if count > 1 { return } //####
-        count += 1
-        
-        var lastId: String? = nil
-        if let view = self.view as? NotificationTableView {
-            lastId = view.notificationModel.getLastId()
+        guard let view = self.view as? NotificationTableView else { return }
+        if lastDate.timeIntervalSinceNow >= -1 {
+            return // 無限ループ防止
         }
+        lastDate = Date()
         
-        /*let waitIndicator = WaitIndicator()
-        if lastId == nil {
-            self.view.addSubview(waitIndicator)
-        }*/
+        let lastId = view.notificationModel.getLastId()
         
         var idStr = ""
         if let lastId = lastId {
@@ -78,10 +74,6 @@ final class NotificationViewController: NSViewController {
         guard let url = URL(string: "https://\(hostName)/api/v1/notifications?limit=15\(idStr)\(excludeTypes)") else { return }
         try? MastodonRequest.get(url: url, accessToken: accessToken, completionHandler: { [weak self] (data, response, error) in
             guard let strongSelf = self else { return }
-            
-            /*DispatchQueue.main.async {
-                waitIndicator.removeFromSuperview()
-            }*/
             
             if let data = data {
                 do {
@@ -188,9 +180,15 @@ final class NotificationTableView: TimeLineView {
     override func layout() {
         let screenBounds = self.superview?.bounds ?? self.bounds
         
-        self.frame = CGRect(x: 0,
-                            y: 0,
-                            width: screenBounds.width,
-                            height: screenBounds.height)
+        var sumHeight: CGFloat = 0
+        for i in 0..<self.numberOfRows {
+            if i > 10 {
+                sumHeight += 200
+            } else {
+                sumHeight += self.model.tableView(self, heightOfRow: i)
+            }
+        }
+        
+        self.frame = NSRect(x: 0, y: 0, width: screenBounds.width, height: sumHeight)
     }
 }

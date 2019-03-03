@@ -159,8 +159,14 @@
 "BUTTON_DELETE_IMAGE" = "削除";
 "BUTTON_NSFW" = "閲覧注意";
 
-// 通知
+// システム通知
 "NOTIFY_MENTION" = "返信されました";
 "NOTIFY_FAV" = "お気に入りされました";
 "NOTIFY_BOOST" = "ブーストされました";
 "NOTIFY_FOLLOW" = "フォローされました";
+
+// 通知画面
+"NOTIFICATION_MENTION" = "返信しました";
+"NOTIFICATION_BOOST" = "🔁ブーストしました";
+"NOTIFICATION_FAV" = "🌟お気に入りしました";
+"NOTIFICATION_FOLLOW" = "➕フォローしました";

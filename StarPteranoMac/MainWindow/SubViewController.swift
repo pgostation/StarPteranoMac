@@ -101,16 +101,30 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
         
         let type: TimeLineViewController.TimeLineType
-        if mode == .home { type = .home }
-        else if mode == .local { type = .local }
-        else if mode == .homeLocal { type = .homeLocal }
-        else if mode == .federation { type = .federation }
-        else if mode == .list { type = .list }
-        else if mode == .favorites { type = .favorites }
-        else if mode == .dm { type = .direct }
-        else if mode == .mentions { type = .notificationMentions }
-        else if mode == .notifications { type = .notifications }
-        else { type = .home }
+        switch mode {
+        case .home:
+            type = .home
+        case .local:
+            type = .local
+        case .homeLocal:
+            type = .homeLocal
+        case .federation:
+            type = .federation
+        case .list:
+            type = .list
+        case .favorites:
+            type = .favorites
+        case .dm:
+            type = .direct
+        case .mentions:
+            type = .notificationMentions
+        case .notifications:
+            type = .notifications
+        case .users:
+            type = .home // これは使用しない
+        case .search:
+            type = .home // 検索ビューは未作成
+        }
         
         let vc: NSViewController
         if type == .notifications || type == .notificationMentions {
@@ -246,7 +260,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         for subview in self.view.subviews {
             if subview is SubTimeLineView {
-                subview.frame = scrollView.documentView!.frame
+                subview.needsLayout = true
             }
         }
         
