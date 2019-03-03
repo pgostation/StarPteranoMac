@@ -29,6 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
     
     func applicationDidBecomeActive(_ notification: Notification) {
         showWindow()
+        
+        TimeLineViewCell.appActiveDate = Date()
     }
     
     private func showWindow() {

@@ -76,6 +76,8 @@ final class TimeLineViewCell: NSView {
     var isFaved = false
     var isBoosted = false
     
+    static var appActiveDate = Date()
+    
     // セルの初期化
     init() {
         self.date = Date()
@@ -782,6 +784,8 @@ final class TimeLineViewCell: NSView {
     }
     
     @objc func cellClick() {
+        if TimeLineViewCell.appActiveDate.timeIntervalSinceNow > -0.3 { return }
+        
         if let tableView = self.tableView, let indexPath = self.indexPath {
             // セル選択時の処理を実行
             tableView.model.selectRow(timelineView: tableView, row: indexPath, notSelect: false)
