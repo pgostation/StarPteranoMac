@@ -20,6 +20,6 @@ final class ClickableTextField: NSTextField {
     }
     
     override func resetCursorRects() {
-        addCursorRect(bounds, cursor: NSCursor.pointingHand)
+        addCursorRect(bounds, cursor: NSCursor.arrow)
     }
 }

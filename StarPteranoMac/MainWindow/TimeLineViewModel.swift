@@ -1497,8 +1497,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         if !notSelect {
             // 入力フィールドからフォーカスを外す
-            DispatchQueue.main.async {
-                MainViewController.instance?.quickResignFirstResponder()
+            if MainWindow.window?.firstResponder is TootView.TootTextView {
+                DispatchQueue.main.async {
+                    MainViewController.instance?.quickResignFirstResponder()
+                }
             }
         }
         
