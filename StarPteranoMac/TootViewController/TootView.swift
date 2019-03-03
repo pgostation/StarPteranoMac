@@ -54,6 +54,8 @@ final class TootView: NSView {
         inputBar.addSubview(cwButton)
         inputBar.addSubview(emojiButton)
         
+        spoilerTextField.isHidden = true
+        
         refresh()
     }
     
@@ -89,7 +91,6 @@ final class TootView: NSView {
         spoilerTextField.layer?.borderColor = ThemeColor.messageColor.cgColor
         spoilerTextField.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
         //spoilerTextField.tag = UIUtils.responderTag2
-        spoilerTextField.isHidden = true
         spoilerTextField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         spoilerTextField.textContainerInset = NSSize.init(width: 1, height: 5)
         
@@ -162,7 +163,7 @@ final class TootView: NSView {
         }
         
         spoilerTextField.frame = CGRect(x: 0,
-                                        y: self.frame.height,
+                                        y: 25 + textField.frame.height,
                                         width: self.frame.width,
                                         height: spoilerTextFieldHeight)
         

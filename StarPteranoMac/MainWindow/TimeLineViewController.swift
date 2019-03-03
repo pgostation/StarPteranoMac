@@ -69,9 +69,23 @@ final class TimeLineViewController: NSViewController {
     override func viewDidLayout() {
         if let frame = self.view.superview?.frame, let view = self.view as? TimeLineView {
             var sumHeight: CGFloat = 0
+            let isMiniView = SettingsData.isMiniView
+            var baseHeight = SettingsData.fontSize * 2
             for i in 0..<view.numberOfRows {
                 if i > 10 {
-                    sumHeight += 150
+                    if i == 11 && isMiniView == .full || isMiniView == .normal {
+                        baseHeight = sumHeight / 10
+                    }
+                    switch isMiniView {
+                    case .full:
+                        sumHeight += 350
+                    case .normal:
+                        sumHeight += 300
+                    case .miniView:
+                        sumHeight += baseHeight * 2
+                    case .superMini:
+                        sumHeight += baseHeight
+                    }
                 } else {
                     sumHeight += view.model.tableView(view, heightOfRow: i)
                 }

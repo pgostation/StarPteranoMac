@@ -55,6 +55,8 @@ final class TimeLineViewCell: NSView {
     var favoriterLabels: [NSTextField] = []
     var favoriterList: [String]?
     
+    let cellClickButton = NSButton()
+    
     weak var tableView: TimeLineView?
     var indexPath: Int?
     var date: Date
@@ -118,11 +120,16 @@ final class TimeLineViewCell: NSView {
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         self.lineLayer.isOpaque = true
         
+        self.cellClickButton.isTransparent = true
+        self.cellClickButton.target = self
+        self.cellClickButton.action = #selector(cellClick)
+        
         // addする
         self.addSubview(self.idLabel)
         self.addSubview(self.dateLabel)
         self.addSubview(self.nameLabel)
         self.layer?.addSublayer(self.lineLayer)
+        self.addSubview(self.cellClickButton)
         
         if SettingsData.isNameTappable {
             // アカウント名のタップ処理
@@ -774,6 +781,13 @@ final class TimeLineViewCell: NSView {
         }
     }
     
+    @objc func cellClick() {
+        if let tableView = self.tableView, let indexPath = self.indexPath {
+            // セル選択時の処理を実行
+            tableView.model.selectRow(timelineView: tableView, row: indexPath, notSelect: false)
+        }
+    }
+    
     // セル内のレイアウト
     override func layout() {
         if let superview = self.tableView?.superview, self.frame.width != superview.frame.width {
@@ -784,6 +798,8 @@ final class TimeLineViewCell: NSView {
         let isDetailMode = self.showDetail
         let isMiniView = isDetailMode ? .normal : self.isMiniView
         let iconSize = isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
+        
+        self.cellClickButton.frame = self.bounds
         
         if isDetailMode {
             self.nameLabel.isHidden = false

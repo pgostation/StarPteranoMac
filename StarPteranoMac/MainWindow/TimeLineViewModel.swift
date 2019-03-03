@@ -351,7 +351,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         if row >= list.count {
             // AutoPagerize用セルの高さ
-            return 300
+            return NSScreen.main?.frame.height ?? 300
         }
         
         let isSelected = (SettingsData.isMiniView == .full || row == self.selectedRow)
@@ -1326,6 +1326,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             cell.boostView?.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
             cell.boostView?.textColor = NSColor.red
             cell.boostView?.stringValue = I18n.get("THIS_TOOT_IS_DIRECT_MESSAGE")
+            cell.boostView?.isBordered = false
+            cell.boostView?.isEditable = false
+            cell.boostView?.isSelectable = false
+            cell.boostView?.drawsBackground = false
             cell.addSubview(cell.boostView!)
         }
         

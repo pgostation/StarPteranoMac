@@ -127,6 +127,7 @@ class TimeLineView: NSTableView {
         case .direct:
             url = URL(string: "https://\(hostName)/api/v1/timelines/direct?limit=50\(sinceIdStr)")
         case .list:
+            if option == nil { return }
             url = URL(string: "https://\(hostName)/api/v1/timelines/list/\(option!)?limit=50\(sinceIdStr)")
         case .scheduled:
             return

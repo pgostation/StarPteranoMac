@@ -90,6 +90,8 @@ final class ImageViewController: NSViewController {
                                    y: 5,
                                    width: 50,
                                    height: 30)
+        
+        refreshButtons()
     }
     
     @objc func leftAction() {
@@ -104,7 +106,7 @@ final class ImageViewController: NSViewController {
         reloadImage()
     }
     
-    private func reloadImage() {
+    private func refreshButtons() {
         if selectedIndex == 0 {
             leftButton.title = "|<"
             leftButton.alphaValue = 0.5
@@ -120,6 +122,10 @@ final class ImageViewController: NSViewController {
             rightButton.title = ">"
             rightButton.alphaValue = 1.0
         }
+    }
+    
+    private func reloadImage() {
+        refreshButtons()
         
         let index = selectedIndex
         ImageCache.image(urlStr: previewUrls[selectedIndex], isTemp: true, isSmall: false) { [weak self] (image, fileUrl) in
