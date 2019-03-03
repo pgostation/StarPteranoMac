@@ -407,7 +407,7 @@ final class NotificationTableCell: NSView {
             self.statusLabel.frame.size.width = screenBounds.width - left - 5
             self.statusLabel.sizeToFit()
             self.statusLabel.frame = CGRect(x: left,
-                                            y: top,
+                                            y: top + 2,
                                             width: self.statusLabel.frame.width,
                                             height: self.statusLabel.frame.height)
             top = statusLabel.frame.maxY + 5

@@ -17,8 +17,10 @@ final class MovieCache {
     static func movie(urlStr: String?, callback: @escaping (AVPlayer?, Any?, Any?)->Void) {
         guard let urlStr = urlStr else { return }
         
+        let cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac/movie"
+        try? fileManager.createDirectory(atPath: cacheDir, withIntermediateDirectories: true, attributes: nil)
+        
         // ストレージキャッシュにある場合
-        let cacheDir = NSHomeDirectory() + "/Library/Caches/StarPteranoMac"
         let filePath = cacheDir + "/" + urlStr.replacingOccurrences(of: "/", with: "|")
         if fileManager.fileExists(atPath: filePath) {
             imageGlobalQueue.async {

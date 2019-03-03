@@ -18,6 +18,7 @@ final class ImageCache {
     private static var waitingDict: [String: [(NSImage, URL?)->Void]] = [:]
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "ImageCache")
+    private static let imageParallelQueue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
     private static let webpDecoder = SDWebImageWebPCoder()
     private static var deleteCacheDate: Date?
     
@@ -109,7 +110,7 @@ final class ImageCache {
         waitingDict[urlStr] = []
         
         // ネットワークに取りに行く
-        imageQueue.async {
+        imageParallelQueue.async {
             guard let url = URL(string: urlStr) else { return }
             if let data = try? Data(contentsOf: url) {
                 DispatchQueue.main.async {

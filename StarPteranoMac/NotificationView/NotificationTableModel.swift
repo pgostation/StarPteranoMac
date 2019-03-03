@@ -65,15 +65,15 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
                 }
                 self.dummyLabel.textStorage?.setAttributedString(attibutedText.0)
                 self.dummyLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
-                self.dummyLabel.frame.size.width = tableView.bounds.width - 55
+                self.dummyLabel.frame.size.width = tableView.bounds.width - 65
                 self.dummyLabel.sizeToFit()
                 
                 let height: CGFloat
                 if data.type == "mention" {
                     // 返信とお気に入りボタンの分
-                    height = self.dummyLabel.frame.height + SettingsData.fontSize * 2 + 20 + 40
+                    height = self.dummyLabel.frame.height + SettingsData.fontSize * 2 + 20 + 45
                 } else {
-                    height = self.dummyLabel.frame.height + SettingsData.fontSize * 2 + 20
+                    height = self.dummyLabel.frame.height + SettingsData.fontSize * 2 + 20 + 8
                 }
                 
                 // 画像がある場合

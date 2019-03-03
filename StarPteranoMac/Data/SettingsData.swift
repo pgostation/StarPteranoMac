@@ -163,7 +163,7 @@ final class SettingsData {
             }
             return list
         }
-        return [.home]
+        return [.home, .homeLocal, .mentions, .notifications, .dm, .favorites]
     }
     static func setTlMode(key: String, modes: [TLMode]) {
         var string = ""
