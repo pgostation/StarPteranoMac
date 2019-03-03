@@ -584,6 +584,42 @@ final class SettingsData {
         }
     }
     
+    // 画像ファイルのストレージキャッシュを使うかどうか (ただし、APNGと動画は常にキャッシュする)
+    static var useStorageCache: Bool {
+        get {
+            if let string = defaults.string(forKey: "useStorageCache") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "useStorageCache")
+            } else {
+                defaults.removeObject(forKey: "useStorageCache")
+            }
+        }
+    }
+    
+    // 画像ファイルのRAMキャッシュの数
+    static var ramCacheCount: Int {
+        get {
+            let value = defaults.integer(forKey: "ramCacheCount")
+            if value > 0 {
+                return value
+            }
+            return 120
+        }
+        set(newValue) {
+            if newValue > 0 {
+                defaults.set(newValue, forKey: "ramCacheCount")
+            } else {
+                defaults.removeObject(forKey: "ramCacheCount")
+            }
+        }
+    }
+    
     // 最近使った絵文字に追加
     static func addRecentEmoji(key: String, accessToken: String) {
         var list = recentEmojiList(accessToken: accessToken)

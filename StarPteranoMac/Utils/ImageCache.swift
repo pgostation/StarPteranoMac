@@ -19,6 +19,7 @@ final class ImageCache {
     private static let fileManager = FileManager()
     private static let imageQueue = DispatchQueue(label: "ImageCache")
     private static let webpDecoder = SDWebImageWebPCoder()
+    private static var deleteCacheDate: Date?
     
     // 画像をキャッシュから取得する。なければネットに取りに行く
     static func image(urlStr: String?, isTemp: Bool, isSmall: Bool, shortcode: String? = nil, isPreview: Bool = false, isThread: Bool = false, callback: @escaping (NSImage, URL?)->Void) {
@@ -68,7 +69,7 @@ final class ImageCache {
                             callback(image, url)
                         }
                         
-                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                        if memCache.count >= SettingsData.ramCacheCount { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
                             memCache = [:]
                         }
@@ -78,14 +79,22 @@ final class ImageCache {
                             callback(image, url)
                         }
                         
-                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                        if memCache.count >= SettingsData.ramCacheCount { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
                             memCache = [:]
                         }
                     }
                     
-                    // 最終アクセス時刻を更新
-                    try? fileManager.setAttributes([FileAttributeKey.modificationDate : Date()], ofItemAtPath: url.path)
+                    if SettingsData.useStorageCache {
+                        if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
+                            if let fileDate = attr[FileAttributeKey.modificationDate] as? Date {
+                                if fileDate.timeIntervalSinceNow < (isTemp ? -180 : -3600) {
+                                    // 最終アクセス時刻を更新
+                                    try? fileManager.setAttributes([FileAttributeKey.modificationDate : Date()], ofItemAtPath: url.path)
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return
@@ -108,9 +117,7 @@ final class ImageCache {
                     if let image = EmojiImage(data: data) {
                         let smallImage = isSmall ? ImageUtils.small(image: image, size: 50) : image
                         smallImage.shortcode = shortcode
-                        if !isTemp {
-                            memCache.updateValue((smallImage, fileUrl), forKey: urlStr)
-                        }
+                        memCache.updateValue((smallImage, fileUrl), forKey: urlStr)
                         callback(image, fileUrl)
                         
                         for waitingCallback in waitingDict[urlStr] ?? [] {
@@ -119,24 +126,34 @@ final class ImageCache {
                         
                         waitingDict.removeValue(forKey: urlStr)
                         
-                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                        if memCache.count >= SettingsData.ramCacheCount { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
                             memCache = [:]
                         }
                         
-                        // ストレージにキャッシュする
-                        try? data.write(to: fileUrl)
-                        
-                        // ストレージの古いファイルを削除する
-                        let cacheDirUrl = URL(fileURLWithPath: cacheDir)
-                        let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
-                        let nowDate = Date()
-                        for url in urls ?? [] {
-                            if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
-                                if let fileDate = attr[FileAttributeKey.modificationDate] as? Date {
-                                    let time: Double = isTemp ? 3600 * 8 : 86400 * 30
-                                    if nowDate.timeIntervalSince(fileDate) > time {
-                                        try? fileManager.removeItem(at: url)
+                        if SettingsData.useStorageCache {
+                            // ストレージにキャッシュする
+                            try? data.write(to: fileUrl)
+                            
+                            if deleteCacheDate == nil || deleteCacheDate!.timeIntervalSinceNow < -60 {
+                                deleteCacheDate = Date()
+                                
+                                // ストレージの古いファイルを削除する
+                                let cacheDirUrl = URL(fileURLWithPath: cacheDir)
+                                let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+                                let nowDate = Date()
+                                for url in urls ?? [] {
+                                    if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
+                                        if let fileDate = attr[FileAttributeKey.modificationDate] as? Date {
+                                            let time: Double = isTemp ? 3600 : 86400 * 7
+                                            if nowDate.timeIntervalSince(fileDate) > time {
+                                                do {
+                                                    try fileManager.removeItem(at: url)
+                                                } catch {
+                                                    print("delete cache file failure: \(error)")
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -145,14 +162,16 @@ final class ImageCache {
                         memCache.updateValue((image, fileUrl), forKey: urlStr)
                         callback(image, fileUrl)
                         
-                        if memCache.count >= 120 { // メモリの使いすぎを防ぐ
+                        if memCache.count >= SettingsData.ramCacheCount { // メモリの使いすぎを防ぐ
                             oldMemCache = memCache
                             memCache = [:]
                         }
                         
-                        // ストレージにキャッシュする
-                        let fileUrl = URL(fileURLWithPath: filePath)
-                        try? data.write(to: fileUrl)
+                        if SettingsData.useStorageCache {
+                            // ストレージにキャッシュする
+                            let fileUrl = URL(fileURLWithPath: filePath)
+                            try? data.write(to: fileUrl)
+                        }
                     }
                 }
             } else {

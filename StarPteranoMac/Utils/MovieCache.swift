@@ -75,6 +75,25 @@ final class MovieCache {
                 // ストレージにキャッシュする
                 let fileUrl = URL(fileURLWithPath: filePath)
                 try? data.write(to: fileUrl)
+                
+                // ストレージの古いファイルを削除する
+                let cacheDirUrl = URL(fileURLWithPath: cacheDir)
+                let urls = try? fileManager.contentsOfDirectory(at: cacheDirUrl, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles)
+                let nowDate = Date()
+                for url in urls ?? [] {
+                    if let attr = try? fileManager.attributesOfItem(atPath: url.path) {
+                        if let fileDate = attr[FileAttributeKey.modificationDate] as? Date {
+                            let time: Double = 3600
+                            if nowDate.timeIntervalSince(fileDate) > time {
+                                do {
+                                    try fileManager.removeItem(at: url)
+                                } catch {
+                                    print("delete cache file failure: \(error)")
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -214,13 +214,13 @@ private class SettingsView: NSView {
                                     width: SettingsViewController.width,
                                     height: height)
         
-        searchButton.frame = NSRect(x: 0,
+        /*searchButton.frame = NSRect(x: 0,
                                     y: SettingsWindow.contentRect.height - height * 5,
                                     width: SettingsViewController.width,
-                                    height: height)
+                                    height: height)*/
         
         detailButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 6,
+                                    y: SettingsWindow.contentRect.height - height * 5,
                                     width: SettingsViewController.width,
                                     height: height)
     }

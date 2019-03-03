@@ -297,7 +297,7 @@ final class AccountsView: NSScrollView {
     override func layout() {
         let height: CGFloat = 50
         
-        for (index, view) in accountViews.enumerated() {
+        for (index, view) in accountViews.reversed().enumerated() {
             view.frame = NSRect(x: 50,
                                 y: CGFloat(accountViews.count - index) * height,
                                 width: self.frame.width - 100,

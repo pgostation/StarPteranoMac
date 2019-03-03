@@ -65,19 +65,21 @@ final class UISettingsViewController: NSViewController {
     }
     
     @objc func iconSizeAction(_ sender: NSStepper) {
-        SettingsData.iconSize = CGFloat(sender.integerValue)
+        SettingsData.iconSize = min(200, max(1, CGFloat(sender.integerValue)))
         
         guard let view = self.view as? UISettingsView else { return }
         view.setProperties()
+        view.needsLayout = true
         
         MainViewController.refreshAllTimeLineViews()
     }
     
     @objc func fontSizeAction(_ sender: NSStepper) {
-        SettingsData.fontSize = CGFloat(sender.integerValue)
+        SettingsData.fontSize = min(100, max(1, CGFloat(sender.integerValue)))
         
         guard let view = self.view as? UISettingsView else { return }
         view.setProperties()
+        view.needsLayout = true
         
         MainViewController.refreshAllTimeLineViews()
     }
@@ -150,6 +152,7 @@ final class UISettingsView: NSView {
         darkmodeButton.state = SettingsData.forceDarkMode ? .on : .off
         
         iconSizeStepper.integerValue = Int(SettingsData.iconSize)
+        iconSizeStepper.maxValue = 999
         
         iconSizeLabel.string = I18n.get("LABEL_ICONSIZE") + ": " + "\(Int(SettingsData.iconSize))"
         iconSizeLabel.fontSize = 12
@@ -157,6 +160,7 @@ final class UISettingsView: NSView {
         iconSizeLabel.foregroundColor = NSColor.black.cgColor
         
         fontSizeStepper.integerValue = Int(SettingsData.fontSize)
+        fontSizeStepper.maxValue = 999
         
         fontSizeLabel.string = I18n.get("LABEL_FONTSIZE") + ": " + "\(Int(SettingsData.fontSize))"
         fontSizeLabel.fontSize = 12
