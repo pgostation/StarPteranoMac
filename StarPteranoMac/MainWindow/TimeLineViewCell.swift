@@ -832,19 +832,26 @@ final class TimeLineViewCell: NSView {
                                              width: self.spolerTextLabel?.frame.width ?? 0,
                                              height: self.spolerTextLabel?.frame.height ?? 0)
         
+        if let showMoreButton = self.showMoreButton {
+            showMoreButton.frame = CGRect(x: max(nameLeft, min(screenBounds.width - 120, 100)),
+                                          y: (self.spolerTextLabel?.frame.minY ?? height) - 20,
+                                          width: max(120, screenBounds.width - 160),
+                                          height: 20)
+        }
+        
         if let messageView = self.messageView {
             let y: CGFloat
             if isMiniView == .superMini {
                 y = -0
             } else if let showMoreButton = self.showMoreButton {
-                y = height - showMoreButton.frame.minY
+                y = showMoreButton.frame.minY
             } else if let detailDateLabel = self.detailDateLabel {
-                y = height - detailDateLabel.frame.minY
+                y = detailDateLabel.frame.minY
             } else {
-                y = ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
+                y = height - ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
             }
             messageView.frame = CGRect(x: nameLeft,
-                                       y: height - y - messageView.frame.height,
+                                       y: y - messageView.frame.height,
                                        width: min(screenBounds.width - SettingsData.iconSize - 10, messageView.frame.width),
                                        height: messageView.frame.height)
         }
@@ -860,13 +867,6 @@ final class TimeLineViewCell: NSView {
                                        y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 36,
                                        width: screenBounds.width - 56,
                                        height: 24)
-        
-        if let showMoreButton = self.showMoreButton {
-            showMoreButton.frame = CGRect(x: max(nameLeft, min(screenBounds.width - 120, 100)),
-                                          y: (self.spolerTextLabel?.frame.minY ?? self.messageView?.frame.minY ?? height - 20) - 20,
-                                          width: max(120, screenBounds.width - 160),
-                                          height: 20)
-        }
         
         self.DMBarLeft?.frame = CGRect(x: 0, y: 0, width: 5, height: 800)
         

@@ -250,6 +250,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                                y: self.view.frame.height - 20 - tootVC.view.frame.height - 22,
                                width: self.view.frame.width,
                                height: 20)
+        tabView.needsLayout = true
         
         tabCoverView.frame = tabView.frame
         

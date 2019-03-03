@@ -406,7 +406,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
         
         if hasCard {
-            if SettingsData.instanceVersion(hostName: (tableView as? TimeLineView)?.hostName ?? "") >= 2.6 {
+            if SettingsData.instanceVersion(hostName: tableView.hostName) >= 2.6 {
                 if data.card != nil || CardView.hasCard(id: data.id ?? "") == true {
                     // card表示用
                     detailOffset += 150
@@ -430,6 +430,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 spolerTextLabel.frame.size.width = tableView.frame.width - 70
                 spolerTextLabel.drawsBackground = false
                 spolerTextLabel.isBezeled = false
+                spolerTextLabel.isEditable = false
+                spolerTextLabel.isSelectable = false
                 spolerTextLabel.sizeToFit()
                 detailOffset += 20 + spolerTextLabel.frame.height
             } else {

@@ -300,4 +300,73 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
             }
         }
     }
+    
+    // テキストビューの高さを変化させる、絵文字にする
+    func textDidChange(_ notification: Notification) {
+        guard let textView = notification.object as? NSTextView else { return }
+        
+        if textView.string.contains(" :") || textView.string.contains("\u{200b}:") {
+            var emojis: [[String: Any]] = []
+            
+            for emoji in EmojiData.getEmojiCache(host: hostName, accessToken: accessToken, showHiddenEmoji: true) {
+                let dict: [String: Any] = ["shortcode": emoji.short_code ?? "",
+                                           "url": emoji.url ?? ""]
+                emojis.append(dict)
+            }
+            
+            let encodedText = DecodeToot.encodeEmoji(attributedText: textView.attributedString(), textStorage: textView.textStorage!)
+            let attrString = DecodeToot.decodeName(name: encodedText, emojis: emojis, callback: {
+                let attrString = DecodeToot.decodeName(name: encodedText, emojis: emojis, callback: nil)
+                textView.textStorage?.setAttributedString(attrString)
+                textView.textColor = ThemeColor.messageColor
+                textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize + 2)
+            })
+            textView.textStorage?.setAttributedString(attrString)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let newEncodedText = DecodeToot.encodeEmoji(attributedText: textView.attributedString(), textStorage: textView.textStorage!)
+                if newEncodedText.count == encodedText.count { return }
+                let attrString = DecodeToot.decodeName(name: newEncodedText, emojis: emojis, callback: nil)
+                textView.textStorage?.setAttributedString(attrString)
+            }
+            textView.textColor = ThemeColor.messageColor
+            textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize + 2)
+        }
+        
+        // テキストを全削除するとin_reply_toをクリアする
+        if textView.string.count == 0 {
+            TootView.inReplyToId = nil
+            TootView.inReplyToContent = nil
+            (self.view as? TootView)?.inReplyToLabel.title = ""
+        }
+        
+        do {
+            let text: String
+            if let textField = (self.view as? TootView)?.textField {
+                text = DecodeToot.encodeEmoji(attributedText: textField.attributedString(), textStorage: textField.textStorage!)
+            } else {
+                text = ""
+            }
+            
+            let spoilerText: String
+            if let spoilerTextField = (self.view as? TootView)?.spoilerTextField {
+                spoilerText = DecodeToot.encodeEmoji(attributedText: spoilerTextField.attributedString(), textStorage: spoilerTextField.textStorage!)
+            } else {
+                spoilerText = ""
+            }
+            
+            let textCount = text.count + spoilerText.count
+            
+            if let textCountLabel = (self.view as? TootView)?.textCountLabel {
+                textCountLabel.stringValue = "\(textCount) / 500"
+                
+                if textCount > 500 {
+                    textCountLabel.textColor = NSColor.red
+                } else {
+                    textCountLabel.textColor = ThemeColor.contrastColor
+                }
+            }
+        }
+        
+        self.view.needsLayout = true
+    }
 }

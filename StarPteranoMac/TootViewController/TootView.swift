@@ -11,6 +11,7 @@ import Cocoa
 final class TootView: NSView {
     // 下書き保存
     static var inReplyToId: String? = nil
+    static var inReplyToContent: String? = nil
     static var scheduledDate: Date?
     
     //----
@@ -21,6 +22,7 @@ final class TootView: NSView {
     let spoilerTextField = TootTextView()
     let textField = TootTextView()
     let textCountLabel = MyTextField()
+    let inReplyToLabel = NSButton()
     weak var target: TootViewController?
     
     // 入力バー
@@ -65,14 +67,16 @@ final class TootView: NSView {
             self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         }
         
+        textCountLabel.stringValue = "0 / 500"
         textCountLabel.textColor = ThemeColor.contrastColor
-        textCountLabel.font = NSFont.systemFont(ofSize: 18)
+        textCountLabel.font = NSFont.systemFont(ofSize: 12)
         textCountLabel.backgroundColor = ThemeColor.viewBgColor.withAlphaComponent(0.3)
-        //textCountLabel.textAlignment = .center
-        //textCountLabel.adjustsFontSizeToFitWidth = true
-        //textCountLabel.clipsToBounds = true
+        textCountLabel.alignment = .center
         textCountLabel.layer?.cornerRadius = 10
         textCountLabel.isBezeled = false
+        textCountLabel.isEditable = false
+        textCountLabel.isSelectable = false
+        textCountLabel.sizeToFit()
         
         if SettingsData.isTransparentWindow {
             spoilerTextField.backgroundColor = NSColor.clear
@@ -144,8 +148,6 @@ final class TootView: NSView {
         
         emojiButton.title = "😀"
         emojiButton.isBordered = false
-        
-        textCountLabel.isEditable = false
     }
     
     override func layout() {
@@ -200,9 +202,9 @@ final class TootView: NSView {
                                    height: 25)
         
         textCountLabel.frame = CGRect(x: 150,
-                                      y: 0,
-                                      width: 60,
-                                      height: 25)
+                                      y: (25 - textCountLabel.frame.height) / 2,
+                                      width: 75,
+                                      height: textCountLabel.frame.height)
     }
     
     class MyTextView: NSTextView {
