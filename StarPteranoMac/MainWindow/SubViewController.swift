@@ -159,56 +159,32 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         let menu = NSMenu()
         popUp.menu = menu
         
-        // ホーム、ローカル、ローカル + ホーム、連合
+        let existMenus = SettingsData.tlMode(key: hostName + "," + accessToken)
+        
+        selectedItem = nil
+        
         do {
-            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION"]
+            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION", "ACTION_LIST", "ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH"]
             for str in menuItems {
-                let menuItem = NSMenuItem(title: I18n.get(str),
-                                          action: #selector(menuAction(_:)),
-                                          keyEquivalent: "")
-                menuItem.target = self
-                menu.addItem(menuItem)
-            }
-        }
-        
-        menu.addItem(NSMenuItem.separator())
-        
-        // リスト
-        do {
-            let menuItem = NSMenuItem(title: I18n.get("ACTION_LIST"),
-                                      action: #selector(menuAction(_:)),
-                                      keyEquivalent: "")
-            menuItem.target = self
-            menu.addItem(menuItem)
-            
-            do {
-                let subMenu = NSMenu(title: I18n.get("ACTION_LIST"))
-                menuItem.submenu = subMenu
+                // すでにタブがあるなら飛ばす
+                let mode = convert(title: I18n.get(str))
+                if existMenus.contains(mode) {
+                    continue
+                }
                 
-                subMenu.addItem(NSMenuItem.separator())
-                let menuItem = NSMenuItem(title: I18n.get("ACTION_REFRESH_LIST"),
-                                          action: #selector(menuAction(_:)),
-                                          keyEquivalent: "")
-                menuItem.target = self
-                subMenu.addItem(menuItem)
-            }
-        }
-        
-        menu.addItem(NSMenuItem.separator())
-        
-        // 通知、メンション、DM、お気に入り、検索、ユーザー指定
-        do {
-            let menuItems = ["ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES"]
-            for str in menuItems {
+                // メニューアイテム追加
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
                                           keyEquivalent: "")
                 menuItem.target = self
                 menu.addItem(menuItem)
+                
+                // デフォルトでは最初のアイテムを選択したことにする
+                if selectedItem == nil {
+                    selectedItem = mode
+                }
             }
         }
-        
-        selectedItem = .home
         
         return popUp
     }
@@ -219,25 +195,33 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     
     private var selectedItem: SettingsData.TLMode?
     private func doMenu(title: String) {
+        selectedItem = convert(title: title)
+    }
+    
+    // 文字列からTLModeに変換
+    private func convert(title: String) -> SettingsData.TLMode {
         if title == I18n.get("ACTION_HOME") {
-            selectedItem = .home
+            return .home
         } else if title == I18n.get("ACTION_LOCAL") {
-            selectedItem = .local
+            return .local
         } else if title == I18n.get("ACTION_HOMELOCAL") {
-            selectedItem = .homeLocal
+            return .homeLocal
         } else if title == I18n.get("ACTION_FEDERATION") {
-            selectedItem = .federation
+            return .federation
         } else if title == I18n.get("ACTION_MENTIONS") {
-            selectedItem = .mentions
+            return .mentions
         } else if title == I18n.get("ACTION_NOTIFICATIONS") {
-            selectedItem = .notifications
+            return .notifications
         } else if title == I18n.get("ACTION_DM") {
-            selectedItem = .dm
+            return .dm
         } else if title == I18n.get("ACTION_FAVORITES") {
-            selectedItem = .favorites
+            return .favorites
         } else if title == I18n.get("ACTION_LIST") {
-            selectedItem = .list
+            return .list
+        } else if title == I18n.get("ACTION_SEARCH") {
+            return .search
         }
+        return .home
     }
     
     override func viewDidLayout() {

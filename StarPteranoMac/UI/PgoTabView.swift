@@ -313,9 +313,9 @@ private class PgoTabItemView: NSView {
         } else {
             closeButton.frame = NSRect(x: 2, y: 4, width: 12, height: 12)
             
-            nameLabel.frame = NSRect(x: 18,
+            nameLabel.frame = NSRect(x: 14,
                                      y: 0,
-                                     width: self.frame.width - 18 - max(14, infoLabel.frame.width),
+                                     width: self.frame.width - 14 - max(14, infoLabel.frame.width),
                                      height: 18)
             
             infoLabel.frame = NSRect(x: min(nameLabel.frame.maxY, self.frame.width - infoLabel.frame.width),
