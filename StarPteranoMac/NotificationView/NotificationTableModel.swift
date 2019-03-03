@@ -27,7 +27,28 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
         if list.count == 0 {
             list = addList
         } else {
-            list += addList
+            for data in addList {
+                for index in 0..<list.count {
+                    guard let c1 = list[index].created_at else { continue }
+                    guard let c2 = data.created_at else { continue }
+                    
+                    if c2 >= c1 {
+                        if c2 == c1 && data.account?.acct == list[index].account?.acct {
+                            // 同じ内容なので追加しない
+                            break
+                        }
+                        
+                        // 途中(か最初)に追加
+                        list.insert(data, at: index)
+                        break
+                    }
+                    
+                    // 最後に追加
+                    if index == list.count - 1 {
+                        list.append(data)
+                    }
+                }
+            }
         }
     }
     
@@ -50,7 +71,7 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
         if row >= list.count {
             if self.useAutopagerize && self.list.count > 0 {
                 // Autopagerize
-                self.viewController?.addOld()
+                self.viewController?.add()
             }
             
             return 150

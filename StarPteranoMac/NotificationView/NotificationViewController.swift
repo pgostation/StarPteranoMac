@@ -34,7 +34,7 @@ final class NotificationViewController: NSViewController {
         view.notificationModel.viewController = self
         
         // 最新のデータを取得
-        addOld()
+        add(isRefresh: true)
     }
     
     override func viewDidAppear() {
@@ -50,17 +50,23 @@ final class NotificationViewController: NSViewController {
                 SettingsData.newestNotifyDate(accessToken: accessToken, date: date)
             }
         }
+        
+        // 30秒以上経過していたら
+        if lastRefreshDate.timeIntervalSinceNow < -30 {
+            // 最新のデータを取得
+            add(isRefresh: true)
+        }
     }
     
-    private var lastDate = Date(timeInterval: -2, since: Date())
-    func addOld() {
+    private var lastRefreshDate = Date(timeInterval: -2, since: Date())
+    func add(isRefresh: Bool = false) {
         guard let view = self.view as? NotificationTableView else { return }
-        if lastDate.timeIntervalSinceNow >= -1 {
+        if lastRefreshDate.timeIntervalSinceNow >= -1 {
             return // 無限ループ防止
         }
-        lastDate = Date()
+        lastRefreshDate = Date()
         
-        let lastId = view.notificationModel.getLastId()
+        let lastId: String? = isRefresh ? nil : view.notificationModel.getLastId()
         
         var idStr = ""
         if let lastId = lastId {
