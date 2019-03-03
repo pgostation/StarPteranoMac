@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		120B0EC9222C05FE00BC3181 /* ListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EC8222C05FE00BC3181 /* ListData.swift */; };
+		120B0ED4222C080A00BC3181 /* ListPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0ED3222C080A00BC3181 /* ListPopUp.swift */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
@@ -86,6 +88,8 @@
 
 /* Begin PBXFileReference section */
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
+		120B0EC8222C05FE00BC3181 /* ListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListData.swift; sourceTree = "<group>"; };
+		120B0ED3222C080A00BC3181 /* ListPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPopUp.swift; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -251,6 +255,7 @@
 				129E89D522145DC300D3D13B /* CardView.swift */,
 				12C04501222229D600BE3A50 /* SubTimeLineViewController.swift */,
 				12C0450322222C5A00BE3A50 /* BreadCrumbListView.swift */,
+				120B0ED3222C080A00BC3181 /* ListPopUp.swift */,
 			);
 			path = MainWindow;
 			sourceTree = "<group>";
@@ -340,6 +345,7 @@
 			children = (
 				129F434F217F6F5D008E856D /* SettingsData.swift */,
 				12C044F522202A2700BE3A50 /* EmojiData.swift */,
+				120B0EC8222C05FE00BC3181 /* ListData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -516,6 +522,7 @@
 				128751CD2184BD5C00BC8828 /* ImageViewController.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
 				1243D399222A8DD1001DA334 /* NotificationTableCell.swift in Sources */,
+				120B0ED4222C080A00BC3181 /* ListPopUp.swift in Sources */,
 				128751AC218478CA00BC8828 /* ImageUtils.swift in Sources */,
 				12DF0D2F221C4345006A8C0B /* SettingsSelectProtectMode.swift in Sources */,
 				128751B62184817000BC8828 /* TimeLineView.swift in Sources */,
@@ -550,6 +557,7 @@
 				129E89D622145DC300D3D13B /* CardView.swift in Sources */,
 				1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */,
 				12C0450422222C5A00BE3A50 /* BreadCrumbListView.swift in Sources */,
+				120B0EC9222C05FE00BC3181 /* ListData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

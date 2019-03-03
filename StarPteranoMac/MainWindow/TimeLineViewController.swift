@@ -29,8 +29,9 @@ final class TimeLineViewController: NSViewController {
     let hostName: String
     let accessToken: String
     let type: TimeLineType
-    private let option: String? // user指定時はユーザID、タグ指定時はタグ
+    private var option: String? // user指定時はユーザID、タグ指定時はタグ、リスト指定時はリストID
     private let mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? // typeに.mentions指定時のみ有効
+    var headerView: NSView? // リスト選択や検索フィールドをここに登録すると、上に表示する
     
     init(hostName: String, accessToken: String, type: TimeLineType, option: String? = nil, mentions: ([AnalyzeJson.ContentData], [String: AnalyzeJson.AccountData])? = nil) {
         self.hostName = hostName
@@ -57,13 +58,45 @@ final class TimeLineViewController: NSViewController {
             self.view = view
         }
         
+        // ヘッダービューを追加
+        if self.type == .list && self.headerView == nil {
+            // リスト選択用のポップアップ
+            self.headerView = ListPopUp(hostName: hostName, accessToken: accessToken)
+        }
+        
         (self.view as? TimeLineView)?.startStreaming()
+    }
+    
+    override func viewDidAppear() {
+        if let headerView = self.headerView {
+            DispatchQueue.main.async {
+                if self.view.superview != nil {
+                    self.view.superview?.superview?.superview?.addSubview(headerView)
+                    self.view.superview?.superview?.superview?.needsLayout = true
+                }
+            }
+        }
+    }
+    
+    override func viewDidDisappear() {
+        self.headerView?.removeFromSuperview()
     }
     
     // ユーザータイムライン/詳細トゥートを閉じる
     @objc func closeAction() {
         self.removeFromParent()
         self.view.removeFromSuperview()
+    }
+    
+    // リストを選択
+    func selectList(listId: String?) {
+        let scrollView = self.view.superview?.superview as? NSScrollView
+        self.view.removeFromSuperview()
+        
+        self.option = listId
+        loadView()
+        
+        scrollView?.documentView = self.view
     }
     
     override func viewDidLayout() {

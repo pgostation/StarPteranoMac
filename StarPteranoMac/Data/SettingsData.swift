@@ -174,6 +174,7 @@ final class SettingsData {
             string += mode.rawValue
         }
         defaults.set(string, forKey: "tlMode_\(key)")
+        defaults.synchronize()
     }
     
     // 各アカウントで優先表示するリストIDを保持

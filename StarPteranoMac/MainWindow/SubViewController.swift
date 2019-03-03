@@ -37,16 +37,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         setProperties()
         
         let tlModes = SettingsData.tlMode(key: hostName + "," + accessToken)
-        for (index, mode) in tlModes.enumerated() {
-            switch mode {
-            case .list:
-                let listOption = SettingsData.selectedListId(accessToken: accessToken, index: index)
-                let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
-                let vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .list, option: listOption)
-                TimeLineViewManager.set(key: key, vc: vc)
-            default:
-                addTab(mode: mode)
-            }
+        for mode in tlModes {
+            addTab(mode: mode)
         }
         
         if tlModes.count == 0 {
@@ -238,10 +230,23 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         tabCoverView.frame = tabView.frame
         
+        var headHeight: CGFloat = 0
+        for childVc in self.children {
+            if let tlVc = childVc as? TimeLineViewController {
+                if let headerView = tlVc.headerView {
+                    headerView.frame = NSRect(x: 0,
+                                              y: self.view.frame.height - 20 - tootVC.view.frame.height - 22 - 30,
+                                              width: self.view.frame.width,
+                                              height: 30)
+                    headHeight = 30
+                }
+            }
+        }
+        
         scrollView.frame = NSRect(x: 0,
                                   y: 0,
                                   width: self.view.frame.width,
-                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 22)
+                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 22 - headHeight)
         
         for subview in self.view.subviews {
             if subview is SubTimeLineView {
