@@ -91,6 +91,7 @@
 // UI設定
 "BUTTON_USING_COLOR" = "選択したセルに色をつける";
 "LABEL_ICONSIZE" = "アイコンサイズ";
+"LABEL_FONTSIZE" = "フォントサイズ";
 "BUTTON_LOAD_PREVIEW" = "画像プレビューを読み込む";
 "BUTTON_USE_ANIMATION" = "カスタム絵文字のアニメーション";
 "BUTTON_ABSOLUTE_TIME" = "絶対時間表示";
