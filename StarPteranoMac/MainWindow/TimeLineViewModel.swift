@@ -1371,6 +1371,143 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         selectRow(timelineView: timelineView, row: row)
     }
     
+    func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
+        guard let urlStr = link as? String else { return false }
+        guard let Url = URL(string: urlStr) else { return false }
+        
+        if Url.path.hasPrefix("/tags/") {
+            // ハッシュタグの場合
+            let hashTag = String(Url.path.suffix(Url.path.count - 6))
+            let viewController = TimeLineViewController(hostName: self.tableView?.hostName ?? "",
+                                                        accessToken: self.tableView?.accessToken ?? "",
+                                                        type: TimeLineViewController.TimeLineType.federationTag,
+                                                        option: hashTag)
+            
+            let subTimeLineViewController = SubTimeLineViewController(name: NSAttributedString(string: hashTag),
+                                                                      icon: nil,
+                                                                      timelineVC: viewController)
+            
+            var targetSubVC: SubViewController? = nil
+            for subVC in MainViewController.instance?.subVCList ?? [] {
+                if self.tableView?.hostName == subVC.tootVC.hostName && self.tableView?.accessToken == subVC.tootVC.accessToken {
+                    targetSubVC = subVC
+                    break
+                }
+            }
+            
+            // 複数のサブTLを開かないようにする
+            for subVC in targetSubVC?.children ?? [] {
+                if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                    subVC.removeFromParent()
+                    subVC.view.removeFromSuperview()
+                }
+            }
+            
+            targetSubVC?.addChild(subTimeLineViewController)
+            targetSubVC?.view.addSubview(subTimeLineViewController.view)
+            
+            subTimeLineViewController.view.frame = CGRect(x: self.tableView?.frame.width ?? 0,
+                                                          y: 0,
+                                                          width: self.tableView?.frame.width ?? 0,
+                                                          height: (targetSubVC?.view.frame.height ?? 100) - 22)
+            
+            
+            subTimeLineViewController.showAnimation(parentVC: targetSubVC)
+            return true
+        }
+        
+        if Url.path.hasPrefix("/@") {
+            let host: String?
+            if Url.host == self.tableView?.hostName {
+                host = nil
+            } else {
+                host = Url.host
+            }
+            let accountId = String(Url.path.suffix(Url.path.count - 2))
+            if let id = convertAccountToId(host: host, accountId: accountId) {
+                // @でのIDコール
+                let viewController = TimeLineViewController(hostName: self.tableView?.hostName ?? "",
+                                                            accessToken: self.tableView?.accessToken ?? "",
+                                                            type: TimeLineViewController.TimeLineType.user,
+                                                            option: id)
+                
+                func show() {
+                    let subTimeLineViewController = SubTimeLineViewController(name: NSAttributedString(string: accountId),
+                                                                              icon: nil,
+                                                                              timelineVC: viewController)
+                    
+                    var targetSubVC: SubViewController? = nil
+                    for subVC in MainViewController.instance?.subVCList ?? [] {
+                        if self.tableView?.hostName == subVC.tootVC.hostName && self.tableView?.accessToken == subVC.tootVC.accessToken {
+                            targetSubVC = subVC
+                            break
+                        }
+                    }
+                    
+                    // 複数のサブTLを開かないようにする
+                    for subVC in targetSubVC?.children ?? [] {
+                        if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                            subVC.removeFromParent()
+                            subVC.view.removeFromSuperview()
+                        }
+                    }
+                    
+                    targetSubVC?.addChild(subTimeLineViewController)
+                    targetSubVC?.view.addSubview(subTimeLineViewController.view)
+                    
+                    subTimeLineViewController.view.frame = CGRect(x: self.tableView?.frame.width ?? 0,
+                                                                  y: 0,
+                                                                  width: self.tableView?.frame.width ?? 0,
+                                                                  height: (targetSubVC?.view.frame.height ?? 100) - 22)
+                    
+                    
+                    subTimeLineViewController.showAnimation(parentVC: targetSubVC)
+                }
+                
+                let acct = accountId + (host != nil ? "@\(host!)" : "")
+                if let timelineView = viewController.view as? TimeLineView {
+                    if let accountData = self.accountList[acct] {
+                        // すぐに表示
+                        timelineView.accountList.updateValue(accountData, forKey: id)
+                        show()
+                    } else {
+                        // 情報を取得してから表示
+                        guard let url = URL(string: "https://\(self.tableView?.hostName ?? "")/api/v1/accounts/\(id)") else { return false }
+                        try? MastodonRequest.get(url: url, accessToken: self.tableView?.accessToken ?? "") { (data, response, error) in
+                            if let data = data {
+                                do {
+                                    if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] {
+                                        let accountData = AnalyzeJson.analyzeAccountJson(account: responseJson)
+                                        timelineView.accountList.updateValue(accountData, forKey: id)
+                                    }
+                                } catch { }
+                            }
+                            DispatchQueue.main.async {
+                                show()
+                            }
+                        }
+                    }
+                }
+                
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    // アカウント文字列から数値IDに変換
+    private func convertAccountToId(host: String?, accountId: String) -> String? {
+        let key: String
+        if let host = host {
+            key = accountId + "@" + host
+        } else {
+            key = accountId
+        }
+        
+        return accountIdDict[key]
+    }
+    
     // セル選択時の処理
     private var isAnimating = false
     private var inDoubleClick = false
@@ -1454,7 +1591,12 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     
     // 詳細画面に移動
     func gotoDetailView(timelineView: TimeLineView, row: Int) {
-        let index = row
+        let index: Int
+        if timelineView.type == .user {
+            index = row - 1
+        } else {
+            index = row
+        }
         
         if self.isDetailTimeline { return } // すでに詳細表示画面
         
