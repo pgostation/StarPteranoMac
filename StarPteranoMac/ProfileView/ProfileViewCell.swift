@@ -555,10 +555,12 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
             style: MyAlertAction.Style.defaultValue,
             handler: { _ in
                 let vc = AllListsViewController(accountId: id, hostName: hostName, accessToken: accessToken)
-                if let subVC = TimeLineViewManager.getLastSelectedSubTLView() {
-                    subVC.addChild(vc)
-                    subVC.view.addSubview(vc.view)
-                }
+                TimeLineViewManager.getLastSelectedSubTLView()?.present(
+                    vc,
+                    asPopoverRelativeTo: sender.bounds,
+                    of: sender,
+                    preferredEdge: NSRectEdge.minY,
+                    behavior: NSPopover.Behavior.transient)
         }))
         
         // Safariで表示
