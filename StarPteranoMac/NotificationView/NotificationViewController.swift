@@ -61,7 +61,7 @@ final class NotificationViewController: NSViewController {
     private var lastRefreshDate = Date(timeInterval: -2, since: Date())
     func add(isRefresh: Bool = false) {
         guard let view = self.view as? NotificationTableView else { return }
-        if lastRefreshDate.timeIntervalSinceNow >= -1 {
+        if lastRefreshDate.timeIntervalSinceNow >= -1.5 {
             return // 無限ループ防止
         }
         lastRefreshDate = Date()

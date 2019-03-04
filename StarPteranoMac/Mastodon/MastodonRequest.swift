@@ -36,6 +36,9 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
+                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
+                    print("GET remain=\(remain)")
+                }
             }
             
             completionHandler(data, response, error)
@@ -57,6 +60,9 @@ final class MastodonRequest {
             if let response = response as? HTTPURLResponse {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
+                }
+                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
+                    print("POST remain=\(remain)")
                 }
             }
             
@@ -80,6 +86,9 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
+                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
+                    print("DELETE remain=\(remain)")
+                }
             }
             
             completionHandler(data, response, error)
@@ -101,6 +110,9 @@ final class MastodonRequest {
             if let response = response as? HTTPURLResponse {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
+                }
+                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
+                    print("PATCH remain=\(remain)")
                 }
             }
             
