@@ -403,6 +403,11 @@
 				TargetAttributes = {
 					129F4331217E1CD3008E856D = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -706,6 +711,7 @@
 			baseConfigurationReference = F08368C04FE0E65A158039A7 /* Pods-StarPteranoMac.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StarPteranoMac/StarPteranoMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;
@@ -730,6 +736,7 @@
 			baseConfigurationReference = 109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = StarPteranoMac/StarPteranoMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = L5M8K6XWJN;
