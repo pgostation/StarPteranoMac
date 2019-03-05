@@ -577,8 +577,15 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         if index >= list.count {
             if self.showAutoPagerizeCell, let timelineView = tableView as? TimeLineView {
-                // 過去のトゥートに遡る
-                timelineView.refreshOld(id: timelineView.model.getLastTootId())
+                if timelineView.type == .favorites {
+                    // 過去のお気に入りに遡る
+                    if let prevLinkStr = timelineView.prevLinkStr {
+                        timelineView.refreshOld(id: "-")
+                    }
+                } else {
+                    // 過去のトゥートに遡る
+                    timelineView.refreshOld(id: timelineView.model.getLastTootId())
+                }
             }
             let cell = NSView()
             return cell
