@@ -202,3 +202,7 @@
 "NOTIFICATION_BOOST" = "🔁ブーストしました";
 "NOTIFICATION_FAV" = "🌟お気に入りしました";
 "NOTIFICATION_FOLLOW" = "➕フォローしました";
+
+// 検索画面
+"SEARCH_SEG_TAG" = "タグ";
+"SEARCH_SEG_ACCOUNT" = "ユーザー";

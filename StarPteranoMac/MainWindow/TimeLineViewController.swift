@@ -24,6 +24,7 @@ final class TimeLineViewController: NSViewController {
         case scheduled // 予約投稿
         case notifications // 通知一覧
         case notificationMentions // 通知一覧(メンションのみ)
+        case search // 検索
     }
     
     let hostName: String

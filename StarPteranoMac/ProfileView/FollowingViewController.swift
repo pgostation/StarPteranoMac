@@ -29,7 +29,7 @@ final class FollowingViewController: NSViewController {
     }
     
     override func loadView() {
-        let view = FollowingView(hostName: hostName, accessToken: accessToken)
+        let view = FollowingView(hostName: hostName, accessToken: accessToken, type: type)
         self.view = view
         
         view.tableView.model.viewController = self
@@ -137,8 +137,8 @@ private final class FollowingView: NSView {
     let tableView: FollowingTableView
     let closeButton = NSButton()
     
-    init(hostName: String, accessToken: String) {
-        self.tableView = FollowingTableView(hostName: hostName, accessToken: accessToken)
+    init(hostName: String, accessToken: String, type: String) {
+        self.tableView = FollowingTableView(hostName: hostName, accessToken: accessToken, type: type)
         
         super.init(frame: NSRect(x: 0, y: 0, width: 10, height: 10))
         
@@ -181,7 +181,7 @@ private final class FollowingView: NSView {
 final class FollowingTableView: NSTableView {
     let model: FollowingTableModel
     
-    init(hostName: String, accessToken: String) {
+    init(hostName: String, accessToken: String, type: String) {
         self.model = FollowingTableModel(hostName: hostName, accessToken: accessToken)
         
         super.init(frame: NSRect(x: 0, y: 0, width: 10, height: 10))
@@ -190,6 +190,7 @@ final class FollowingTableView: NSTableView {
         self.dataSource = model
         
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
+        column.title = String(type.split(separator: "/").last ?? "")
         column.width = 200
         self.addTableColumn(column)
         

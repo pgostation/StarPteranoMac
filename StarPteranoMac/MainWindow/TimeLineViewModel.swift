@@ -833,6 +833,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             // 返信された数
             cell.repliedLabel = MyTextField()
             cell.repliedLabel?.isBordered = false
+            cell.repliedLabel?.isEditable = false
             cell.repliedLabel?.drawsBackground = false
             cell.addSubview(cell.repliedLabel!)
             if let replies_count = data.replies_count, replies_count > 0 {
@@ -862,6 +863,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             // ブーストされた数
             cell.boostedLabel = MyTextField()
             cell.boostedLabel?.isBordered = false
+            cell.boostedLabel?.isEditable = false
             cell.boostedLabel?.drawsBackground = false
             cell.addSubview(cell.boostedLabel!)
             if let reblogs_count = data.reblogs_count, reblogs_count > 0 {
@@ -887,6 +889,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             // お気に入りされた数
             cell.favoritedLabel = MyTextField()
             cell.favoritedLabel?.isBordered = false
+            cell.favoritedLabel?.isEditable = false
             cell.favoritedLabel?.drawsBackground = false
             cell.addSubview(cell.favoritedLabel!)
             if let favourites_count = data.favourites_count, favourites_count > 0 {

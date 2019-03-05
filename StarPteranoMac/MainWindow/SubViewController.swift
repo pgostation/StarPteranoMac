@@ -115,12 +115,14 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         case .users:
             type = .home // これは使用しない
         case .search:
-            type = .home // 検索ビューは未作成
+            type = .search
         }
         
         let vc: NSViewController
         if type == .notifications || type == .notificationMentions {
             vc = TimeLineViewManager.get(key: key) ?? NotificationViewController(hostName: hostName, accessToken: accessToken, type: type)
+        } else if type == .search {
+            vc = TimeLineViewManager.get(key: key) ?? SearchViewController(hostName: hostName, accessToken: accessToken, type: TimeLineViewController.TimeLineType.search, option: nil)
         } else {
             vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
         }

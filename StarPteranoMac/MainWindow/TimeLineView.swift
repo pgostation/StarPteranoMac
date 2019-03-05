@@ -135,6 +135,8 @@ class TimeLineView: NSTableView {
             return
         case .notificationMentions:
             return
+        case .search:
+            return
         }
         
         guard let requestUrl = url else { return }
@@ -532,6 +534,8 @@ class TimeLineView: NSTableView {
         case .notifications:
             return
         case .notificationMentions:
+            return
+        case .search:
             return
         }
         

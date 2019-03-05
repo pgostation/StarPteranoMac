@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		120B0EC9222C05FE00BC3181 /* ListData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EC8222C05FE00BC3181 /* ListData.swift */; };
 		120B0ED4222C080A00BC3181 /* ListPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0ED3222C080A00BC3181 /* ListPopUp.swift */; };
+		120B0ED7222EA0FB00BC3181 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
@@ -90,6 +91,7 @@
 		109992682A663A66FDFC1F10 /* Pods-StarPteranoMac.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StarPteranoMac.release.xcconfig"; path = "Pods/Target Support Files/Pods-StarPteranoMac/Pods-StarPteranoMac.release.xcconfig"; sourceTree = "<group>"; };
 		120B0EC8222C05FE00BC3181 /* ListData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListData.swift; sourceTree = "<group>"; };
 		120B0ED3222C080A00BC3181 /* ListPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPopUp.swift; sourceTree = "<group>"; };
+		120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -172,6 +174,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		120B0ED5222EA0D200BC3181 /* SearchView */ = {
+			isa = PBXGroup;
+			children = (
+				120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */,
+			);
+			path = SearchView;
+			sourceTree = "<group>";
+		};
 		1243D393222A8D92001DA334 /* NotificationView */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +301,7 @@
 				128751C021849C0E00BC8828 /* ProfileView */,
 				128751BD218493A000BC8828 /* TootViewController */,
 				1243D393222A8D92001DA334 /* NotificationView */,
+				120B0ED5222EA0D200BC3181 /* SearchView */,
 				128751C92184BD4000BC8828 /* ImageWindow */,
 				129F4335217E1CD3008E856D /* AppDelegate.swift */,
 				129F4337217E1CD4008E856D /* Assets.xcassets */,
@@ -519,6 +530,7 @@
 				1243D3842225795C001DA334 /* ProfileAction.swift in Sources */,
 				121A82402214E652008D3176 /* ClickableTextField.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
+				120B0ED7222EA0FB00BC3181 /* SearchViewController.swift in Sources */,
 				1243D397222A8DC3001DA334 /* NotificationTableModel.swift in Sources */,
 				128751AE2184792500BC8828 /* EmojiImage.swift in Sources */,
 				128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */,
