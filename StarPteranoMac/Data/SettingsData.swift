@@ -662,8 +662,8 @@ final class SettingsData {
         }
         list.insert(key, at: 0)
         
-        if list.count > 16 {
-            list.remove(at: 16)
+        if list.count > 24 {
+            list.remove(at: 24)
         }
         
         let str = list.joined(separator: "\n")

@@ -132,14 +132,16 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         // ヘッダ画像
         headerImageView.wantsLayer = true
         headerImageView.layer?.backgroundColor = NSColor.gray.cgColor
-        ImageCache.image(urlStr: data.header ?? data.header_static, isTemp: true, isSmall: false) { [weak self] (image, localUrl) in
-            guard let strongSelf = self else { return }
-            if image.size.width <= 1 && image.size.height <= 1 { return }
-            
-            let headerImageView = strongSelf.headerImageView
-            headerImageView.image = image
-            headerImageView.imageScaling = .scaleProportionallyUpOrDown
-            strongSelf.needsLayout = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            ImageCache.image(urlStr: data.header ?? data.header_static, isTemp: true, isSmall: false) { [weak self] (image, localUrl) in
+                guard let strongSelf = self else { return }
+                if image.size.width <= 1 && image.size.height <= 1 { return }
+                
+                let headerImageView = strongSelf.headerImageView
+                headerImageView.image = image
+                headerImageView.imageScaling = .scaleProportionallyUpOrDown
+                strongSelf.needsLayout = true
+            }
         }
         
         // メインの表示

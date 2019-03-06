@@ -121,8 +121,9 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     }
                 }
             }
-            
-            if self.list.count == 0 {
+            if tableView.type == .favorites {
+                self.list += addList2
+            } else if self.list.count == 0 {
                 self.list = addList2
                 if isStreaming {
                     tableView.reloadData()

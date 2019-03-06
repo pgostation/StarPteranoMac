@@ -261,7 +261,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             let height = min(500, scrollView.frame.height)
             emojiView.frame = NSRect(x: 0,
                                      y: scrollView.frame.height - height,
-                                     width: min(320, self.view.frame.width),
+                                     width: min(400, self.view.frame.width),
                                      height: height)
             
             emojiView.needsLayout = true

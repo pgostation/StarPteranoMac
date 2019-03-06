@@ -28,7 +28,7 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         self.hostName = hostName
         self.accessToken = accessToken
         
-        super.init(frame: CGRect(x: 0, y: 0, width: 320, height: 500))
+        super.init(frame: CGRect(x: 0, y: 0, width: 400, height: 500))
         
         self.emojiScrollView = EmojiInputScrollView(hostName: hostName, accessToken: accessToken, emojiScrollContentView: emojiScrollContentView)
         
@@ -207,6 +207,11 @@ private final class EmojiInputScrollView: NSScrollView {
     }
     
     private func addEmojis() {
+        let buttonSize: CGFloat = 22 + SettingsData.fontSize
+        let margin: CGFloat = 2
+        let screenBounds = self.bounds
+        let xCount = floor(screenBounds.width / (buttonSize + margin)) // ボタンの横に並ぶ数
+        
         var recentList: [EmojiData.EmojiStruct] = []
         for key in SettingsData.recentEmojiList(accessToken: accessToken) {
             for emojiData in self.emojiList {
@@ -214,6 +219,9 @@ private final class EmojiInputScrollView: NSScrollView {
                     recentList.append(emojiData)
                     break
                 }
+            }
+            if recentList.count >= Int(xCount * 2) { // 横2列分まで表示する
+                break
             }
         }
         
