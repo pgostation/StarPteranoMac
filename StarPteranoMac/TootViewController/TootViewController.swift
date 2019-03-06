@@ -87,6 +87,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         TootView.scheduledDate = nil
         
         if view.imageCheckView.urls.count > 0 {
+            let urls = view.imageCheckView.urls
             let imageCheckView = view.imageCheckView
             view.imageCheckView.urls = []
             view.imageCheckView.closeAction()
@@ -95,7 +96,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
                 let group = DispatchGroup()
                 
                 var idList: [String] = []
-                for url in imageCheckView.urls {
+                for url in urls {
                     group.enter()
                     let lowUrlStr = url.absoluteString.lowercased()
                     if lowUrlStr.contains(".mp4") || lowUrlStr.contains(".m4v") || lowUrlStr.contains(".mov") {

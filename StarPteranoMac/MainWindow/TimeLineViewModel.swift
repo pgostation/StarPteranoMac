@@ -1261,8 +1261,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
         self.waitingQueryId = data.id
         
-        // 2秒以内にリクエストが来なければ発行
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        // 0.5秒以内にリクエストが来なければ発行
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if self.waitingQueryId == nil {
                 return
             }

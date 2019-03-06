@@ -76,6 +76,7 @@ final class NotificationTableCell: NSView {
         
         self.iconView.wantsLayer = true
         self.iconView.layer?.cornerRadius = 5
+        self.iconView.imageScaling = .scaleProportionallyUpOrDown
         
         self.nameLabel.textColor = ThemeColor.nameColor
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
