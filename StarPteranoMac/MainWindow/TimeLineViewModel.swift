@@ -1244,10 +1244,190 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         // お気に入りした人やブーストした人の名前表示
         if isDetailTimeline && row == selectedRow { // 詳細拡大表示
-            //getBoosterAndFavoriter(data: data, cell: cell)
+            getBoosterAndFavoriter(data: data, cell: cell)
         }
         
         return cell
+    }
+    
+    // トゥートを更新してからブーストした人やお気に入りした人を取得する
+    private var waitingQueryId: String? = nil
+    private func getBoosterAndFavoriter(data: AnalyzeJson.ContentData, cell: TimeLineViewCell) {
+        if self.waitingQueryId == data.id {
+            // 2回目が来たらリクエスト発行
+            self.waitingQueryId = nil
+            self.getBoosterAndFavoriterInner(data: data, cell: cell)
+            return
+        }
+        self.waitingQueryId = data.id
+        
+        // 2秒以内にリクエストが来なければ発行
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            if self.waitingQueryId == nil {
+                return
+            }
+            self.getBoosterAndFavoriterInner(data: data, cell: cell)
+        }
+    }
+    
+    // お気に入りした人やブーストした人の名前表示
+    private func getBoosterAndFavoriterInner(data: AnalyzeJson.ContentData, cell: TimeLineViewCell) {
+        if cell.id != data.id { return }
+        
+        let id = data.id
+        
+        // ブーストした人の名前を表示
+        let reblogs_count = data.reblogs_count ?? 0
+        if reblogs_count > 0 || data.reblogged == 1 {
+            if let url = URL(string: "https://\(cell.tableView?.hostName ?? "")/api/v1/statuses/\(data.reblog_id ?? data.id ?? "")/reblogged_by?limit=10") {
+                try? MastodonRequest.get(url: url, accessToken: cell.tableView?.accessToken ?? "") { (data, response, error) in
+                    if cell.id != id { return }
+                    if let data = data {
+                        do {
+                            if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: AnyObject]] {
+                                DispatchQueue.main.async {
+                                    var count = 0
+                                    for json in responseJson {
+                                        let accountData = AnalyzeJson.analyzeAccountJson(account: json)
+                                        if count >= 10 { break }
+                                        if cell.rebologerLabels.count <= count {
+                                            let label = BoosterLabel()
+                                            cell.rebologerLabels.append(label)
+                                            label.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                                            label.textColor = ThemeColor.idColor
+                                            label.isBordered = false
+                                            label.isSelectable = false
+                                            label.isEditable = false
+                                            label.drawsBackground = false
+                                            cell.addSubview(label)
+                                            
+                                            label.accountData = accountData
+                                        }
+                                        let label = cell.rebologerLabels[count]
+                                        label.attributedStringValue = DecodeToot.decodeName(name: "🔁 " + (accountData.display_name ?? "") + " " + (accountData.acct ?? ""), emojis: accountData.emojis, textField: label, callback: nil)
+                                        count += 1
+                                    }
+                                    cell.needsLayout = true
+                                }
+                            }
+                        } catch { }
+                    }
+                }
+            }
+        }
+        
+        // お気に入りした人の名前を表示
+        let favourites_count = data.favourites_count ?? 0
+        if favourites_count > 0 || data.favourited == 1 {
+            if let url = URL(string: "https://\(cell.tableView?.hostName ?? "")/api/v1/statuses/\(data.reblog_id ?? data.id ?? "")/favourited_by?limit=10") {
+                try? MastodonRequest.get(url: url, accessToken: cell.tableView?.accessToken ?? "") { (data, response, error) in
+                    if cell.id != id { return }
+                    if let data = data {
+                        do {
+                            if let responseJson = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: AnyObject]] {
+                                DispatchQueue.main.async {
+                                    var count = 0
+                                    for json in responseJson {
+                                        let accountData = AnalyzeJson.analyzeAccountJson(account: json)
+                                        if count >= 10 { break }
+                                        if cell.favoriterLabels.count <= count {
+                                            let label = BoosterLabel()
+                                            cell.favoriterLabels.append(label)
+                                            label.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                                            label.textColor = ThemeColor.idColor
+                                            label.isBordered = false
+                                            label.isSelectable = false
+                                            label.isEditable = false
+                                            label.drawsBackground = false
+                                            cell.addSubview(label)
+                                            
+                                            label.accountData = accountData
+                                        }
+                                        let label = cell.favoriterLabels[count]
+                                        label.attributedStringValue = DecodeToot.decodeName(name: "⭐️ " + (accountData.display_name ?? "") + " " + (accountData.acct ?? ""), emojis: accountData.emojis, textField: label, callback: nil)
+                                        count += 1
+                                    }
+                                    cell.needsLayout = true
+                                }
+                            }
+                        } catch { }
+                    }
+                }
+            }
+        }
+    }
+    
+    private class BoosterLabel: MyTextField {
+        var accountData: AnalyzeJson.AccountData? = nil
+        let button = NSButton()
+        
+        override init(frame frameRect: NSRect) {
+            super.init(frame: frameRect)
+            
+            self.addSubview(button)
+            
+            button.isTransparent = true
+            button.target = self
+            button.action = #selector(clickAction)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        override var frame: NSRect {
+            get {
+                return super.frame
+            }
+            set {
+                super.frame = newValue
+                
+                button.frame = self.bounds
+            }
+        }
+        
+        @objc func clickAction() {
+            if let accountId = self.accountData?.id {
+                let cell = self.superview as? TimeLineViewCell
+                guard let parentTlView = cell?.tableView else { return }
+                if parentTlView.option == accountId {
+                    return
+                }
+                
+                let accountTimeLineViewController = TimeLineViewController(hostName: parentTlView.hostName, accessToken: parentTlView.accessToken, type: TimeLineViewController.TimeLineType.user, option: accountId)
+                let timelineView = accountTimeLineViewController.view as! TimeLineView
+                if let accountData = self.accountData {
+                    timelineView.accountList.updateValue(accountData, forKey: accountId)
+                }
+                
+                let subTimeLineViewController = SubTimeLineViewController(name: self.attributedStringValue, icon: nil, timelineVC: accountTimeLineViewController)
+                
+                var targetSubVC: SubViewController? = nil
+                for subVC in MainViewController.instance?.subVCList ?? [] {
+                    if timelineView.hostName == subVC.tootVC.hostName && timelineView.accessToken == subVC.tootVC.accessToken {
+                        targetSubVC = subVC
+                        break
+                    }
+                }
+                
+                // 複数のサブTLを開かないようにする
+                for subVC in targetSubVC?.children ?? [] {
+                    if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                        subVC.removeFromParent()
+                        subVC.view.removeFromSuperview()
+                    }
+                }
+                
+                subTimeLineViewController.view.frame = CGRect(x: timelineView.frame.width,
+                                                              y: 0,
+                                                              width: timelineView.frame.width,
+                                                              height: (targetSubVC?.view.frame.height ?? 100) - 22)
+                
+                DispatchQueue.main.async {
+                    subTimeLineViewController.showAnimation(parentVC: targetSubVC)
+                }
+            }
+        }
     }
     
     // セルの色を設定
@@ -1534,12 +1714,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
             }
         }
-        
-        // 選択中のカラムの幅を広げる
-        /*if timelineView.frame.width < 320 {
-         SettingsData.setViewWidth(accessToken: timelineView.accessToken, width: 320)
-         MainViewController.instance?.view.needsLayout = true
-         }*/
         
         if !notSelect {
             // 入力フィールドからフォーカスを外す

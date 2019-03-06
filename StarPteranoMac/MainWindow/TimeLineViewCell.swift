@@ -1013,7 +1013,7 @@ final class TimeLineViewCell: NSView {
                 label.frame = CGRect(x: 50,
                                      y: top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
-                                     height: SettingsData.fontSize)
+                                     height: SettingsData.fontSize * 1.5)
                 
                 top -= SettingsData.fontSize + 4
             }
@@ -1022,7 +1022,7 @@ final class TimeLineViewCell: NSView {
                 label.frame = CGRect(x: 50,
                                      y: top - SettingsData.fontSize,
                                      width: screenBounds.width - 50,
-                                     height: SettingsData.fontSize)
+                                     height: SettingsData.fontSize * 1.5)
                 
                 top -= SettingsData.fontSize + 4
             }

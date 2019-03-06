@@ -158,6 +158,8 @@ final class PgoTabView: NSTabView {
         self.delegate?.tabView?(self, didSelect: items[index])
         
         self.selectedIndex = index
+        
+        refresh()
     }
     
     // ビューを更新する

@@ -37,7 +37,7 @@ class TimeLineView: NSTableView {
         self.delegate = model
         self.dataSource = model
         
-        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: option ?? ""))
         column.width = 200
         self.addTableColumn(column)
         
