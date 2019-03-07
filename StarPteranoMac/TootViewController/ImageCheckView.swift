@@ -122,6 +122,13 @@ final class ImageCheckView: NSView {
         }
     }
     
+    // 全削除
+    func deleteAll() {
+        for button in self.deleteButtons{
+            deleteAction(button)
+        }
+    }
+    
     override func layout() {
         let imageSize: CGFloat = min(150, (self.superview?.frame.width ?? 300) / 2 - 20)
         var x: CGFloat = 0

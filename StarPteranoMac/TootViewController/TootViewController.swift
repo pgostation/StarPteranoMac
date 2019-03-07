@@ -90,6 +90,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
             let urls = view.imageCheckView.urls
             let imageCheckView = view.imageCheckView
             view.imageCheckView.urls = []
+            view.imageCheckView.deleteAll()
             view.imageCheckView.closeAction()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 // 画像をアップロードしてから投稿
@@ -369,5 +370,51 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         }
         
         self.view.needsLayout = true
+    }
+    
+    private static var helperMode = HelperViewManager.HelperMode.none
+    private static var helperRange: NSRange?
+    
+    func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
+        guard let text = replacementString else { return true }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            if text == ":" {
+                TootViewController.helperMode = .emoji
+                TootViewController.helperRange = affectedCharRange
+                HelperViewManager.show(hostName: self.hostName, accessToken: self.accessToken, mode: TootViewController.helperMode, textView: textView, location: TootViewController.helperRange?.location ?? 0)
+            }
+            else if text == "@" {
+                TootViewController.helperMode = .account
+                TootViewController.helperRange = affectedCharRange
+                HelperViewManager.show(hostName: self.hostName, accessToken: self.accessToken, mode: TootViewController.helperMode, textView: textView, location: TootViewController.helperRange?.location ?? 0)
+            }
+            else if text == "#" {
+                TootViewController.helperMode = .hashtag
+                TootViewController.helperRange = affectedCharRange
+                HelperViewManager.show(hostName: self.hostName, accessToken: self.accessToken, mode: TootViewController.helperMode, textView: textView, location: TootViewController.helperRange?.location ?? 0)
+            }
+            else if text == " " || text == "\n" {
+                TootViewController.helperMode = .none
+                TootViewController.helperRange = nil
+                HelperViewManager.close()
+            }
+            else if text == "" {
+                if let location = TootViewController.helperRange?.location {
+                    if textView.string.prefix(location + 1).suffix(1) != TootViewController.helperMode.rawValue {
+                        TootViewController.helperMode = .none
+                        TootViewController.helperRange = nil
+                        HelperViewManager.close()
+                    } else {
+                        HelperViewManager.change()
+                    }
+                }
+            }
+            else {
+                HelperViewManager.change()
+            }
+        }
+        
+        return true
     }
 }
