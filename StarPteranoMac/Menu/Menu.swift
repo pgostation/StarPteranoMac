@@ -132,10 +132,10 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem3.target = menuTarget
                 viewMenu.addItem(menuItem3)
                 
-                let menuItem4 = NSMenuItem(title: I18n.get("Full View"), action: #selector(doViewMenu(_:)), keyEquivalent: "f")
+                /*let menuItem4 = NSMenuItem(title: I18n.get("Full View"), action: #selector(doViewMenu(_:)), keyEquivalent: "f")
                 menuItem4.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.control)
                 menuItem4.target = menuTarget
-                viewMenu.addItem(menuItem4)
+                viewMenu.addItem(menuItem4)*/
             }
             viewMenu.addItem(NSMenuItem.separator())
             do {
@@ -182,18 +182,18 @@ final class Menu: NSObject, NSMenuDelegate {
                 
                 let menuItem3 = NSMenuItem(title: I18n.get("Add Image…"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem3.target = menuTarget
-                tootMenu.addItem(menuItem3)*/
+                tootMenu.addItem(menuItem3)
                 
                 let menuItem4 = NSMenuItem(title: I18n.get("Scheduled Toot…"), action: #selector(doTootMenu(_:)), keyEquivalent: "")
                 menuItem4.target = menuTarget
-                tootMenu.addItem(menuItem4)
+                tootMenu.addItem(menuItem4)*/
             }
             
             tootMenuItem.submenu = tootMenu
         }
         
         // Tool Menu
-        let toolMenuItem = NSMenuItem(title: "Tool", action: nil, keyEquivalent: "")
+        /*let toolMenuItem = NSMenuItem(title: "Tool", action: nil, keyEquivalent: "")
         toolMenuItem.target = menuTarget
         do {
             let toolMenu = NSMenu(title: I18n.get("Tool"))
@@ -207,7 +207,7 @@ final class Menu: NSObject, NSMenuDelegate {
             toolMenu.addItem(NSMenuItem.separator())
             
             toolMenuItem.submenu = toolMenu
-        }
+        }*/
         
         // Set Menus to App
         let mainMenu = NSMenu(title: "Main")
@@ -216,7 +216,7 @@ final class Menu: NSObject, NSMenuDelegate {
         mainMenu.addItem(editMenuItem)
         mainMenu.addItem(viewMenuItem)
         mainMenu.addItem(tootMenuItem)
-        mainMenu.addItem(toolMenuItem)
+        //mainMenu.addItem(toolMenuItem)
         NSApplication.shared.mainMenu = mainMenu
     }
     

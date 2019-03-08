@@ -135,6 +135,13 @@ final class MainViewController: NSViewController {
             (subVC.view.viewWithTag(5823) as? PgoTabView)?.bold = false
         }
     }
+    
+    // 修飾キーの監視
+    static var modifierFlags = NSEvent.ModifierFlags(rawValue: 0)
+    override func flagsChanged(with event: NSEvent) {
+        MainViewController.modifierFlags = event.modifierFlags
+        super.flagsChanged(with: event)
+    }
 }
 
 class MainView: NSView {

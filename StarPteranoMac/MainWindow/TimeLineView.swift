@@ -686,30 +686,114 @@ class TimeLineView: NSTableView {
         }
     }
     
-    func myKeyDown(keyCode: UInt16) {
+    func myKeyDown(keyCode: UInt16, modifierFlags: NSEvent.ModifierFlags) {
+        func getCell() -> TimeLineViewCell? {
+            if let selectedRow = model.selectedRow {
+                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                    if let tlView = tlVC.view as? TimeLineView {
+                        if let cell = model.tableView(tlView, viewFor: nil, row: selectedRow) as? TimeLineViewCell {
+                            return cell
+                        }
+                    }
+                }
+            }
+            return nil
+        }
+        
         switch keyCode {
         case 126, 40: // up arrow, k
+            // ひとつ上を選択
             if let selectedRow = model.selectedRow {
                 model.selectRow(timelineView: self, row: max(0, selectedRow - 1), notSelect: selectedRow == 0)
             } else {
                 model.selectRow(timelineView: self, row: 0, notSelect: selectedRow == 0)
             }
         case 125, 38: // down arrow, l
+            // ひとつ下を選択
             if let selectedRow = model.selectedRow {
                 model.selectRow(timelineView: self, row: selectedRow + 1, notSelect: false)
             } else {
                 model.selectRow(timelineView: self, row: 0, notSelect: false)
             }
         case 48: //tab
+            // 入力フィールドにフォーカスを移す
             if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                 let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
                 MainWindow.window?.makeFirstResponder(textField)
             }
         case 53: //esc
+            // 選択解除
             if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                 if let tlView = tlVC.view as? TimeLineView {
                     tlView.model.selectedRow = nil
                     tlView.reloadData()
+                }
+            }
+        case 36, 52: // return
+            // リプライ
+            if modifierFlags.contains(NSEvent.ModifierFlags.shift) {
+                getCell()?.replyAction(isAll: true)
+            } else {
+                getCell()?.replyAction()
+            }
+        case 3: // f
+            // お気に入り
+            getCell()?.favoriteAction()
+        case 11: // b
+            // ブースト
+            getCell()?.boostAction()
+        case 4: // h
+            // ユーザータイムラインを表示
+            getCell()?.tapAccountAction()
+        case 37: // l
+            // リンクを開く
+            let string = getCell()?.messageView?.string ?? ""
+            let regex = try? NSRegularExpression(pattern: "http(s)?://([\\w-]+\\.)+[\\w-]+(/[\\w- ./?%&=]*)?",
+                                                 options: NSRegularExpression.Options())
+            if let result = regex?.firstMatch(in: string,
+                                              options: NSRegularExpression.MatchingOptions(),
+                                              range: NSMakeRange(0, string.count)) {
+                let linkStr = (string as NSString).substring(with: result.range(at: 0))
+                if let url = URL(string: linkStr) {
+                    NSWorkspace.shared.open(url)
+                }
+            }
+        case 15: //r
+            // 会話ビューを開く
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                if let tlView = tlVC.view as? TimeLineView {
+                    if let selectedRow = model.selectedRow {
+                        model.gotoDetailView(timelineView: tlView, row: selectedRow)
+                    }
+                }
+            }
+        case 17: // t
+            // ブラウザでトゥートを開く
+            getCell()?.browserAction()
+        case 14: // e
+            // イメージプレビュー
+            let cell = getCell()
+            if let imageView = cell?.imageViews.first {
+                cell?.imageTapAction(imageView)
+            }
+        case 1: // s
+            // もっと見る/やっぱり隠す
+            let tmpCell = getCell()
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                if let tlView = tlVC.view as? TimeLineView {
+                    for subview in tlView.subviews {
+                        if let subview = subview as? NSTableRowView {
+                            for cell in subview.subviews {
+                                if let cell = cell as? TimeLineViewCell {
+                                    if cell.id == tmpCell?.id {
+                                        if cell.showMoreButton != nil {
+                                            cell.showMoreAction()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         default:

@@ -77,16 +77,47 @@ final class MainWindow: NSWindow {
     
     override func keyDown(with event: NSEvent) {
         if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+            switch event.keyCode {
+            case 123: // left arrow
+                if event.modifierFlags.contains(.command) {
+                    // 左タブに移動
+                    for subVC in MainViewController.instance?.subVCList ?? [] {
+                        if subVC.tabView.bold {
+                            subVC.tabView.selectLeft()
+                            return
+                        }
+                    }
+                }
+                else if event.modifierFlags.contains(.shift) {
+                    // 左カラムに移動
+                }
+            case 124: // right arrow
+                if event.modifierFlags.contains(.command) {
+                    // 右タブに移動
+                    for subVC in MainViewController.instance?.subVCList ?? [] {
+                        if subVC.tabView.bold {
+                            subVC.tabView.selectRight()
+                            return
+                        }
+                    }
+                }
+                else if event.modifierFlags.contains(.shift) {
+                    // 右カラムに移動
+                }
+            default:
+                break
+            }
+            
             if let lastVC = tlVC.parent?.children.last as? SubTimeLineViewController {
                 // 会話ビューなどを開いている場合
                 if let tlVC = lastVC.children.first as? TimeLineViewController {
                     if let tlView = tlVC.view as? TimeLineView {
-                        tlView.myKeyDown(keyCode: event.keyCode)
+                        tlView.myKeyDown(keyCode: event.keyCode, modifierFlags: event.modifierFlags)
                     }
                 }
             } else if let tlView = tlVC.view as? TimeLineView {
                 // タイムライン
-                tlView.myKeyDown(keyCode: event.keyCode)
+                tlView.myKeyDown(keyCode: event.keyCode, modifierFlags: event.modifierFlags)
             }
         }
     }

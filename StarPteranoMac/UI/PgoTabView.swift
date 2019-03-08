@@ -162,6 +162,36 @@ final class PgoTabView: NSTabView {
         refresh()
     }
     
+    // 左のタブを選択する
+    func selectLeft() {
+        let index = self.selectedIndex
+        
+        if index > 0 {
+            self.selectedIndex = index - 1
+        } else {
+            self.selectedIndex = self.items.count - 1
+        }
+        
+        self.delegate?.tabView?(self, didSelect: items[self.selectedIndex])
+        
+        refresh()
+    }
+    
+    // 右のタブを選択する
+    func selectRight() {
+        let index = self.selectedIndex
+        
+        if index < self.items.count - 1 {
+            self.selectedIndex = index + 1
+        } else {
+            self.selectedIndex = 0
+        }
+        
+        self.delegate?.tabView?(self, didSelect: items[self.selectedIndex])
+        
+        refresh()
+    }
+    
     // ビューを更新する
     func refresh() {
         // アイテムのビューが少なければ作る

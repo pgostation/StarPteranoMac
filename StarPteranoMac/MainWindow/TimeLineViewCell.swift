@@ -324,7 +324,7 @@ final class TimeLineViewCell: NSView {
     }
     
     // リプライボタンをクリックした時の処理
-    @objc func replyAction() {
+    @objc func replyAction(isAll: Bool = false) {
         self.tableView?.selectedDate = Date()
         
         if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {
@@ -353,6 +353,19 @@ final class TimeLineViewCell: NSView {
             DispatchQueue.main.async {
                 if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
                     view.textField.string = "@\(self.idLabel.stringValue) "
+                    if isAll || MainViewController.modifierFlags.contains(NSEvent.ModifierFlags.shift){
+                        let string = self.messageView?.string ?? ""
+                        let regex = try? NSRegularExpression(pattern: "@[a-zA-Z_]+",
+                                                             options: NSRegularExpression.Options())
+                        let matches = regex?.matches(in: string,
+                                                     options: NSRegularExpression.MatchingOptions(),
+                                                     range: NSMakeRange(0, string.count))
+                        for result in matches ?? [] {
+                            for i in 0..<result.numberOfRanges {
+                                view.textField.string += (string as NSString).substring(with: result.range(at: i)) + " "
+                            }
+                        }
+                    }
                 }
             }
         }
