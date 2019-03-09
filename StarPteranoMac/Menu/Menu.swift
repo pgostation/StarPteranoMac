@@ -65,7 +65,7 @@ final class Menu: NSObject, NSMenuDelegate {
             let fileMenu = NSMenu(title: I18n.get("File"))
             
             do {
-                let menuItem = NSMenuItem(title: I18n.get("New window"), action: #selector(doAppMenu(_:)), keyEquivalent: "n")
+                let menuItem = NSMenuItem(title: I18n.get("New window"), action: #selector(doAppMenu(_:)), keyEquivalent: "N")
                 menuItem.target = menuTarget
                 fileMenu.addItem(menuItem)
             }

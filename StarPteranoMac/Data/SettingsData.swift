@@ -235,6 +235,18 @@ final class SettingsData {
         }
     }
     
+    // 最初のアプリ起動か？
+    static var firstExec: Bool {
+        get {
+            if defaults.string(forKey: "firstExec") != nil {
+                return false
+            }
+            
+            defaults.set("ON", forKey: "firstExec")
+            return true
+        }
+    }
+    
     // 強制ダークモード
     static var forceDarkMode: Bool {
         get {

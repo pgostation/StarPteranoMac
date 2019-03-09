@@ -56,6 +56,16 @@ final class MainWindow: NSWindow {
             window.contentViewController = vc
             window.contentView = vc.view
         }
+        
+        // 初回起動時は説明を表示
+        if SettingsData.firstExec {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                var message = ""
+                message += "星プテラノを起動していただきありがとうございます。"
+                message += "\n\n一番上が入力エリアです。command + returnキーで投稿できます。"
+                Dialog.show(message: message)
+            }
+        }
     }
     
     private static func setFrame() {
