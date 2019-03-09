@@ -307,7 +307,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
     func textDidChange(_ notification: Notification) {
         guard let textView = notification.object as? NSTextView else { return }
         
-        if textView.string.contains(" :") || textView.string.contains("\u{200b}:") {
+        if textView.string.contains(" :") || self.view.superview?.viewWithTag(3948) != nil {
             var emojis: [[String: Any]] = []
             
             for emoji in EmojiData.getEmojiCache(host: hostName, accessToken: accessToken, showHiddenEmoji: true) {

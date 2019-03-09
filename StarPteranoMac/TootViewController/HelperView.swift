@@ -69,6 +69,11 @@ private class HelperView: NSView {
         self.tapParentView.addSubview(closeButton)
         
         scrollView.documentView = tapParentView
+        scrollView.layer?.backgroundColor = NSColor.clear.cgColor
+        scrollView.drawsBackground = false
+        scrollView.subviews.first?.layer?.backgroundColor = NSColor.clear.cgColor
+        
+        tapParentView.layer?.backgroundColor = NSColor.clear.cgColor
         
         closeButton.target = self
         closeButton.action = #selector(closeAction)
@@ -84,8 +89,12 @@ private class HelperView: NSView {
         self.wantsLayer = true
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         
-        closeButton.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
-        closeButton.title = "×"
+        closeButton.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        let attributedTitle = NSMutableAttributedString.init(string: "×")
+        attributedTitle.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.contrastColor],
+                                      range: NSRange(location: 0, length: attributedTitle.length))
+        closeButton.attributedTitle = attributedTitle
+        closeButton.isBordered = false
         
         setLabels()
     }
@@ -359,6 +368,8 @@ private class TapView: NSButton {
         label.isSelectable = false
         label.isEditable = false
         label.drawsBackground = false
+        label.wantsLayer = true
+        label.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         label.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         
         self.isTransparent = true
