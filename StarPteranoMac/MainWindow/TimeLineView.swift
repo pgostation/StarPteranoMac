@@ -427,20 +427,6 @@ class TimeLineView: NSTableView {
                         }
                     }
                 case "notification":
-                    // 通知ボタンにマークをつける
-                    //MainViewController.instance?.markNotificationButton(accessToken: accessToken ?? "", to: true)
-                    
-                    // 効果音を出す
-                    /*if TimeLineView.audioPlayer == nil {
-                        if let soundFilePath = Bundle.main.path(forResource: "decision21", ofType: "mp3") {
-                            let sound = URL(fileURLWithPath: soundFilePath)
-                            TimeLineView.audioPlayer = try? AVAudioPlayer(contentsOf: sound, fileTypeHint:nil)
-                            TimeLineView.audioPlayer?.prepareToPlay()
-                        }
-                    }
-                    TimeLineView.audioPlayer?.currentTime = 0
-                    TimeLineView.audioPlayer?.play()*/
-                    
                     // デスクトップ通知する
                     if let string = payload as? String {
                         guard let json = try JSONSerialization.jsonObject(with: string.data(using: String.Encoding.utf8)!, options: .allowFragments) as? [String: Any] else { return }
@@ -478,6 +464,24 @@ class TimeLineView: NSTableView {
                                                  "created_at": (json["created_at"] as? String) ?? ""]
                         DispatchQueue.main.async {
                             NSUserNotificationCenter.default.deliver(notification)
+                        }
+                        
+                        // 通知TL画面を更新する/更新フラグを立てる
+                        let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: SettingsData.TLMode.notifications)
+                        if let vc = TimeLineViewManager.get(key: key) as? NotificationViewController {
+                            vc.refreshFlag = true
+                            if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
+                                vc.add(isRefresh: true)
+                            }
+                        }
+                        if typeStr == "mention" {
+                            let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: SettingsData.TLMode.mentions)
+                            if let vc = TimeLineViewManager.get(key: key) as? NotificationViewController {
+                                vc.refreshFlag = true
+                                if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
+                                    vc.add(isRefresh: true)
+                                }
+                            }
                         }
                     }
                 case "delete":

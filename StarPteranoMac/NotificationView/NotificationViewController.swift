@@ -14,6 +14,7 @@ final class NotificationViewController: NSViewController {
     let hostName: String
     let accessToken: String
     let type: TimeLineViewController.TimeLineType
+    var refreshFlag = false
     
     init(hostName: String, accessToken: String, type: TimeLineViewController.TimeLineType) {
         self.hostName = hostName
@@ -52,19 +53,21 @@ final class NotificationViewController: NSViewController {
         }
         
         // 30秒以上経過していたら
-        if lastRefreshDate.timeIntervalSinceNow < -30 {
+        if lastRefreshDate.timeIntervalSinceNow < -30 || refreshFlag == true {
             // 最新のデータを取得
             add(isRefresh: true)
         }
     }
     
-    private var lastRefreshDate = Date(timeInterval: -2, since: Date())
+    var lastRefreshDate = Date(timeInterval: -2, since: Date())
     func add(isRefresh: Bool = false) {
         guard let view = self.view as? NotificationTableView else { return }
         if lastRefreshDate.timeIntervalSinceNow >= -1.5 {
             return // 無限ループ防止
         }
         lastRefreshDate = Date()
+        
+        refreshFlag = false
         
         let lastId: String? = isRefresh ? nil : view.notificationModel.getLastId()
         
