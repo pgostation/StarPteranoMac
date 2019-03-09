@@ -289,9 +289,45 @@ final class AccountsView: NSScrollView {
             let view = AccountView(account: account)
             accountViews.append(view)
             self.addSubview(view)
+            
+            view.deleteButton.target = self
+            view.deleteButton.action = #selector(deleteAction(_:))
+            view.upperButton.target = self
+            view.upperButton.action = #selector(upperAction(_:))
+            
+            if accountViews.count == 1 {
+                view.upperButton.isEnabled = false
+            }
         }
         
         needsLayout = true
+    }
+    
+    @objc func deleteAction(_ sender: NSButton) {
+        guard let view = sender.superview as? AccountView else { return }
+        
+        for (index, account) in SettingsData.accountList.enumerated() {
+            if account.0 == view.hostName && account.1 == view.accessToken {
+                SettingsData.accountList.remove(at: index)
+                break
+            }
+        }
+        
+        refresh()
+    }
+    
+    @objc func upperAction(_ sender: NSButton) {
+        guard let view = sender.superview as? AccountView else { return }
+        
+        for (index, account) in SettingsData.accountList.enumerated() {
+            if account.0 == view.hostName && account.1 == view.accessToken {
+                SettingsData.accountList.remove(at: index)
+                SettingsData.accountList.insert(account, at: index - 1)
+                break
+            }
+        }
+        
+        refresh()
     }
     
     override func layout() {
@@ -312,9 +348,15 @@ private final class AccountView: NSView {
     private let iconView = MyImageView()
     private let hostLabel = CATextLayer()
     private let idLabel = CATextLayer()
-    private let deleteButton = NSButton()
+    let deleteButton = NSButton()
+    let upperButton = NSButton()
+    let hostName: String
+    let accessToken: String
     
     init(account: (String, String)) {
+        self.hostName = account.0
+        self.accessToken = account.1
+        
         super.init(frame: SettingsWindow.contentRect)
         
         self.wantsLayer = true
@@ -323,6 +365,7 @@ private final class AccountView: NSView {
         self.layer?.addSublayer(hostLabel)
         self.layer?.addSublayer(idLabel)
         self.addSubview(deleteButton)
+        self.addSubview(upperButton)
         
         setProperties(account: account)
     }
@@ -349,6 +392,9 @@ private final class AccountView: NSView {
         deleteButton.title = I18n.get("BUTTON_DELETE")
         deleteButton.bezelStyle = .roundRect
         
+        upperButton.title = "▲"
+        upperButton.bezelStyle = .roundRect
+        
         if let imageUrl = SettingsData.accountIconUrl(accessToken: account.1) {
             ImageCache.image(urlStr: imageUrl, isTemp: false, isSmall: true) { [weak self] image, url in
                 self?.iconView.image = image
@@ -372,9 +418,14 @@ private final class AccountView: NSView {
                                     width: 250,
                                     height: 20)
         
-        self.deleteButton.frame = NSRect(x: 310,
+        self.deleteButton.frame = NSRect(x: 260,
                                          y: 10,
-                                         width: 80,
+                                         width: 70,
                                          height: 30)
+        
+        self.upperButton.frame = NSRect(x: 350,
+                                        y: 15,
+                                        width: 30,
+                                        height: 20)
     }
 }

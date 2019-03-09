@@ -602,7 +602,11 @@ final class TimeLineViewCell: NSView {
             for imageView in self.imageViews {
                 imageView.isHidden = true
             }
-            self.showMoreButton?.title = I18n.get("BUTTON_SHOW_MORE")
+            let attributedTitle = NSMutableAttributedString(string: I18n.get("BUTTON_SHOW_MORE"))
+            attributedTitle.addAttribute(NSAttributedString.Key.foregroundColor,
+                                         value: ThemeColor.nameColor,
+                                         range: NSRange(location: 0, length: attributedTitle.length))
+            self.showMoreButton?.attributedTitle = attributedTitle
             return
         }
         
@@ -611,7 +615,11 @@ final class TimeLineViewCell: NSView {
             imageView.isHidden = false
         }
         
-        self.showMoreButton?.title = I18n.get("BUTTON_HIDE_REDO")
+        let attributedTitle = NSMutableAttributedString(string: I18n.get("BUTTON_HIDE_REDO"))
+        attributedTitle.addAttribute(NSAttributedString.Key.foregroundColor,
+                                     value: ThemeColor.nameColor,
+                                     range: NSRange(location: 0, length: attributedTitle.length))
+        self.showMoreButton?.attributedTitle = attributedTitle
         
         if !TimeLineViewCell.showMoreList.contains(self.id) && self.id != "" {
             TimeLineViewCell.showMoreList.append(self.id)

@@ -426,6 +426,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 let spolerTextLabel = MyTextField()
                 spolerTextLabel.stringValue = data.spoiler_text ?? ""
                 spolerTextLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
+                spolerTextLabel.textColor = ThemeColor.messageColor
                 //spolerTextLabel.numberOfLines = 0
                 spolerTextLabel.lineBreakMode = .byCharWrapping
                 spolerTextLabel.frame.size.width = tableView.frame.width - 70
@@ -1216,8 +1217,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         // もっと見るの場合
         if (data.sensitive == 1 && data.mediaData != nil) || (data.spoiler_text != "" && data.spoiler_text != nil) {
             cell.showMoreButton = NSButton()
-            cell.showMoreButton?.title = I18n.get("BUTTON_SHOW_MORE")
-            //cell.showMoreButton?.setTitleColor(ThemeColor.nameColor, for: .normal)
+            let attributedTitle = NSMutableAttributedString(string: I18n.get("BUTTON_SHOW_MORE"))
+            attributedTitle.addAttribute(NSAttributedString.Key.foregroundColor,
+                                         value: ThemeColor.nameColor,
+                                         range: NSRange(location: 0, length: attributedTitle.length))
+            cell.showMoreButton?.attributedTitle = attributedTitle
             cell.showMoreButton?.target = cell
             cell.showMoreButton?.action = #selector(cell.showMoreAction)
             cell.showMoreButton?.isBordered = false
