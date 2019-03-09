@@ -51,9 +51,11 @@ final class MainWindow: NSWindow {
         setFrame()
         window.makeKeyAndOrderFront(window)
         
-        let vc = MainViewController()
-        window.contentViewController = vc
-        window.contentView = vc.view
+        DispatchQueue.main.async {
+            let vc = MainViewController()
+            window.contentViewController = vc
+            window.contentView = vc.view
+        }
     }
     
     private static func setFrame() {

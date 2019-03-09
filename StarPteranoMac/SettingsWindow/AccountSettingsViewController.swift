@@ -314,6 +314,8 @@ final class AccountsView: NSScrollView {
         }
         
         refresh()
+        
+        MainWindow.window?.close()
     }
     
     @objc func upperAction(_ sender: NSButton) {
@@ -328,6 +330,8 @@ final class AccountsView: NSScrollView {
         }
         
         refresh()
+        
+        MainWindow.window?.close()
     }
     
     override func layout() {

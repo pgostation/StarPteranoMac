@@ -65,6 +65,12 @@ final class Menu: NSObject, NSMenuDelegate {
             let fileMenu = NSMenu(title: I18n.get("File"))
             
             do {
+                let menuItem = NSMenuItem(title: I18n.get("New window"), action: #selector(doAppMenu(_:)), keyEquivalent: "n")
+                menuItem.target = menuTarget
+                fileMenu.addItem(menuItem)
+            }
+            
+            do {
                 let menuItem = NSMenuItem(title: I18n.get("Close"), action: #selector(doAppMenu(_:)), keyEquivalent: "w")
                 menuItem.target = menuTarget
                 fileMenu.addItem(menuItem)
@@ -238,6 +244,9 @@ final class Menu: NSObject, NSMenuDelegate {
         }
         else if item.title == I18n.get("About StarPterano") {
             NSApplication.shared.orderFrontStandardAboutPanel(nil)
+        }
+        else if item.title == I18n.get("New window") {
+            MainWindow.show()
         }
         else if item.title == I18n.get("Close") {
             NSApplication.shared.keyWindow?.close()
