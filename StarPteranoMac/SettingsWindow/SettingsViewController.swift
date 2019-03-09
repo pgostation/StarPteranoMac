@@ -9,6 +9,7 @@
 import Cocoa
 
 final class SettingsViewController: NSViewController {
+    static weak var instance: SettingsViewController?
     static let width: CGFloat = 128
     
     init() {
@@ -22,7 +23,10 @@ final class SettingsViewController: NSViewController {
         view.uiButton.action = #selector(uiAction)
         view.notifyButton.action = #selector(notifyAction)
         view.searchButton.action = #selector(searchAction)
+        view.colorButton.action = #selector(colorAction)
         view.detailButton.action = #selector(detailAction)
+        
+        SettingsViewController.instance = self
     }
     
     required init?(coder: NSCoder) {
@@ -104,6 +108,21 @@ final class SettingsViewController: NSViewController {
         self.view.addSubview(vc.view)
     }
     
+    @objc func colorAction() {
+        guard let view = self.view as? SettingsView else { return }
+        DispatchQueue.main.async {
+            view.clearHighlight()
+            view.colorButton.highlight(true)
+        }
+        
+        self.children.first?.view.removeFromSuperview()
+        self.children.first?.removeFromParent()
+        
+        let vc = ColorSettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
+    }
+    
     @objc func detailAction() {
         guard let view = self.view as? SettingsView else { return }
         DispatchQueue.main.async {
@@ -127,6 +146,7 @@ private class SettingsView: NSView {
     let uiButton = NSButton()
     let notifyButton = NSButton()
     let searchButton = NSButton()
+    let colorButton = NSButton()
     let detailButton = NSButton()
     
     init() {
@@ -140,6 +160,7 @@ private class SettingsView: NSView {
         self.addSubview(uiButton)
         self.addSubview(notifyButton)
         self.addSubview(searchButton)
+        self.addSubview(colorButton)
         self.addSubview(detailButton)
         
         setProperties()
@@ -173,6 +194,9 @@ private class SettingsView: NSView {
         searchButton.title = I18n.get("SETTINGS_SEARCH")
         setButtonStyle(button: searchButton)
         
+        colorButton.title = I18n.get("SETTINGS_COLOR")
+        setButtonStyle(button: colorButton)
+        
         detailButton.title = I18n.get("SETTINGS_DETAIL")
         setButtonStyle(button: detailButton)
     }
@@ -183,6 +207,7 @@ private class SettingsView: NSView {
         uiButton.highlight(false)
         notifyButton.highlight(false)
         searchButton.highlight(false)
+        colorButton.highlight(false)
         detailButton.highlight(false)
     }
     
@@ -219,8 +244,13 @@ private class SettingsView: NSView {
                                     width: SettingsViewController.width,
                                     height: height)*/
         
+        colorButton.frame = NSRect(x: 0,
+                                   y: SettingsWindow.contentRect.height - height * 5,
+                                   width: SettingsViewController.width,
+                                   height: height)
+        
         detailButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 5,
+                                    y: SettingsWindow.contentRect.height - height * 6,
                                     width: SettingsViewController.width,
                                     height: height)
     }

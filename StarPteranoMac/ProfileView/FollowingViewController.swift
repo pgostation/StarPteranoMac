@@ -375,7 +375,7 @@ private final class FollowingTableCell: NSView {
             self.nameLabel.isUserInteractionEnabled = true
         }*/
         
-        self.followButton.layer?.backgroundColor = ThemeColor.opaqueButtonsBgColor.cgColor
+        self.followButton.layer?.backgroundColor = ThemeColor.detailButtonsColor.cgColor
         //self.followButton.setTitleColor(ThemeColor.idColor, for: .normal)
         self.followButton.layer?.cornerRadius = 8
         self.followButton.alphaValue = 0

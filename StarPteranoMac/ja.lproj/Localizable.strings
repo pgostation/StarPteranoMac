@@ -69,6 +69,7 @@
 "SETTINGS_UI" = "UI";
 "SETTINGS_NOTIFICATIONS" = "通知";
 "SETTINGS_SEARCH" = "検索";
+"SETTINGS_COLOR" = "色";
 "SETTINGS_DETAIL" = "詳細";
 
 // アカウント設定
@@ -109,6 +110,29 @@
 "BUTTON_LICENSE" = "使用ライブラリの著作権情報";
 "BUTTON_USE_STORAGE_CACHE" = "ストレージに画像をキャッシュする";
 "LABEL_RAMCACHECOUNT" = "メモリ(RAM)の画像キャッシュ数";
+
+// 色設定
+"SETTINGS_COLOR_USE_CUSTOM" = "カスタム色を使う";
+"SETTINGS_COLOR_RESET" = "リセット";
+"viewBgColor" = "基本背景";
+"contrastColor" = "その他文字";
+"cellBgColor" = "トゥート背景";
+"messageColor" = "本文の文字";
+"idColor" = "アカウントID";
+"dateColor" = "日時";
+"linkTextColor" = "リンク文字";
+"nameColor" = "スクリーンネーム";
+"detailButtonsColor" = "ボタン1";
+"detailButtonsHiliteColor" = "ボタン2";
+"selectedBgColor" = "トゥート背景(選択)";
+"mentionedMeBgColor" = "トゥート背景(選択かつ返信)";
+"sameAccountBgColor" = "トゥート背景(選択アカウント)";
+"mentionedBgColor" = "トゥート背景(返信先)";
+"mentionedSameBgColor" = "トゥート背景(返信先アカウント)";
+"toMentionBgColor" = "トゥート背景(返信先が選択中アカウント)";
+"directBar" = "ダイレクトメッセージ";
+"privateBar" = "フォロワー限定";
+"unlistedBar" = "ホーム";
 
 // 詳細アクション
 "ACTION_OPEN_WITH_BROWSER" = "ブラウザで開く";

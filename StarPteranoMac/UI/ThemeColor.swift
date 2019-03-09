@@ -25,10 +25,10 @@ final class ThemeColor {
     // 各種ボタンの色
     static var detailButtonsColor = NSColor.white
     static var detailButtonsHiliteColor = NSColor.white
-    static var mainButtonsBgColor = NSColor.white
-    static var mainButtonsTitleColor = NSColor.white
-    static var buttonBorderColor = NSColor.white
-    static var opaqueButtonsBgColor = NSColor.white
+    //static var mainButtonsBgColor = NSColor.white
+    //static var mainButtonsTitleColor = NSColor.white
+    //static var buttonBorderColor = NSColor.white
+    //static var opaqueButtonsBgColor = NSColor.white
     
     // セル選択色
     static var selectedBgColor = NSColor(red: 0.78, green: 1.0, blue: 0.78, alpha: 1)
@@ -44,6 +44,41 @@ final class ThemeColor {
     static var unlistedBar = NSColor.white
     
     static func change() {
+        if CustomColor.useCustomColor {
+            setOriginalColor()
+            
+            // カスタムカラーを使う
+            viewBgColor = CustomColor.viewBgColor
+            contrastColor = CustomColor.contrastColor
+            cellBgColor = CustomColor.cellBgColor
+            separatorColor = NSColor.darkGray
+            
+            messageColor = CustomColor.messageColor
+            idColor = CustomColor.idColor
+            dateColor = CustomColor.dateColor
+            linkTextColor = CustomColor.linkTextColor
+            nameColor = CustomColor.nameColor
+            
+            detailButtonsColor = CustomColor.detailButtonsColor
+            detailButtonsHiliteColor = CustomColor.detailButtonsHiliteColor
+            
+            selectedBgColor = CustomColor.selectedBgColor
+            mentionedMeBgColor = CustomColor.mentionedMeBgColor
+            sameAccountBgColor = CustomColor.sameAccountBgColor
+            mentionedBgColor = CustomColor.mentionedBgColor
+            mentionedSameBgColor = CustomColor.mentionedSameBgColor
+            toMentionBgColor = CustomColor.toMentionBgColor
+            
+            directBar = CustomColor.directBar
+            privateBar = CustomColor.privateBar
+            unlistedBar = CustomColor.unlistedBar
+        }
+        else {
+            setOriginalColor()
+        }
+    }
+    
+    private static func setOriginalColor() {
         if SettingsData.isDarkMode {
             // ダークモード
             viewBgColor = NSColor.black
@@ -67,10 +102,10 @@ final class ThemeColor {
             
             detailButtonsColor = NSColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
             detailButtonsHiliteColor = NSColor(red: 0.5, green: 1.0, blue: 0.6, alpha: 1)
-            mainButtonsBgColor = NSColor(red: 0.20, green: 0.25, blue: 0.0, alpha: 0.4)
-            mainButtonsTitleColor = NSColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 1)
-            buttonBorderColor = NSColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 0.8)
-            opaqueButtonsBgColor = NSColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
+            //mainButtonsBgColor = NSColor(red: 0.20, green: 0.25, blue: 0.0, alpha: 0.4)
+            //mainButtonsTitleColor = NSColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 1)
+            //buttonBorderColor = NSColor(red: 0.7, green: 1.0, blue: 0.1, alpha: 0.8)
+            //opaqueButtonsBgColor = NSColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
             
             selectedBgColor = NSColor(red: 0.20, green: 0.25, blue: 0.00, alpha: 1)
             mentionedMeBgColor = NSColor(red: 0.16, green: 0.20, blue: 0.03, alpha: 1)
@@ -97,10 +132,10 @@ final class ThemeColor {
             
             detailButtonsColor = NSColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)
             detailButtonsHiliteColor = NSColor(red: 0.0, green: 1.0, blue: 0.0, alpha: 1)
-            mainButtonsBgColor = NSColor(red: 0.88, green: 1.0, blue: 0.68, alpha: 0.4)
-            mainButtonsTitleColor = NSColor(red: 0.2, green: 0.4, blue: 0.0, alpha: 1)
-            buttonBorderColor = NSColor(red: 0.2, green: 0.4, blue: 0.0, alpha: 0.8)
-            opaqueButtonsBgColor = NSColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1)
+            //mainButtonsBgColor = NSColor(red: 0.88, green: 1.0, blue: 0.68, alpha: 0.4)
+            //mainButtonsTitleColor = NSColor(red: 0.2, green: 0.4, blue: 0.0, alpha: 1)
+            //buttonBorderColor = NSColor(red: 0.2, green: 0.4, blue: 0.0, alpha: 0.8)
+            //opaqueButtonsBgColor = NSColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1)
             
             selectedBgColor = NSColor(red: 0.88, green: 1.0, blue: 0.68, alpha: 1)
             mentionedMeBgColor = NSColor(red: 0.90, green: 0.98, blue: 0.75, alpha: 1)

@@ -327,10 +327,10 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         // フォロー関連
         actionButton.title = "…"
         //actionButton.titleLabel?.font = NSFont.boldSystemFont(ofSize: 32)
-        actionButton.layer?.backgroundColor = ThemeColor.mainButtonsBgColor.cgColor
+        actionButton.layer?.backgroundColor = ThemeColor.detailButtonsColor.cgColor
         //actionButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
         actionButton.layer?.cornerRadius = 10
-        actionButton.layer?.borderColor = ThemeColor.buttonBorderColor.cgColor
+        actionButton.layer?.borderColor = ThemeColor.detailButtonsColor.cgColor
         actionButton.layer?.borderWidth = 1
         actionButton.alphaValue = 0
         

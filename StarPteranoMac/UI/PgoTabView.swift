@@ -220,9 +220,9 @@ final class PgoTabView: NSTabView {
             if isSelected {
                 itemViews[index].layer?.borderWidth = 1
                 if _bold {
-                    itemViews[index].layer?.borderColor = ThemeColor.buttonBorderColor.cgColor
+                    itemViews[index].layer?.borderColor = ThemeColor.nameColor.cgColor
                 } else {
-                    itemViews[index].layer?.borderColor = ThemeColor.buttonBorderColor.withAlphaComponent(0.3).cgColor
+                    itemViews[index].layer?.borderColor = ThemeColor.nameColor.withAlphaComponent(0.3).cgColor
                 }
             } else {
                 itemViews[index].layer?.borderWidth = 0

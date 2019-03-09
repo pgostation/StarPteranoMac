@@ -12,6 +12,8 @@
 		120B0ED7222EA0FB00BC3181 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */; };
 		120B0ED92231455E00BC3181 /* HelperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0ED82231455E00BC3181 /* HelperView.swift */; };
 		120B0EDB2231563100BC3181 /* HashtagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDA2231563100BC3181 /* HashtagCache.swift */; };
+		120B0EDD2233D36100BC3181 /* ColorSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */; };
+		120B0EDF2233DBEE00BC3181 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDE2233DBEE00BC3181 /* CustomColor.swift */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
@@ -96,6 +98,8 @@
 		120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		120B0ED82231455E00BC3181 /* HelperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperView.swift; sourceTree = "<group>"; };
 		120B0EDA2231563100BC3181 /* HashtagCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagCache.swift; sourceTree = "<group>"; };
+		120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSettingsViewController.swift; sourceTree = "<group>"; };
+		120B0EDE2233DBEE00BC3181 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -329,6 +333,7 @@
 				12C044F92220FF9D00BE3A50 /* UISettingsViewController.swift */,
 				12C044FB2220FFAA00BE3A50 /* NotifySettingsViewController.swift */,
 				12C044FD2220FFB700BE3A50 /* SearchSettingsViewController.swift */,
+				120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */,
 				12C044FF2220FFC300BE3A50 /* DetailSettingsViewController.swift */,
 				12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */,
 				1243D38F2229FF2C001DA334 /* License.text */,
@@ -363,6 +368,7 @@
 				12C044F522202A2700BE3A50 /* EmojiData.swift */,
 				120B0EC8222C05FE00BC3181 /* ListData.swift */,
 				120B0EDA2231563100BC3181 /* HashtagCache.swift */,
+				120B0EDE2233DBEE00BC3181 /* CustomColor.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -551,6 +557,7 @@
 				128751B62184817000BC8828 /* TimeLineView.swift in Sources */,
 				12C044FC2220FFAA00BE3A50 /* NotifySettingsViewController.swift in Sources */,
 				12C044FA2220FF9D00BE3A50 /* UISettingsViewController.swift in Sources */,
+				120B0EDF2233DBEE00BC3181 /* CustomColor.swift in Sources */,
 				12C044F42220193B00BE3A50 /* EmojiView.swift in Sources */,
 				128751BA2184830200BC8828 /* ThemeColor.swift in Sources */,
 				129F4345217F4F18008E856D /* SettingsWindow.swift in Sources */,
@@ -575,6 +582,7 @@
 				1243D3862225796A001DA334 /* FollowingViewController.swift in Sources */,
 				128751B021847D9C00BC8828 /* SubViewController.swift in Sources */,
 				128751C421849F1400BC8828 /* DecodeToot.swift in Sources */,
+				120B0EDD2233D36100BC3181 /* ColorSettingsViewController.swift in Sources */,
 				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
 				128751D12185445A00BC8828 /* TootView.swift in Sources */,
 				1243D38A22257983001DA334 /* ProfileEditViewController.swift in Sources */,
