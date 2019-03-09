@@ -118,7 +118,11 @@ final class NotificationTableCell: NSView {
         
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         
-        self.replyButton.title = "↩︎"
+        let attributedTitle = NSMutableAttributedString(string: "↩︎")
+        attributedTitle.addAttribute(NSAttributedString.Key.foregroundColor,
+                                     value: ThemeColor.detailButtonsColor,
+                                     range: NSRange(location: 0, length: attributedTitle.length))
+        self.replyButton.attributedTitle = attributedTitle
         self.replyButton.target = self
         self.replyButton.action = #selector(self.replyAction)
         self.replyButton.isBordered = false

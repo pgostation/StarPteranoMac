@@ -102,6 +102,17 @@ final class MainWindow: NSWindow {
                 }
                 else if event.modifierFlags.contains(.shift) {
                     // 左カラムに移動
+                    let subVCList = MainViewController.instance?.subVCList ?? []
+                    for (index, subVC) in subVCList.enumerated() {
+                        if subVC.tabView.bold {
+                            if index > 0 {
+                                subVCList[index - 1].tabCoverView.mouseDown(with: NSEvent())
+                            } else {
+                                subVCList[subVCList.count - 1].tabCoverView.mouseDown(with: NSEvent())
+                            }
+                            break
+                        }
+                    }
                 }
             case 124: // right arrow
                 if event.modifierFlags.contains(.command) {
@@ -115,6 +126,17 @@ final class MainWindow: NSWindow {
                 }
                 else if event.modifierFlags.contains(.shift) {
                     // 右カラムに移動
+                    let subVCList = MainViewController.instance?.subVCList ?? []
+                    for (index, subVC) in subVCList.enumerated() {
+                        if subVC.tabView.bold {
+                            if index < subVCList.count - 1 {
+                                subVCList[index + 1].tabCoverView.mouseDown(with: NSEvent())
+                            } else {
+                                subVCList[0].tabCoverView.mouseDown(with: NSEvent())
+                            }
+                            break
+                        }
+                    }
                 }
             default:
                 break

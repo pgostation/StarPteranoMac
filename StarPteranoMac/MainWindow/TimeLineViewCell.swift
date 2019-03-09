@@ -462,12 +462,13 @@ final class TimeLineViewCell: NSView {
             menu.addItem(deleteItem)
         }
         
+        /*
         // 通報する
         let reportItem = NSMenuItem(title: I18n.get("ACTION_REPORT_TOOT"),
                                       action: #selector(reportAction),
                                       keyEquivalent: "")
         reportItem.target = self
-        menu.addItem(reportItem)
+        menu.addItem(reportItem)*/
         
         // ペーストボードにコピー
         let copyItem = NSMenuItem(title: I18n.get("ACTION_COPY_TOOT"),

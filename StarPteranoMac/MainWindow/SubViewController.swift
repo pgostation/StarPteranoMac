@@ -13,7 +13,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
     private let accessToken: String
     let tootVC: TootViewController
     let tabView = PgoTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
-    private let tabCoverView = CoverView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
+    let tabCoverView = CoverView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
     
     init(hostName: String, accessToken: String) {

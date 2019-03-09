@@ -93,6 +93,7 @@ final class TootView: NSView {
         //spoilerTextField.tag = UIUtils.responderTag2
         spoilerTextField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         spoilerTextField.textContainerInset = NSSize.init(width: 1, height: 5)
+        spoilerTextField.insertionPointColor = ThemeColor.contrastColor
         
         if imageCheckView.isHidden {
             DispatchQueue.main.async {
@@ -112,6 +113,7 @@ final class TootView: NSView {
         //textField.tag = UIUtils.responderTag
         textField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         textField.textContainerInset = NSSize.init(width: 1, height: 5)
+        textField.insertionPointColor = ThemeColor.contrastColor
         
         if !SettingsData.isTransparentWindow {
             inputBar.layer?.backgroundColor = ThemeColor.cellBgColor.withAlphaComponent(0.9).cgColor
