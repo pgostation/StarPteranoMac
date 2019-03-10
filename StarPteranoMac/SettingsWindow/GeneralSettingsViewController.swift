@@ -37,7 +37,15 @@ final class GeneralSettingsViewController: NSViewController {
             
             MainViewController.refreshAllTimeLineViews()
         })
-        self.present(vc, asPopoverRelativeTo: view.protectModeButton.bounds, of: view.protectModeButton, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
+        if #available(OSX 10.14, *) {
+            self.present(vc, asPopoverRelativeTo: view.protectModeButton.bounds, of: view.protectModeButton, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
+        } else {
+            self.addChild(vc)
+            self.view.addSubview(vc.view)
+            vc.view.frame.origin = NSPoint(
+                x: view.protectModeButton.frame.midX - vc.view.frame.width / 2,
+                y: view.protectModeButton.frame.minY - vc.view.frame.height)
+        }
     }
     
     @objc func useStreamingAction(_ sender: NSButton) {

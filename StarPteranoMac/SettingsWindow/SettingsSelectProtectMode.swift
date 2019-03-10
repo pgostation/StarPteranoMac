@@ -14,7 +14,15 @@ final class SettingsSelectProtectMode {
             if accessToken == subVC.tootVC.accessToken {
                 let vc = ProtectModeViewController()
                 vc.view = ProtectModeView(vc: vc, callback: callback)
-                subVC.present(vc, asPopoverRelativeTo: fromView.bounds, of: fromView, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
+                if #available(OSX 10.14, *) {
+                    subVC.present(vc, asPopoverRelativeTo: fromView.bounds, of: fromView, preferredEdge: NSRectEdge.minY, behavior: NSPopover.Behavior.transient)
+                } else {
+                    subVC.addChild(vc)
+                    subVC.view.addSubview(vc.view)
+                    vc.view.frame.origin = NSPoint(
+                        x: fromView.frame.midX - vc.view.frame.width / 2,
+                        y: subVC.view.frame.maxY - 60 - vc.view.frame.height)
+                }
                 break
             }
         }
@@ -86,22 +94,42 @@ final class ProtectModeView: NSView {
     
     @objc func publicAction() {
         callback(SettingsData.ProtectMode.publicMode)
-        vc?.dismiss(nil)
+        if #available(OSX 10.14, *) {
+            vc?.dismiss(nil)
+        } else  {
+            vc?.removeFromParent()
+            vc?.view.removeFromSuperview()
+        }
     }
     
     @objc func unlistedAction() {
         callback(SettingsData.ProtectMode.unlisted)
-        vc?.dismiss(nil)
+        if #available(OSX 10.14, *) {
+            vc?.dismiss(nil)
+        } else  {
+            vc?.removeFromParent()
+            vc?.view.removeFromSuperview()
+        }
     }
     
     @objc func privateAction() {
         callback(SettingsData.ProtectMode.privateMode)
-        vc?.dismiss(nil)
+        if #available(OSX 10.14, *) {
+            vc?.dismiss(nil)
+        } else  {
+            vc?.removeFromParent()
+            vc?.view.removeFromSuperview()
+        }
     }
     
     @objc func directAction() {
         callback(SettingsData.ProtectMode.direct)
-        vc?.dismiss(nil)
+        if #available(OSX 10.14, *) {
+            vc?.dismiss(nil)
+        } else  {
+            vc?.removeFromParent()
+            vc?.view.removeFromSuperview()
+        }
     }
     
     override func layout() {
