@@ -70,7 +70,10 @@ final class MainViewController: NSViewController {
         var maxIndex = -1
         var maxWidth: CGFloat = -1
         for (index, account) in SettingsData.accountList.enumerated() {
-            let width = max(48, CGFloat(SettingsData.viewWidth(accessToken: account.1) ?? 0))
+            var width = max(48, CGFloat(SettingsData.viewWidth(accessToken: account.1) ?? 0))
+            if SettingsData.accountList.count >= 2 {
+                width = min(width, size.width - 48)
+            }
             widthList.append(width)
             sum += width
             if width > maxWidth {

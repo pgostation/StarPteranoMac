@@ -245,7 +245,7 @@ final class DecodeToot {
         let text = name ?? ""
         
         let attributedText = NSMutableAttributedString(string: text)
-        attributedText.addAttributes([NSAttributedString.Key.foregroundColor : ThemeColor.messageColor],
+        attributedText.addAttributes([NSAttributedString.Key.foregroundColor : textField?.textColor ?? ThemeColor.messageColor],
                                      range: NSRange(location: 0, length: attributedText.length))
         
         if let emojis = emojis {

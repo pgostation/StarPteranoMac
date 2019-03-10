@@ -9,6 +9,8 @@
 import Cocoa
 
 final class ImageWindow: NSPanel {
+    static var windowController = NSWindowController()
+    
     init(contentViewController: NSViewController) {
         super.init(contentRect: contentViewController.view.frame,
                    styleMask: NSWindow.StyleMask.closable,
@@ -37,11 +39,15 @@ final class ImageWindow: NSPanel {
     }
     
     func show() {
+        ImageWindow.windowController.window = self
+        
         self.makeKeyAndOrderFront(self)
     }
     
     override func close() {
         self.orderOut(self)
+        
+        ImageWindow.windowController.window = nil
     }
     
     @objc func moved() {

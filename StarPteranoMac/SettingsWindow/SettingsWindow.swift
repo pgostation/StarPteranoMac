@@ -9,6 +9,7 @@
 import Cocoa
 
 final class SettingsWindow: NSWindow {
+    static var windowController = NSWindowController()
     static weak var window: SettingsWindow?
     static let contentRect = NSRect(x: 0, y: 0, width: 640, height: 480)
     
@@ -30,7 +31,7 @@ final class SettingsWindow: NSWindow {
         let window = SettingsWindow(contentRect: contentRect,
                                     styleMask: NSWindow.StyleMask.closable,
                                     backing: NSWindow.BackingStoreType.buffered,
-                                    defer: true)
+                                    defer: false)
         window.styleMask.insert(NSWindow.StyleMask.titled)
         if #available(OSX 10.12, *) {
             window.tabbingMode = .disallowed
@@ -39,6 +40,8 @@ final class SettingsWindow: NSWindow {
         self.window = window
         setFrame()
         window.makeKeyAndOrderFront(window)
+        
+        windowController.window = window
         
         let vc = SettingsViewController()
         window.contentViewController = vc
@@ -58,6 +61,8 @@ final class SettingsWindow: NSWindow {
     
     override func close() {
         self.orderOut(self)
+        
+        SettingsWindow.windowController.window = nil
     }
     
     @objc func moved() {

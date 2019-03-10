@@ -222,6 +222,8 @@ final class AccountSettingsView: NSView {
             self.authButton.isHidden = true
             self.inputCodeField.isHidden = false
             self.codeEnterButton.isHidden = false
+            
+            self.inputCodeField.stringValue = ""
         }
     }
     
@@ -276,31 +278,31 @@ final class AccountsView: NSScrollView {
     }
     
     func refresh() {
-        let accountList = SettingsData.accountList
-        
-        for view in accountViews {
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            let accountList = SettingsData.accountList
+            
+            for view in self.accountViews {
                 view.removeFromSuperview()
             }
-        }
-        accountViews = []
-        
-        for account in accountList {
-            let view = AccountView(account: account)
-            accountViews.append(view)
-            self.addSubview(view)
+            self.accountViews = []
             
-            view.deleteButton.target = self
-            view.deleteButton.action = #selector(deleteAction(_:))
-            view.upperButton.target = self
-            view.upperButton.action = #selector(upperAction(_:))
-            
-            if accountViews.count == 1 {
-                view.upperButton.isEnabled = false
+            for account in accountList {
+                let view = AccountView(account: account)
+                self.accountViews.append(view)
+                self.addSubview(view)
+                
+                view.deleteButton.target = self
+                view.deleteButton.action = #selector(self.deleteAction(_:))
+                view.upperButton.target = self
+                view.upperButton.action = #selector(self.upperAction(_:))
+                
+                if self.accountViews.count == 1 {
+                    view.upperButton.isEnabled = false
+                }
             }
+            
+            self.needsLayout = true
         }
-        
-        needsLayout = true
     }
     
     @objc func deleteAction(_ sender: NSButton) {

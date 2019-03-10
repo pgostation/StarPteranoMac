@@ -9,6 +9,7 @@
 import Cocoa
 
 final class MainWindow: NSWindow {
+    static var windowController = NSWindowController()
     static weak var window: MainWindow?
     
     private override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
@@ -40,10 +41,12 @@ final class MainWindow: NSWindow {
         let window = MainWindow(contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
                                     styleMask: NSWindow.StyleMask.closable,
                                     backing: NSWindow.BackingStoreType.buffered,
-                                    defer: true)
+                                    defer: false)
         window.styleMask.insert(NSWindow.StyleMask.titled)
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
         window.styleMask.insert(NSWindow.StyleMask.resizable)
+        
+        windowController.window = window
         
         if #available(OSX 10.12, *) {
             window.tabbingMode = .disallowed
@@ -82,6 +85,8 @@ final class MainWindow: NSWindow {
     
     override func close() {
         self.orderOut(self)
+        
+        MainWindow.windowController.window = nil
     }
     
     @objc func moved() {
