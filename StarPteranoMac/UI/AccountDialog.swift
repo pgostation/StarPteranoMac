@@ -73,7 +73,7 @@ final class AccountDialog: NSView, NSTextFieldDelegate {
             MainWindow.window?.attachedSheet?.close()
             callback?(textField, true)
         }
-        return true
+        return false
     }
     
     override func layout() {

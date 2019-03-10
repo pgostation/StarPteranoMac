@@ -1711,7 +1711,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         if !notSelect {
             timelineView.selectedDate = Date()
-            if let tabView = (timelineView.superview?.superview?.superview?.viewWithTag(5823) as? PgoTabView) {
+            if let tabView = (timelineView.superview?.superview?.superview?.viewWithTag(5823) as? PgoTabView) ?? (timelineView.superview?.superview?.superview?.superview?.superview?.viewWithTag(5823) as? PgoTabView) {
                 if !tabView.bold {
                     MainViewController.instance?.unboldAll()
                     tabView.bold = true
@@ -1729,10 +1729,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
         
         if timelineView.type == .user {
-            index -= 1
-            if index < 0 {
-                return
-            }
+            index = max(0, index - 1)
         }
         
         if !notSelect && self.selectedRow == row {

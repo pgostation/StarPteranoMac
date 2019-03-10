@@ -725,14 +725,10 @@ class TimeLineView: NSTableView {
                 let textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
                 MainWindow.window?.makeFirstResponder(textField)
             }
-        case 53: //esc
+        case 53: // esc
             // 選択解除
-            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
-                if let tlView = tlVC.view as? TimeLineView {
-                    tlView.model.selectedRow = nil
-                    tlView.reloadData()
-                }
-            }
+            self.model.selectedRow = nil
+            self.reloadData()
         case 36, 52, 76: // return
             // リプライ
             if modifierFlags.contains(NSEvent.ModifierFlags.shift) {
@@ -800,6 +796,10 @@ class TimeLineView: NSTableView {
                     }
                 }
             }
+        case 29: // 0
+            // タイムラインの一番上に移動
+            self.scroll(NSPoint.zero)
+            self.model.selectRow(timelineView: self, row: 0)
         default:
             break
         }

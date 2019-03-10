@@ -149,6 +149,11 @@ final class MainWindow: NSWindow {
                         }
                     }
                 }
+            case 13: // w
+                // サブビューを閉じる
+                if let lastVC = tlVC.parent?.children.last as? SubTimeLineViewController {
+                    lastVC.closeAction()
+                }
             default:
                 break
             }
