@@ -39,6 +39,27 @@ final class HelperViewManager {
     static func close() {
         instance?.removeFromSuperview()
     }
+    
+    static func left() -> Bool {
+        if instance == nil { return false }
+        
+        instance?.left()
+        return true
+    }
+    
+    static func right() -> Bool {
+        if instance == nil { return false }
+        
+        instance?.right()
+        return true
+    }
+    
+    static func select() -> Bool {
+        if instance == nil { return false }
+        
+        instance?.select()
+        return true
+    }
 }
 
 private class HelperView: NSView {
@@ -52,6 +73,7 @@ private class HelperView: NSView {
     private let mode: HelperViewManager.HelperMode
     private weak var textView: NSTextView?
     private let location: Int
+    private var selectedNumber = 0
     
     init(hostName: String, accessToken: String, mode: HelperViewManager.HelperMode, textView: NSTextView, location: Int) {
         self.hostName = hostName
@@ -117,6 +139,12 @@ private class HelperView: NSView {
             setEmojiLabels(text: text)
         case .hashtag:
             setHashtagLabels(text: text)
+        }
+        
+        DispatchQueue.main.async {
+            if self.tapViews.count > 0 {
+                self.tapViews[min(self.tapViews.count - 1, self.selectedNumber)].label.layer?.backgroundColor = ThemeColor.selectedBgColor.cgColor
+            }
         }
     }
     
@@ -297,6 +325,39 @@ private class HelperView: NSView {
         }
         
         self.needsLayout = true
+    }
+    
+    // キー操作から左
+    func left() {
+        if tapViews.count == 0 { return }
+        
+        tapViews[min(tapViews.count - 1, selectedNumber)].label.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        
+        if selectedNumber > 0 {
+            selectedNumber -= 1
+        }
+        
+        tapViews[selectedNumber].label.layer?.backgroundColor = ThemeColor.selectedBgColor.cgColor
+    }
+    
+    // キー操作から右
+    func right() {
+        if tapViews.count == 0 { return }
+        
+        tapViews[min(tapViews.count - 1, selectedNumber)].label.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
+        
+        if selectedNumber < tapViews.count - 1 {
+            selectedNumber += 1
+        }
+        
+        tapViews[selectedNumber].label.layer?.backgroundColor = ThemeColor.selectedBgColor.cgColor
+    }
+    
+    // キー操作から選択
+    func select() {
+        if selectedNumber < tapViews.count {
+            tapViews[selectedNumber].tapAction()
+        }
     }
     
     override func layout() {

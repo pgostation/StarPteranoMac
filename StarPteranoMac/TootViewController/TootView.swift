@@ -224,9 +224,35 @@ final class TootView: NSView {
     
     class TootTextView: MyTextView {
         override func keyDown(with event: NSEvent) {
-            if event.keyCode == 52 && event.modifierFlags.contains(.command) { // cmd + return
-                (self.superview as? TootView)?.target?.tootAction()
+            switch event.keyCode {
+            case 36, 52, 76: // return, enter
+                if event.modifierFlags.contains(.command) { // cmd + return
+                    // トゥート
+                    (self.superview as? TootView)?.target?.tootAction()
+                    return
+                } else {
+                    if HelperViewManager.select() {
+                        return
+                    }
+                }
+            case 48: // tab
+                // タイムラインを選択
+                self.window?.makeFirstResponder(nil)
+                if let tabView = self.superview?.superview?.superview?.viewWithTag(5823) as? PgoTabView {
+                    tabView.selectLeft()
+                    tabView.selectRight()
+                }
                 return
+            case 123: // <-
+                if HelperViewManager.left() {
+                    return
+                }
+            case 124: // ->
+                if HelperViewManager.right() {
+                    return
+                }
+            default:
+                break
             }
             super.keyDown(with: event)
         }
