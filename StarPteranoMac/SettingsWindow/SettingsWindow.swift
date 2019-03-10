@@ -41,7 +41,7 @@ final class SettingsWindow: NSWindow {
         setFrame()
         window.makeKeyAndOrderFront(window)
         
-        windowController.window = window
+        SettingsWindow.windowController.window = window
         
         let vc = SettingsViewController()
         window.contentViewController = vc
@@ -60,9 +60,12 @@ final class SettingsWindow: NSWindow {
     }
     
     override func close() {
-        self.orderOut(self)
-        
-        SettingsWindow.windowController.window = nil
+        if SettingsWindow.windowController.window != nil {
+            SettingsWindow.windowController.window = nil
+            SettingsWindow.windowController.close()
+            super.close()
+        }
+        SettingsWindow.windowController = NSWindowController()
     }
     
     @objc func moved() {

@@ -97,8 +97,10 @@ final class DetailSettingsView: NSView {
         setCheckboxStyle(button: storageCacheButton)
         storageCacheButton.state = SettingsData.useStorageCache ? .on : .off
         
-        ramCacheStepper.integerValue = SettingsData.ramCacheCount
+        ramCacheStepper.minValue = 60
         ramCacheStepper.maxValue = 999
+        ramCacheStepper.increment = 10
+        ramCacheStepper.integerValue = SettingsData.ramCacheCount
         
         ramCacheLabel.string = I18n.get("LABEL_RAMCACHECOUNT") + ": " + "\(SettingsData.ramCacheCount)"
         ramCacheLabel.fontSize = 12

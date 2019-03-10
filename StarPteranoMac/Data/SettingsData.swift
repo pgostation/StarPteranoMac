@@ -622,7 +622,7 @@ final class SettingsData {
             if value > 0 {
                 return value
             }
-            return 120
+            return 200
         }
         set(newValue) {
             if newValue > 0 {

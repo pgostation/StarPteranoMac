@@ -46,7 +46,7 @@ final class MainWindow: NSWindow {
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
         window.styleMask.insert(NSWindow.StyleMask.resizable)
         
-        windowController.window = window
+        MainWindow.windowController.window = window
         
         if #available(OSX 10.12, *) {
             window.tabbingMode = .disallowed
@@ -68,7 +68,7 @@ final class MainWindow: NSWindow {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 var message = ""
                 message += "星プテラノを起動していただきありがとうございます。"
-                message += "\n\n一番上が入力エリアです。command + returnキーで投稿できます。"
+                message += "\n\n一番上の部分が入力エリアです。command + returnキーで投稿できます。"
                 Dialog.show(message: message)
             }
         }
@@ -84,9 +84,12 @@ final class MainWindow: NSWindow {
     }
     
     override func close() {
-        self.orderOut(self)
-        
-        MainWindow.windowController.window = nil
+        if MainWindow.windowController.window != nil {
+            MainWindow.windowController.window = nil
+            MainWindow.windowController.close()
+            super.close()
+        }
+        MainWindow.windowController = NSWindowController()
     }
     
     @objc func moved() {
