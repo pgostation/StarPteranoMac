@@ -318,6 +318,7 @@ private final class FollowingTableCell: NSView {
     // 基本ビュー
     let lineLayer = CALayer()
     let iconView = NSImageView()
+    let iconCoverView = NSButton()
     let nameLabel = MyTextField()
     let idLabel = MyTextField()
     
@@ -332,6 +333,7 @@ private final class FollowingTableCell: NSView {
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
         
         self.addSubview(iconView)
+        self.addSubview(iconCoverView)
         self.addSubview(nameLabel)
         self.addSubview(idLabel)
         self.addSubview(followButton)
@@ -351,29 +353,32 @@ private final class FollowingTableCell: NSView {
         
         self.iconView.layer?.cornerRadius = 5
         
+        self.iconCoverView.isTransparent = true
+        
         self.nameLabel.textColor = ThemeColor.nameColor
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         self.nameLabel.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        self.nameLabel.isEditable = false
+        self.nameLabel.isSelectable = false
+        self.nameLabel.drawsBackground = false
+        self.nameLabel.isBordered = false
         //self.nameLabel.isOpaque = true
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.idLabel.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+        self.idLabel.isEditable = false
+        self.idLabel.isSelectable = false
+        self.idLabel.drawsBackground = false
+        self.idLabel.isBordered = false
         //self.idLabel.isOpaque = true
         
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         self.lineLayer.isOpaque = true
         
         // アイコンのタップジェスチャー
-        /*let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountAction))
-        self.iconView.addGestureRecognizer(tapGesture)
-        self.iconView.isUserInteractionEnabled = true
-        
-        if SettingsData.isNameTappable {
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapAccountAction))
-            self.nameLabel.addGestureRecognizer(tapGesture)
-            self.nameLabel.isUserInteractionEnabled = true
-        }*/
+        iconCoverView.target = self
+        iconCoverView.action = #selector(tapAccountAction)
         
         self.followButton.layer?.backgroundColor = ThemeColor.detailButtonsColor.cgColor
         //self.followButton.setTitleColor(ThemeColor.idColor, for: .normal)
@@ -394,10 +399,35 @@ private final class FollowingTableCell: NSView {
         if let timelineView = accountTimeLineViewController.view as? TimeLineView, let accountData = self.accountData {
             timelineView.accountList.updateValue(accountData, forKey: accountData.id ?? "")
         }
-        if let tableView = self.superview as? FollowingTableView {
-            tableView.model.viewController?.addChild(accountTimeLineViewController)
-            tableView.model.viewController?.view.addSubview(accountTimeLineViewController.view)
+        
+        let subTimeLineViewController = SubTimeLineViewController(name: self.nameLabel.attributedStringValue, icon: self.iconView.image, timelineVC: accountTimeLineViewController)
+        
+        var targetSubVC: SubViewController? = nil
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            if self.hostName == subVC.tootVC.hostName && self.accessToken == subVC.tootVC.accessToken {
+                targetSubVC = subVC
+                break
+            }
         }
+        
+        // 複数のサブTLを開かないようにする
+        for subVC in targetSubVC?.children ?? [] {
+            if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                subVC.removeFromParent()
+                subVC.view.removeFromSuperview()
+            }
+        }
+        
+        targetSubVC?.addChild(subTimeLineViewController)
+        targetSubVC?.view.addSubview(subTimeLineViewController.view)
+        
+        subTimeLineViewController.view.frame = CGRect(x: self.frame.width,
+                                                      y: 0,
+                                                      width: self.frame.width,
+                                                      height: (targetSubVC?.view.frame.height ?? 100) - 22)
+        
+        
+        subTimeLineViewController.showAnimation(parentVC: targetSubVC)
     }
     
     @objc func followAction() {
@@ -478,15 +508,17 @@ private final class FollowingTableCell: NSView {
                                      width: 40,
                                      height: 40)
         
+        self.iconCoverView.frame = self.iconView.frame
+        
         self.nameLabel.frame = CGRect(x: 50,
-                                      y: 32,
+                                      y: 28,
                                       width: self.nameLabel.frame.width,
-                                      height: (SettingsData.fontSize + 1) * 2)
+                                      height: (SettingsData.fontSize + 1) * 1.5)
         
         self.idLabel.frame = CGRect(x: 50,
-                                    y: 2,
+                                    y: 0,
                                     width: screenBounds.width - 110,
-                                    height: SettingsData.fontSize * 2)
+                                    height: SettingsData.fontSize * 1.5)
         
         self.followButton.frame = CGRect(x: screenBounds.width - 60,
                                          y: 8,

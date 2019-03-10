@@ -884,13 +884,24 @@ final class TimeLineViewCell: NSView {
         if let messageView = self.messageView {
             let y: CGFloat
             if isMiniView == .superMini {
-                y = -0
+                y = height
             } else if let showMoreButton = self.showMoreButton {
                 y = showMoreButton.frame.minY
             } else if let detailDateLabel = self.detailDateLabel {
                 y = detailDateLabel.frame.minY
             } else {
                 y = height - ((isMiniView != .normal ? 4 : 12) + SettingsData.fontSize)
+            }
+            if isMiniView == .superMini {
+                if messageView.isHorizontallyResizable == false {
+                    messageView.frame.size.width = screenBounds.width
+                    messageView.isHorizontallyResizable = true
+                }
+            } else {
+                if messageView.isHorizontallyResizable == true {
+                    messageView.isHorizontallyResizable = false
+                    messageView.sizeToFit()
+                }
             }
             messageView.frame = CGRect(x: nameLeft,
                                        y: y - messageView.frame.height,
