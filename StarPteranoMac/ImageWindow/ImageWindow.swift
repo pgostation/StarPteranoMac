@@ -22,6 +22,9 @@ final class ImageWindow: NSPanel {
         self.styleMask.insert(NSWindow.StyleMask.resizable)
         //self.styleMask.insert(NSWindow.StyleMask.hudWindow) // HUDよりも半透明のほうがいいかな
         
+        if #available(OSX 10.12, *) {
+            self.tabbingMode = .disallowed
+        }
         self.level = .floating
         self.backgroundColor = NSColor.black.withAlphaComponent(0.5)
         self.titlebarAppearsTransparent = true

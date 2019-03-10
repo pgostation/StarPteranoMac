@@ -32,6 +32,9 @@ final class SettingsWindow: NSWindow {
                                     backing: NSWindow.BackingStoreType.buffered,
                                     defer: true)
         window.styleMask.insert(NSWindow.StyleMask.titled)
+        if #available(OSX 10.12, *) {
+            window.tabbingMode = .disallowed
+        }
         window.title = I18n.get("TITLE_PREFERENCES")
         self.window = window
         setFrame()

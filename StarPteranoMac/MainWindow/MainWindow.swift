@@ -45,6 +45,9 @@ final class MainWindow: NSWindow {
         window.styleMask.insert(NSWindow.StyleMask.miniaturizable)
         window.styleMask.insert(NSWindow.StyleMask.resizable)
         
+        if #available(OSX 10.12, *) {
+            window.tabbingMode = .disallowed
+        }
         window.title = I18n.get("APPLICATION_NAME")
         
         self.window = window
