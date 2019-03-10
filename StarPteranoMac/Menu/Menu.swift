@@ -145,6 +145,12 @@ final class Menu: NSObject, NSMenuDelegate {
             }
             viewMenu.addItem(NSMenuItem.separator())
             do {
+                let menuItem1 = NSMenuItem(title: I18n.get("Show user…"), action: #selector(doViewMenu(_:)), keyEquivalent: "u")
+                menuItem1.target = menuTarget
+                viewMenu.addItem(menuItem1)
+            }
+            viewMenu.addItem(NSMenuItem.separator())
+            do {
                 let menuItem1 = NSMenuItem(title: I18n.get("Larger"), action: #selector(doViewMenu(_:)), keyEquivalent: "+")
                 menuItem1.target = menuTarget
                 viewMenu.addItem(menuItem1)
@@ -286,7 +292,11 @@ final class Menu: NSObject, NSMenuDelegate {
             MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Compact View") {
-            SettingsData.isMiniView = .miniView
+            if SettingsData.isMiniView == .miniView {
+                SettingsData.isMiniView = .normal
+            } else {
+                SettingsData.isMiniView = .miniView
+            }
             MainViewController.refreshAllTimeLineViews()
         }
         else if item.title == I18n.get("Standard View") {
@@ -304,6 +314,104 @@ final class Menu: NSObject, NSMenuDelegate {
         else if item.title == I18n.get("Smaller") {
             SettingsData.fontSize -= 1
             MainViewController.refreshAllTimeLineViews()
+        }
+        else if item.title == I18n.get("Show user…") {
+            let vc = TimeLineViewManager.getLastSelectedTLView()
+            let hostName = (vc as? TimeLineViewController)?.hostName ?? (vc as? NotificationViewController)?.hostName
+            let accessToken = (vc as? TimeLineViewController)?.accessToken ?? (vc as? NotificationViewController)?.accessToken
+            let accountList = (vc?.view as? TimeLineView)?.accountList ?? (vc?.view as? NotificationTableView)?.accountList
+            let subAccountList = SettingsData.recentMentionList(accessToken: accessToken ?? "") + SettingsData.followingList(accessToken: accessToken ?? "")
+            
+            AccountDialog.showWithTextInput(
+                message: I18n.get("Show user…"),
+                okName: "OK",
+                cancelName: "Cancel",
+                defaultText: nil,
+                accountList: accountList,
+                subAccountList: subAccountList) { (textField, result) in
+                    if !result { return }
+                    
+                    let account = textField.stringValue
+                    
+                    if account == "" { return }
+                    
+                    var accountId: String? = nil
+                    
+                    for tmpAccount in accountList ?? [:] {
+                        if account == tmpAccount.value.acct {
+                            accountId = tmpAccount.value.id
+                            break
+                        }
+                    }
+                    
+                    func show(accountData: AnalyzeJson.AccountData) {
+                        let accountTimeLineViewController = TimeLineViewController(hostName: hostName ?? "", accessToken: accessToken ?? "", type: TimeLineViewController.TimeLineType.user, option: accountId)
+                        if let timelineView = accountTimeLineViewController.view as? TimeLineView {
+                            timelineView.accountList.updateValue(accountData, forKey: accountId ?? "")
+                        }
+                        
+                        let subTimeLineViewController = SubTimeLineViewController(name: NSAttributedString(string: account), icon: nil, timelineVC: accountTimeLineViewController)
+                        
+                        var targetSubVC: SubViewController? = nil
+                        for subVC in MainViewController.instance?.subVCList ?? [] {
+                            if hostName == subVC.tootVC.hostName && accessToken == subVC.tootVC.accessToken {
+                                targetSubVC = subVC
+                                break
+                            }
+                        }
+                        
+                        // 複数のサブTLを開かないようにする
+                        for subVC in targetSubVC?.children ?? [] {
+                            if subVC is SubTimeLineViewController || subVC is FollowingViewController {
+                                subVC.removeFromParent()
+                                subVC.view.removeFromSuperview()
+                            }
+                        }
+                        
+                        targetSubVC?.addChild(subTimeLineViewController)
+                        targetSubVC?.view.addSubview(subTimeLineViewController.view)
+                        
+                        subTimeLineViewController.view.frame = CGRect(x: (targetSubVC?.view.frame.width ?? 100),
+                                                                      y: 0,
+                                                                      width: (targetSubVC?.view.frame.width ?? 100),
+                                                                      height: (targetSubVC?.view.frame.height ?? 100) - 22)
+                        
+                        
+                        subTimeLineViewController.showAnimation(parentVC: targetSubVC)
+                    }
+                    
+                    if let accountData = accountList?[account] {
+                        // アカウントデータがあればすぐ表示
+                        show(accountData: accountData)
+                    } else {
+                        // 情報を取得してから表示
+                        guard let url = URL(string: "https://\(hostName ?? "")/api/v1/accounts/search?q=\(account)") else { return }
+                        try? MastodonRequest.get(url: url, accessToken: accessToken ?? "") { (data, response, error) in
+                            if let data = data {
+                                do {
+                                    if let responseJsonList = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [[String: Any]] {
+                                        var accountData: AnalyzeJson.AccountData? = nil
+                                        for responseJson in responseJsonList {
+                                            let tmpData = AnalyzeJson.analyzeAccountJson(account: responseJson)
+                                            if tmpData.acct == account {
+                                                accountData = tmpData
+                                                break
+                                            }
+                                        }
+                                        if let accountData = accountData {
+                                            DispatchQueue.main.async {
+                                                if accountData.id != nil {
+                                                    accountId = accountData.id
+                                                }
+                                                show(accountData: accountData)
+                                            }
+                                        }
+                                    }
+                                } catch { }
+                            }
+                        }
+                    }
+            }
         }
     }
     

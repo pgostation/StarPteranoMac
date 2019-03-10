@@ -64,6 +64,7 @@
 		129F4348217F54D8008E856D /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4347217F54D8008E856D /* Menu.swift */; };
 		129F434B217F5B1D008E856D /* I18n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434A217F5B1D008E856D /* I18n.swift */; };
 		129F4350217F6F5D008E856D /* SettingsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F434F217F6F5D008E856D /* SettingsData.swift */; };
+		12AFD1F92234CB4C00DB0623 /* AccountDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12AFD1F82234CB4C00DB0623 /* AccountDialog.swift */; };
 		12C044F42220193B00BE3A50 /* EmojiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044F32220193B00BE3A50 /* EmojiView.swift */; };
 		12C044F622202A2700BE3A50 /* EmojiData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044F522202A2700BE3A50 /* EmojiData.swift */; };
 		12C044F82220FF8E00BE3A50 /* GeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C044F72220FF8E00BE3A50 /* GeneralSettingsViewController.swift */; };
@@ -154,6 +155,7 @@
 		129F4347217F54D8008E856D /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		129F434A217F5B1D008E856D /* I18n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I18n.swift; sourceTree = "<group>"; };
 		129F434F217F6F5D008E856D /* SettingsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsData.swift; sourceTree = "<group>"; };
+		12AFD1F82234CB4C00DB0623 /* AccountDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDialog.swift; sourceTree = "<group>"; };
 		12C044F32220193B00BE3A50 /* EmojiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiView.swift; sourceTree = "<group>"; };
 		12C044F522202A2700BE3A50 /* EmojiData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiData.swift; sourceTree = "<group>"; };
 		12C044F72220FF8E00BE3A50 /* GeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsViewController.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				1291FC4A21835D5A009B8788 /* Dialog.swift */,
+				12AFD1F82234CB4C00DB0623 /* AccountDialog.swift */,
 				128751AD2184792500BC8828 /* EmojiImage.swift */,
 				128751B92184830200BC8828 /* ThemeColor.swift */,
 				121A823F2214E652008D3176 /* ClickableTextField.swift */,
@@ -539,6 +542,7 @@
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
+				12AFD1F92234CB4C00DB0623 /* AccountDialog.swift in Sources */,
 				1243D3842225795C001DA334 /* ProfileAction.swift in Sources */,
 				121A82402214E652008D3176 /* ClickableTextField.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
