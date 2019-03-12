@@ -69,11 +69,6 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
     private let dummyLabel = NSTextView()
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         if row >= list.count {
-            if self.useAutopagerize && self.list.count > 0 {
-                // Autopagerize
-                self.viewController?.add()
-            }
-            
             return 150
         }
         
@@ -113,6 +108,10 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
         if row >= list.count {
             let cell = NSView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
             cell.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
+            if self.useAutopagerize && self.list.count > 0 {
+                // Autopagerize
+                self.viewController?.add()
+            }
             return cell
         }
         
