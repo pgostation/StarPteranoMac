@@ -176,6 +176,7 @@
 "BOOSTED_BY_%@" = "🔁 %@";
 "SUBTIMELINE_RELATIONS" = "💬会話";
 "THIS_TOOT_IS_DIRECT_MESSAGE" = "ダイレクトメッセージ";
+"ALERT_TEXT_EXISTS" = "すでに文字列が入力されています";
 
 // 公開範囲
 "TITLE_PROTECTMODE" = "公開範囲";

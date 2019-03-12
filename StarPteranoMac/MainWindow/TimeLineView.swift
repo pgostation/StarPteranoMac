@@ -732,7 +732,7 @@ class TimeLineView: NSTableView {
         case 36, 52, 76: // return
             // リプライ
             if modifierFlags.contains(NSEvent.ModifierFlags.shift) {
-                getCell()?.replyAction(isAll: true)
+                getCell()?.innerReplyAction(isAll: true)
             } else {
                 getCell()?.replyAction()
             }

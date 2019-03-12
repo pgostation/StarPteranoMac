@@ -324,7 +324,11 @@ final class TimeLineViewCell: NSView {
     }
     
     // リプライボタンをクリックした時の処理
-    @objc func replyAction(isAll: Bool = false) {
+    @objc func replyAction() {
+        innerReplyAction(isAll: false)
+    }
+    
+    func innerReplyAction(isAll: Bool) {
         self.tableView?.selectedDate = Date()
         
         if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {

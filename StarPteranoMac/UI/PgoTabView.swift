@@ -443,6 +443,7 @@ private class PgoTabItemView: NSView {
                 // タブ移動
                 tabView.items.remove(at: myIndex)
                 tabView.items.insert(myItem, at: index)
+                break
             }
         }
         // 最大から逆方向
@@ -452,6 +453,7 @@ private class PgoTabItemView: NSView {
                 // タブ移動
                 tabView.items.insert(myItem, at: index + 1)
                 tabView.items.remove(at: myIndex)
+                break
             }
         }
         
@@ -464,6 +466,9 @@ private class PgoTabItemView: NSView {
             tabView.select(itemView: newItemView)
             tabView.refresh()
         }
+        
+        // 変更を保存
+        tabView.delegate?.tabViewDidChangeNumberOfTabViewItems?(tabView)
         
         dragFlag = false
     }

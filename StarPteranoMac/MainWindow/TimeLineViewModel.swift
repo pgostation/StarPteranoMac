@@ -631,6 +631,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             loadButton.frame = NSRect(x: 0, y: 0, width: tableView.frame.width, height: SettingsData.isMiniView == .normal ? 60 : (SettingsData.isMiniView == .miniView ? 44 : 30))
             cell.addSubview(loadButton)
             loadButton.action = #selector(reloadOld(_:))
+            loadButton.target = self
             return cell
         } else if data.id == nil {
             let cell = NSView()
@@ -837,6 +838,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.replyButton?.attributedTitle = colorTitle
             }
             cell.replyButton?.action = #selector(cell.replyAction)
+            cell.replyButton?.target = cell
             cell.addSubview(cell.replyButton!)
             
             // 返信された数
