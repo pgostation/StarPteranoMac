@@ -37,6 +37,7 @@ final class TimeLineViewCell: NSView {
     var DMBarLeft: NSView?
     var DMBarRight: NSView?
     var cardView: CardView?
+    var pollView: PollView?
     
     // 詳細ビュー
     var showDetail = false
@@ -227,6 +228,8 @@ final class TimeLineViewCell: NSView {
         
         self.cardView?.removeFromSuperview()
         self.cardView = nil
+        self.pollView?.removeFromSuperview()
+        self.pollView = nil
         
         // フォントサイズと色を指定
         self.nameLabel.textColor = ThemeColor.nameColor
@@ -1003,6 +1006,15 @@ final class TimeLineViewCell: NSView {
                 top = cardView.frame.minY - 5
             }
             
+            if let pollView = self.pollView {
+                pollView.frame.origin.y = top - (pollView.frame.size.height + 10)
+                pollView.frame.origin.x = 40
+                pollView.frame.size.width =  min(300, self.frame.width - 50)
+                pollView.layout()
+                
+                top = pollView.frame.minY - 5
+            }
+            
             self.replyButton?.frame = CGRect(x: 50,
                                              y: (top - 3) - 40,
                                              width: 30,
@@ -1070,6 +1082,14 @@ final class TimeLineViewCell: NSView {
                 cardView.frame.origin.x = 30
                 cardView.frame.size.width = min(400, self.frame.width - 40)
                 cardView.layout()
+            }
+            
+            if let pollView = self.pollView {
+                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8 + imagesOffset)
+                pollView.frame.origin.y = top - (pollView.frame.size.height + 10)
+                pollView.frame.origin.x = 40
+                pollView.frame.size.width =  min(300, self.frame.width - 50)
+                pollView.layout()
             }
         }
     }

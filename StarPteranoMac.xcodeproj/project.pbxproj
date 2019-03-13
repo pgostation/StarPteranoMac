@@ -15,6 +15,7 @@
 		120B0EDD2233D36100BC3181 /* ColorSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */; };
 		120B0EDF2233DBEE00BC3181 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDE2233DBEE00BC3181 /* CustomColor.swift */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
+		12403B8922393D4C00C167B9 /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8822393D4C00C167B9 /* PollView.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
 		1243D3862225796A001DA334 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3852225796A001DA334 /* FollowingViewController.swift */; };
@@ -102,6 +103,7 @@
 		120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSettingsViewController.swift; sourceTree = "<group>"; };
 		120B0EDE2233DBEE00BC3181 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
+		12403B8822393D4C00C167B9 /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D3832225795C001DA334 /* ProfileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAction.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				128751B72184817D00BC8828 /* TimeLineViewModel.swift */,
 				128751C52184A37300BC8828 /* TimeLineViewCell.swift */,
 				129E89D522145DC300D3D13B /* CardView.swift */,
+				12403B8822393D4C00C167B9 /* PollView.swift */,
 				12C04501222229D600BE3A50 /* SubTimeLineViewController.swift */,
 				12C0450322222C5A00BE3A50 /* BreadCrumbListView.swift */,
 				120B0ED3222C080A00BC3181 /* ListPopUp.swift */,
@@ -589,6 +592,7 @@
 				120B0EDD2233D36100BC3181 /* ColorSettingsViewController.swift in Sources */,
 				1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */,
 				128751D12185445A00BC8828 /* TootView.swift in Sources */,
+				12403B8922393D4C00C167B9 /* PollView.swift in Sources */,
 				1243D38A22257983001DA334 /* ProfileEditViewController.swift in Sources */,
 				1243D395222A8DB3001DA334 /* NotificationViewController.swift in Sources */,
 				129E89D622145DC300D3D13B /* CardView.swift in Sources */,

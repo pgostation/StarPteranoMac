@@ -418,6 +418,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             }
         }
         
+        if let poll = data.poll {
+            // 投票表示用
+            detailOffset += 50 + CGFloat(poll.options.count) * 30
+        }
+        
         if (data.sensitive == 1 && data.mediaData != nil) { // もっと見る
             detailOffset += 20
         }
@@ -946,6 +951,13 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.cardView = cardView
                 cell.addSubview(cardView)
             }
+        }
+        
+        if let poll = data.poll {
+            // 投票表示
+            let pollView = PollView(hostName: timelineView.hostName, accessToken: timelineView.accessToken, data: poll)
+            cell.pollView = pollView
+            cell.addSubview(pollView)
         }
         
         let iconView = MyImageView()
