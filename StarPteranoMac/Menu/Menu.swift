@@ -456,6 +456,22 @@ final class Menu: NSObject, NSMenuDelegate {
             }
         }
         if item.title == I18n.get("Now Browsing") {
+            if let info = SafariInfo.get(), info.title != nil || info.url != nil {
+                var textField: NSTextView? = nil
+                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                    textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
+                }
+                if textField == nil {
+                    textField = MainWindow.window?.firstResponder as? NSTextView
+                }
+                if let textField = textField {
+                    var str = "#NowBrowsing \(info.title ?? "")"
+                    if let url = info.url {
+                        str += " - \(url)"
+                    }
+                    textField.string = str
+                }
+            }
         }
         if item.title == I18n.get("Add Image…") {
         }
@@ -506,6 +522,13 @@ final class Menu: NSObject, NSMenuDelegate {
         }
         else if item.title == I18n.get("Now Playing") {
             return (iTunesInfo.get()?.title != nil)
+        }
+        else if item.title == I18n.get("Now Browsing") {
+            if let info = SafariInfo.get(), info.title != nil || info.url != nil {
+                return true
+            } else {
+                return false
+            }
         }
         
         return true

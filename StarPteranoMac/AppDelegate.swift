@@ -19,6 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         
         // iTunesを監視
         DistributedNotificationCenter.default().addObserver(self, selector: #selector(trackChanged(_:)), name: Notification.Name("com.apple.iTunes.playerInfo"), object: nil)
+        
         // メニューを作成する
         Menu.makeMainMenus()
         
