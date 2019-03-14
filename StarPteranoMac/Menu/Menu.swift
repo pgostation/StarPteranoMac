@@ -474,6 +474,14 @@ final class Menu: NSObject, NSMenuDelegate {
             }
         }
         if item.title == I18n.get("Add Image…") {
+            var tootVC: TootViewController? = nil
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                tootVC = (tlVC.parent as? SubViewController)?.tootVC
+            }
+            if tootVC == nil {
+                tootVC = ((MainWindow.window?.firstResponder as? NSTextView)?.superview as? TootView)?.imagesButton.target as? TootViewController
+            }
+            tootVC?.addImageAction()
         }
     }
     
