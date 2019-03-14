@@ -65,7 +65,7 @@ final class Menu: NSObject, NSMenuDelegate {
             let fileMenu = NSMenu(title: I18n.get("File"))
             
             do {
-                let menuItem = NSMenuItem(title: I18n.get("New window"), action: #selector(doAppMenu(_:)), keyEquivalent: "N")
+                let menuItem = NSMenuItem(title: I18n.get("New Window"), action: #selector(doAppMenu(_:)), keyEquivalent: "N")
                 menuItem.target = menuTarget
                 fileMenu.addItem(menuItem)
             }
@@ -182,7 +182,7 @@ final class Menu: NSObject, NSMenuDelegate {
             
             tootMenu.addItem(NSMenuItem.separator())
             do {
-                /*let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
+                let menuItem1 = NSMenuItem(title: I18n.get("Now Playing"), action: #selector(doTootMenu(_:)), keyEquivalent: "i")
                 menuItem1.keyEquivalentModifierMask =  NSEvent.ModifierFlags.command.union(NSEvent.ModifierFlags.option)
                 menuItem1.target = menuTarget
                 tootMenu.addItem(menuItem1)
@@ -196,6 +196,7 @@ final class Menu: NSObject, NSMenuDelegate {
                 menuItem3.target = menuTarget
                 tootMenu.addItem(menuItem3)
                 
+                /*
                 let menuItem4 = NSMenuItem(title: I18n.get("Scheduled Toot…"), action: #selector(doTootMenu(_:)), keyEquivalent: "")
                 menuItem4.target = menuTarget
                 tootMenu.addItem(menuItem4)*/
@@ -251,7 +252,7 @@ final class Menu: NSObject, NSMenuDelegate {
         else if item.title == I18n.get("About StarPterano") {
             NSApplication.shared.orderFrontStandardAboutPanel(nil)
         }
-        else if item.title == I18n.get("New window") {
+        else if item.title == I18n.get("New Window") {
             MainWindow.show()
         }
         else if item.title == I18n.get("Close") {
@@ -433,6 +434,31 @@ final class Menu: NSObject, NSMenuDelegate {
                 }
             }
         }
+        if item.title == I18n.get("Now Playing") {
+            if let info = iTunesInfo.get(), info.title != nil {
+                var textField: NSTextView? = nil
+                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                    textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
+                }
+                if textField == nil {
+                    textField = MainWindow.window?.firstResponder as? NSTextView
+                }
+                if let textField = textField {
+                    var str = "#NowPlaying \(info.title ?? "")"
+                    if let album = info.album {
+                        str += " - \(album)"
+                    }
+                    if let artist = info.artist {
+                        str += " - \(artist)"
+                    }
+                    textField.string = str
+                }
+            }
+        }
+        if item.title == I18n.get("Now Browsing") {
+        }
+        if item.title == I18n.get("Add Image…") {
+        }
     }
     
     @objc func doToolMenu(_ item: NSMenuItem) {
@@ -440,6 +466,7 @@ final class Menu: NSObject, NSMenuDelegate {
         }
     }
     
+    // メニューの有効無効を判断
     @objc func validateMenuItem(_ item: NSMenuItem) -> Bool {
         if item.title == I18n.get("Show All") {
             return true
@@ -471,6 +498,14 @@ final class Menu: NSObject, NSMenuDelegate {
         }
         else if item.title == I18n.get("Select All") {
             return true
+        }
+        else if item.title == I18n.get("New Window") {
+            if MainWindow.window != nil {
+                return false
+            }
+        }
+        else if item.title == I18n.get("Now Playing") {
+            return (iTunesInfo.get()?.title != nil)
         }
         
         return true

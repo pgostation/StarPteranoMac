@@ -17,10 +17,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDele
         // 通知対応
         NSUserNotificationCenter.default.delegate = self
         
+        // iTunesを監視
+        DistributedNotificationCenter.default().addObserver(self, selector: #selector(trackChanged(_:)), name: Notification.Name("com.apple.iTunes.playerInfo"), object: nil)
         // メニューを作成する
         Menu.makeMainMenus()
         
         showWindow()
+    }
+    
+    @objc func trackChanged(_ notification: Notification) {
+        iTunesInfo.set(notification: notification)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

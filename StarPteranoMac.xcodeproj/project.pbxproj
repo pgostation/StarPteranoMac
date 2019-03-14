@@ -16,6 +16,7 @@
 		120B0EDF2233DBEE00BC3181 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDE2233DBEE00BC3181 /* CustomColor.swift */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		12403B8922393D4C00C167B9 /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8822393D4C00C167B9 /* PollView.swift */; };
+		12403B8B223957C600C167B9 /* iTunesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8A223957C600C167B9 /* iTunesInfo.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
 		1243D3862225796A001DA334 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3852225796A001DA334 /* FollowingViewController.swift */; };
@@ -104,6 +105,7 @@
 		120B0EDE2233DBEE00BC3181 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		12403B8822393D4C00C167B9 /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
+		12403B8A223957C600C167B9 /* iTunesInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesInfo.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D3832225795C001DA334 /* ProfileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAction.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				129F4347217F54D8008E856D /* Menu.swift */,
+				12403B8A223957C600C167B9 /* iTunesInfo.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -555,6 +558,7 @@
 				128751BC21848A1900BC8828 /* MastodonStreaming.swift in Sources */,
 				128751C221849C2500BC8828 /* ProfileViewCell.swift in Sources */,
 				128751C82184B44600BC8828 /* MovieCache.swift in Sources */,
+				12403B8B223957C600C167B9 /* iTunesInfo.swift in Sources */,
 				128751CD2184BD5C00BC8828 /* ImageViewController.swift in Sources */,
 				1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */,
 				1243D399222A8DD1001DA334 /* NotificationTableCell.swift in Sources */,
