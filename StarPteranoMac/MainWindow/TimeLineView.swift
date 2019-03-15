@@ -223,6 +223,9 @@ class TimeLineView: NSTableView {
         // ホーム/ローカル統合時は、ローカル側を手動更新した時にホームも手動更新しないと
         if self.mergeLocalTL && (self.type == .home || self.type == .local) {
             let homeLocalKey = TimeLineViewManager.makeKey(hostName: self.hostName, accessToken: self.accessToken, type: .homeLocal, option: nil)
+            if TimeLineViewManager.get(key: homeLocalKey) == nil && SettingsData.tlMode(key: self.hostName + "," + self.accessToken).contains(SettingsData.TLMode.homeLocal) {
+                TimeLineViewManager.set(key: homeLocalKey, vc: TimeLineViewController(hostName: self.hostName, accessToken: self.accessToken, type: .homeLocal) )
+            }
             if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
                 if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
                     homeLocalTlView.refresh()
@@ -371,7 +374,7 @@ class TimeLineView: NSTableView {
     }
     
     //
-    private func analyzeStreamingData(string: String?, isMerge: Bool = false) {
+    func analyzeStreamingData(string: String?, isMerge: Bool = false) {
         func update() {
             self.model.change(tableView: self, addList: self.waitingStatusList, accountList: self.accountList, isStreaming: true)
             self.waitingStatusList = []

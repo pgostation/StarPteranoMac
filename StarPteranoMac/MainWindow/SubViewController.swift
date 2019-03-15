@@ -137,6 +137,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         modes.append(mode)
     }
     
+    static var notChange = false
     func tabViewDidChangeNumberOfTabViewItems(_ tabView: NSTabView) {
         var modes: [SettingsData.TLMode] = []
         
@@ -145,7 +146,9 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             modes.append(mode)
         }
         
-        SettingsData.setTlMode(key: hostName + "," + accessToken, modes: modes)
+        if !SubViewController.notChange {
+            SettingsData.setTlMode(key: hostName + "," + accessToken, modes: modes)
+        }
     }
     
     private func getPopUp() -> NSPopUpButton {

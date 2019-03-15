@@ -119,7 +119,9 @@ final class PgoTabView: NSTabView {
         self.refresh()
         
         // デリゲートで変更通知
+        SubViewController.notChange = true
         delegate?.tabViewDidChangeNumberOfTabViewItems?(self)
+        SubViewController.notChange = false
         
         // 最初のアイテムは必ず選択
         if items.count == 1 {
