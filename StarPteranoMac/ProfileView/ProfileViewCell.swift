@@ -166,7 +166,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         }
         
         nameLabel.textColor = ThemeColor.nameColor
-        nameLabel.attributedStringValue = DecodeToot.decodeName(name: data.display_name, emojis: data.emojis, textField: nameLabel) { }
+        nameLabel.attributedStringValue = DecodeToot.decodeName(name: data.display_name ?? "", emojis: data.emojis, textField: nameLabel) { }
         nameLabel.wantsLayer = true
         nameLabel.layer?.shadowColor = NSColor.black.cgColor
         nameLabel.layer?.shadowOffset = CGSize(width: 0.5, height: 0.5)
@@ -269,7 +269,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         followingCountTitle.isEditable = false
         followingCountTitle.drawsBackground = false
         
-        followingCountLabel.stringValue = "\(data.following_count ?? 0)"
+        followingCountLabel.stringValue = "\(data.following_count ?? 0)" + (data.locked == 1 ?  " 🔒" : "")
         followingCountLabel.textColor = ThemeColor.nameColor
         followingCountLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         followingCountLabel.alignment = .center
@@ -287,7 +287,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         followerCountTitle.isEditable = false
         followerCountTitle.drawsBackground = false
         
-        followerCountLabel.stringValue = "\(data.followers_count ?? 0)"
+        followerCountLabel.stringValue = "\(data.followers_count ?? 0)" + (data.locked == 1 ?  " 🔒" : "")
         followerCountLabel.textColor = ThemeColor.nameColor
         followerCountLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         followerCountLabel.alignment = .center
