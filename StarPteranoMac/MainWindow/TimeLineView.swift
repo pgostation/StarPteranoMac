@@ -333,7 +333,7 @@ class TimeLineView: NSTableView {
     
     // ストリーミングを受信
     //   ホーム(通知含む)、ローカル、連合のみ
-    private var streamingObject: MastodonStreaming?
+    var streamingObject: MastodonStreaming?
     private var waitingStatusList: [AnalyzeJson.ContentData] = []
     private var waitingIdDict: [String: Bool] = [:]
     private var streamingTimer: Timer?
@@ -354,23 +354,23 @@ class TimeLineView: NSTableView {
                     }
                 }
             }
-            
-            // 再接続タイマー
-            if #available(OSX 10.12, *) {
-                if self?.streamingTimer == nil {
-                    DispatchQueue.main.async {
-                        self?.streamingTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true, block: { [weak self] (timer) in
-                            if self == nil { return }
-                            if self?.streamingObject == nil {
-                                self?.streaming(streamingType: streamingType)
-                            } else if self?.streamingObject?.isConnected == false {
-                                self?.startStreaming()
-                            }
-                        })
-                    }
+        })
+        
+        // 再接続タイマー
+        if #available(OSX 10.12, *) {
+            if self.streamingTimer == nil {
+                DispatchQueue.main.async {
+                    self.streamingTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { [weak self] (timer) in
+                        if self == nil { return }
+                        if self?.streamingObject == nil {
+                            self?.streaming(streamingType: streamingType)
+                        } else if self?.streamingObject?.isConnected == false && self?.streamingObject?.isConnecting == false {
+                            self?.startStreaming()
+                        }
+                    })
                 }
             }
-        })
+        }
     }
     
     //
@@ -813,5 +813,10 @@ class TimeLineView: NSTableView {
         
         self.resignFirstResponder()
         return false
+    }
+    
+    // 検索
+    func search(string: String?) {
+        self.model.search(string: string)
     }
 }

@@ -36,9 +36,7 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
-                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
-                    print("GET remain=\(remain)")
-                }
+                showRemain(accessToken: accessToken, response: response)
             }
             
             completionHandler(data, response, error)
@@ -61,9 +59,7 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
-                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
-                    print("POST remain=\(remain)")
-                }
+                showRemain(accessToken: accessToken, response: response)
             }
             
             completionHandler(data, response, error)
@@ -86,9 +82,7 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
-                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
-                    print("DELETE remain=\(remain)")
-                }
+                showRemain(accessToken: accessToken, response: response)
             }
             
             completionHandler(data, response, error)
@@ -111,9 +105,7 @@ final class MastodonRequest {
                 if response.statusCode != 200 {
                     print("response.statusCode=\(response.statusCode), data=\(String(data: data ?? Data(), encoding: String.Encoding.utf8) ?? "-")")
                 }
-                if let remain = response.allHeaderFields["x-ratelimit-remaining"] {
-                    print("PATCH remain=\(remain)")
-                }
+                showRemain(accessToken: accessToken, response: response)
             }
             
             completionHandler(data, response, error)
@@ -129,5 +121,12 @@ final class MastodonRequest {
         request.httpBody = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
         
         session.dataTask(with: request, completionHandler: completionHandler).resume()
+    }
+    
+    private static func showRemain(accessToken: String, response: HTTPURLResponse) {
+        guard let remain = response.allHeaderFields["x-ratelimit-remaining"] as? String ?? response.allHeaderFields["X-RateLimit-Remaining"] as? String else { return }
+        guard let maxCount = response.allHeaderFields["x-ratelimit-limit"] as? String ?? response.allHeaderFields["X-RateLimit-Limit"] as? String else { return }
+        
+        MainViewController.showRemain(accessToken: accessToken, remain: Int(remain)!, maxCount: Int(maxCount)!)
     }
 }

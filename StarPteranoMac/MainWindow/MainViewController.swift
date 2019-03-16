@@ -59,6 +59,29 @@ final class MainViewController: NSViewController {
             if let tootView = subVC.tootVC.view as? TootView {
                 tootView.refresh()
             }
+            if let footerView = subVC.footerVC.view as? FooterView {
+                footerView.refresh()
+            }
+        }
+    }
+    
+    // ストリーミングランプを更新
+    static func setLamp(accessToken: String) {
+        for subVC in instance?.subVCList ?? [] {
+            if subVC.accessToken == accessToken {
+                subVC.refreshLamp()
+                break
+            }
+        }
+    }
+    
+    // 残りAPIの表示
+    static func showRemain(accessToken: String, remain: Int, maxCount: Int) {
+        for subVC in instance?.subVCList ?? [] {
+            if subVC.accessToken == accessToken {
+                subVC.showRemain(remain: remain, maxCount: maxCount)
+                break
+            }
         }
     }
     

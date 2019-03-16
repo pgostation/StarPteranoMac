@@ -884,7 +884,7 @@ final class TimeLineViewCell: NSView {
         if let showMoreButton = self.showMoreButton {
             showMoreButton.frame = CGRect(x: max(nameLeft, min(screenBounds.width - 120, 100)),
                                           y: (self.spolerTextLabel?.frame.minY ?? height) - 20,
-                                          width: max(120, screenBounds.width - 160),
+                                          width: 120,
                                           height: 20)
         }
         
@@ -996,7 +996,7 @@ final class TimeLineViewCell: NSView {
         }
         
         if self.replyButton != nil {
-            var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0)) + 10
+            var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0)) + 5
             
             if let cardView = self.cardView, !cardView.isHidden {
                 cardView.frame.origin.y = top - 150

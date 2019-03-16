@@ -250,3 +250,7 @@
 "POLLS_EXPIRED" = "締め切り済み";
 "VOTED_LABEL" = "投票済み";
 "EXPIRES_TIME_FOR:" = "締め切りまで:";
+
+// フッター
+"PLACEHOLDER_SEARCH" = "検索";
+"TOOLTIP_API_REMAIN" = "API残り";

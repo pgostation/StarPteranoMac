@@ -31,6 +31,8 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
         DispatchQueue.global().asyncAfter(deadline: .now() + 30) { [weak self] in
             self?.isConnecting = false
         }
+        
+        MainViewController.setLamp(accessToken: accessToken)
     }
     
     deinit {
@@ -43,6 +45,8 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
         self.isConnecting = false
         
         self.timer = Timer.scheduledTimer(timeInterval: 599, target: self, selector: #selector(ping), userInfo: nil, repeats: true)
+        
+        MainViewController.setLamp(accessToken: accessToken)
     }
     
     func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
@@ -54,6 +58,8 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
             self.timer = nil
             
             //MainViewController.instance?.showNotify(text: I18n.get("NOTIFY_DISCONNECTED_STREAMING"))
+            
+            MainViewController.setLamp(accessToken: accessToken)
         }
     }
     

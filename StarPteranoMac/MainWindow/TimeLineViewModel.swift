@@ -12,6 +12,7 @@ import SDWebImage
 
 class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, NSTextViewDelegate {
     private var list: [AnalyzeJson.ContentData] = []
+    private var filteredList: [AnalyzeJson.ContentData]? = nil
     private var accountList: [String: AnalyzeJson.AccountData] = [:]
     private var accountIdDict: [String: String] = [:]
     var showAutoPagerizeCell = true // 過去遡り用セルを表示するかどうか
@@ -79,6 +80,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     //
     func clear() {
         self.list = []
+        self.filteredList = nil
         self.showAutoPagerizeCell = true
         clearSelection()
     }
@@ -257,13 +259,21 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     }
                     
                     if isStreaming {
-                        tableView.reloadData()
+                        if self.filteredList != nil {
+                            self.search(string: self.lastSearchString)
+                        } else {
+                            tableView.reloadData()
+                        }
                     }
                 }
             }
             
             if !isStreaming {
-                tableView.reloadData()
+                if self.filteredList != nil {
+                    self.search(string: self.lastSearchString)
+                } else {
+                    tableView.reloadData()
+                }
             }
         }
     }
@@ -310,6 +320,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     // セルの数
     private var isFirstView = true
     func numberOfRows(in tableView: NSTableView) -> Int {
+        var list = self.filteredList ?? self.list
+        
         if list.count == 0, isFirstView {
             isFirstView = false
             if let timelineView = tableView as? TimeLineView {
@@ -334,6 +346,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     private var heightCache: [Int: CGFloat] = [:]
     private var oldHeightCache: [Int: CGFloat] = [:]
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        var list = self.filteredList ?? self.list
         var index = row
         
         guard let tableView = tableView as? TimeLineView else { return 1 }
@@ -492,6 +505,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     private var cacheDict: [String: (MyTextView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
     private var oldCacheDict: [String: (MyTextView, AnalyzeJson.ContentData, Bool, Bool)] = [:]
     private func getMessageViewAndData(tableView: NSTableView, index: Int, row: Int, add: Bool, callback: (()->Void)?) -> (MyTextView, AnalyzeJson.ContentData, Bool, Bool) {
+        var list = self.filteredList ?? self.list
         let data = list[index]
         
         if data.emojis == nil, let id = data.id, let cache = self.cacheDict[id] ?? self.oldCacheDict[id] {
@@ -552,6 +566,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     
     // セルを返す
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        var list = self.filteredList ?? self.list
         var index = row
         
         guard let timelineView = tableView as? TimeLineView else {
@@ -1721,6 +1736,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     private var isAnimating = false
     private var inDoubleClick = false
     func selectRow(timelineView: TimeLineView, row: Int, notSelect: Bool = false) {
+        var list = self.filteredList ?? self.list
         var index = row
         
         if !notSelect {
@@ -1870,10 +1886,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     
     // 会話部分のデータを取り出す
     func getMentionsData(data: AnalyzeJson.ContentData) -> [AnalyzeJson.ContentData] {
+        var list = self.filteredList ?? self.list
         var mentionContents: [AnalyzeJson.ContentData] = [data]
         
         var in_reply_to_id = data.in_reply_to_id
-        for listData in self.list {
+        for listData in list {
             if listData.id == in_reply_to_id {
                 mentionContents.append(listData)
                 in_reply_to_id = listData.in_reply_to_id
@@ -1882,6 +1899,29 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
         
         return mentionContents
+    }
+    
+    // 検索
+    private var lastSearchString: String? = nil
+    func search(string: String?) {
+        self.lastSearchString = string
+        
+        guard let string = string else {
+            self.filteredList = nil
+            self.tableView?.reloadData()
+            return
+        }
+        
+        var filteredList: [AnalyzeJson.ContentData] = []
+        
+        for data in self.list {
+            if data.content?.contains(string) == true || data.spoiler_text?.contains(string) == true {
+                filteredList.append(data)
+            }
+        }
+        
+        self.filteredList = filteredList
+        self.tableView?.reloadData()
     }
     
     class MyTextView: NSTextView {

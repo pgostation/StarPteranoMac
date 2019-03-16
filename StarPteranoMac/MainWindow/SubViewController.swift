@@ -9,17 +9,19 @@
 import Cocoa
 
 final class SubViewController: NSViewController, NSTabViewDelegate {
-    private let hostName: String
-    private let accessToken: String
+    let hostName: String
+    let accessToken: String
     let tootVC: TootViewController
     let tabView = PgoTabView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let tabCoverView = CoverView(frame: NSRect(x: 0, y: 0, width: 0, height: 0))
     let scrollView = NSScrollView()
+    let footerVC: FooterViewController
     
     init(hostName: String, accessToken: String) {
         self.hostName = hostName
         self.accessToken = accessToken
         self.tootVC = TootViewController(hostName: hostName, accessToken: accessToken)
+        self.footerVC = FooterViewController(hostName: hostName, accessToken: accessToken)
         
         super.init(nibName: nil, bundle: nil)
         
@@ -44,6 +46,9 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         if tlModes.count == 0 {
             addTab(mode: .home)
         }
+        
+        self.addChild(footerVC)
+        self.view.addSubview(footerVC.view)
         
         self.view.needsLayout = true
     }
@@ -128,13 +133,19 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         }
         scrollView.documentView = vc.view
         
-        self.children.first?.removeFromParent()
+        for child in self.children {
+            if child is TimeLineViewController || child is NotificationViewController || child is SearchViewController {
+                child.removeFromParent()
+            }
+        }
         self.addChild(vc)
         
         TimeLineViewManager.set(key: key, vc: vc)
         
         var modes = SettingsData.tlMode(key: hostName + "," + accessToken)
         modes.append(mode)
+        
+        refreshLamp()
     }
     
     static var notChange = false
@@ -221,6 +232,28 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         return .home
     }
     
+    override func viewDidAppear() {
+        refreshLamp()
+    }
+    
+    // ストリーミングランプを更新
+    func refreshLamp() {
+        if let timelineView = self.scrollView.documentView as? TimeLineView {
+            if let streamingObject = timelineView.streamingObject {
+                footerVC.setLamp(isOn: streamingObject.isConnected, isConnecting: streamingObject.isConnecting)
+            } else {
+                footerVC.setLamp(isOn: nil, isConnecting: false)
+            }
+        } else {
+            footerVC.setLamp(isOn: nil, isConnecting: false)
+        }
+    }
+    
+    // 残りAPIの表示
+    func showRemain(remain: Int, maxCount: Int) {
+        footerVC.showRemain(remain: remain, maxCount: maxCount)
+    }
+    
     override func viewDidLayout() {
         tootVC.view.frame = NSRect(x: 0,
                                    y: self.view.frame.height - tootVC.view.frame.height - 22,
@@ -249,9 +282,14 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         }
         
         scrollView.frame = NSRect(x: 0,
-                                  y: 0,
+                                  y: 20,
                                   width: self.view.frame.width,
-                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 22 - headHeight)
+                                  height: self.view.frame.height - 20 - tootVC.view.frame.height - 22 - headHeight - 20)
+        
+        footerVC.view.frame = NSRect(x: 0,
+                                     y: 0,
+                                     width: self.view.frame.width,
+                                     height: 20)
         
         for subview in self.view.subviews {
             if subview is SubTimeLineView {
