@@ -921,24 +921,17 @@ final class TimeLineViewCell: NSView {
                                           width: 40,
                                           height: 18)
         
-        let imageHeight = isDetailMode ? (min(400, self.frame.width - 80 + 10)) : (SettingsData.previewHeight + 10)
-        let imagesOffset = CGFloat(self.imageViews.count) * imageHeight
-        self.boostView?.frame = CGRect(x: nameLeft - 12,
-                                       y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 36,
-                                       width: screenBounds.width - 56,
-                                       height: 24)
-        
         self.DMBarLeft?.frame = CGRect(x: 0, y: 0, width: 5, height: 800)
         
         self.DMBarRight?.frame = CGRect(x: screenBounds.width - 5, y: 0, width: 5, height: 800)
         
-        var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? height - 20) - 10
+        var imageTop: CGFloat = (self.messageView?.frame.minY ?? self.showMoreButton?.frame.minY ?? height - 20) - 5
         for imageParentView in self.imageParentViews {
             guard let imageView = imageParentView.subviews.first as? NSImageView else { continue }
             if isDetailMode, let image = imageView.image {
                 let maxSize: CGFloat = min(400, 600 / CGFloat(self.imageParentViews.count), self.frame.width - 80)
                 var imageWidth: CGFloat = 0
-                var imageHeight: CGFloat = isDetailMode ? maxSize : 80
+                var imageHeight: CGFloat = maxSize
                 let size = image.size
                 let rate = imageHeight / max(1, size.height)
                 imageWidth = size.width * rate
@@ -956,7 +949,7 @@ final class TimeLineViewCell: NSView {
                                          y: 0,
                                          width: imageWidth,
                                          height: imageHeight)
-                imageTop = (imageTop) - imageHeight - 10
+                imageTop = (imageTop) - imageHeight - 8
             } else if let image = imageView.image {
                 let imageParentWidth: CGFloat = min(300, screenBounds.width - 80)
                 let imageParentHeight: CGFloat = SettingsData.previewHeight
@@ -978,7 +971,7 @@ final class TimeLineViewCell: NSView {
                                          y: imageParentHeight / 2 - (rate * size.height) / 2,
                                          width: rate * size.width,
                                          height: rate * size.height)
-                imageTop = (imageTop) - imageHeight - 8
+                imageTop = (imageTop) - imageParentHeight - 8
             } else {
                 let imageWidth: CGFloat = min(300, screenBounds.width - 80)
                 let imageHeight: CGFloat = SettingsData.previewHeight
@@ -994,8 +987,16 @@ final class TimeLineViewCell: NSView {
             }
         }
         
+        if let boostView = self.boostView {
+            let top: CGFloat = self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0)) + 3
+            boostView.frame = CGRect(x: nameLeft - 12,
+                                     y: top - 24,
+                                     width: screenBounds.width - 56,
+                                     height: 24)
+        }
+        
         if self.replyButton != nil {
-            var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0) + 8 + imagesOffset)
+            var top: CGFloat = self.boostView?.frame.minY ?? self.imageParentViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? height - 0)) + 10
             
             if let cardView = self.cardView, !cardView.isHidden {
                 cardView.frame.origin.y = top - 150
@@ -1007,12 +1008,12 @@ final class TimeLineViewCell: NSView {
             }
             
             if let pollView = self.pollView {
-                pollView.frame.origin.y = top - (pollView.frame.size.height + 10)
+                pollView.frame.origin.y = top - (pollView.frame.size.height + 5)
                 pollView.frame.origin.x = 40
                 pollView.frame.size.width =  min(300, self.frame.width - 50)
                 pollView.layout()
                 
-                top = pollView.frame.minY - 5
+                top = pollView.frame.minY
             }
             
             self.replyButton?.frame = CGRect(x: 50,
@@ -1077,7 +1078,7 @@ final class TimeLineViewCell: NSView {
             }
         } else {
             if let cardView = self.cardView {
-                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8 + imagesOffset)
+                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8)
                 cardView.frame.origin.y = top - 150
                 cardView.frame.origin.x = 30
                 cardView.frame.size.width = min(400, self.frame.width - 40)
@@ -1085,7 +1086,7 @@ final class TimeLineViewCell: NSView {
             }
             
             if let pollView = self.pollView {
-                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8 + imagesOffset)
+                let top = self.boostView?.frame.minY ?? self.imageViews.last?.frame.minY ?? ((self.messageView?.frame.minY ?? 0) - 8)
                 pollView.frame.origin.y = top - (pollView.frame.size.height + 10)
                 pollView.frame.origin.x = 40
                 pollView.frame.size.width =  min(300, self.frame.width - 50)

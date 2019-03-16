@@ -449,20 +449,20 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         let imagesOffset: CGFloat
         if let mediaData = data.mediaData {
             if isSelected {
-                var tmpOffset: CGFloat = 0
+                var tmpOffset: CGFloat = 5
                 for media in mediaData {
                     if let width = media.width, let height = media.height, width > 0 {
-                        let maxSize: CGFloat = min(400, 600 / CGFloat(mediaData.count), tableView.frame.width - 70)
+                        let maxSize: CGFloat = min(400, 600 / CGFloat(mediaData.count), tableView.frame.width - 80)
                         if height > width {
-                            tmpOffset += maxSize
+                            tmpOffset += maxSize + 8
                         } else {
-                            tmpOffset += maxSize * CGFloat(height) / CGFloat(width) + 10
+                            tmpOffset += maxSize * CGFloat(height) / CGFloat(width) + 8
                         }
                     }
                 }
                 imagesOffset = tmpOffset
             } else {
-                imagesOffset = (SettingsData.previewHeight + 10) * CGFloat(mediaData.count)
+                imagesOffset = (SettingsData.previewHeight + 8) * CGFloat(mediaData.count)
             }
         } else {
             imagesOffset = 0
@@ -1768,20 +1768,24 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             timelineView.reloadData()
             
             if let row = self.selectedRow {
-                var rect = timelineView.rect(ofRow: row)
-                if let parentHeight = self.tableView?.superview?.frame.height {
-                    let remain = parentHeight - rect.height
-                    rect.size.height += remain
-                    rect.origin.y = (rect.origin.y - remain / 2)
-                }
                 if !notSelect {
+                    var rect = timelineView.rect(ofRow: row)
+                    if let parentHeight = self.tableView?.superview?.frame.height {
+                        let remain = parentHeight - rect.height
+                        rect.size.height += remain / 2
+                        rect.origin.y = (rect.origin.y - remain / 4)
+                    }
                     if !timelineView.visibleRect.contains(timelineView.rect(ofRow: row)) {
                         timelineView.scrollToVisible(rect)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                            if let row = self.selectedRow {
+                                let rect = timelineView.rect(ofRow: row)
+                                timelineView.scrollToVisible(rect)
+                            }
+                        }
                     }
                 }
-            }
-            
-            if !notSelect {
+            } else if !notSelect {
                 if Thread.isMainThread {
                     timelineView.scrollRowToVisible(self.selectedRow ?? row)
                 }
