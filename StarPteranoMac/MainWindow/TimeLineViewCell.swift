@@ -921,7 +921,7 @@ final class TimeLineViewCell: NSView {
                                           width: 40,
                                           height: 18)
         
-        let imageHeight = isDetailMode ? (self.frame.width - 80 + 10) : 90
+        let imageHeight = isDetailMode ? (min(400, self.frame.width - 80 + 10)) : (SettingsData.previewHeight + 10)
         let imagesOffset = CGFloat(self.imageViews.count) * imageHeight
         self.boostView?.frame = CGRect(x: nameLeft - 12,
                                        y: ((self.messageView?.frame.minY ?? height) + 8 - imagesOffset) - 36,
@@ -959,7 +959,7 @@ final class TimeLineViewCell: NSView {
                 imageTop = (imageTop) - imageHeight - 10
             } else if let image = imageView.image {
                 let imageParentWidth: CGFloat = min(300, screenBounds.width - 80)
-                let imageParentHeight: CGFloat = 80
+                let imageParentHeight: CGFloat = SettingsData.previewHeight
                 imageParentView.frame = CGRect(x: nameLeft,
                                          y: (imageTop) - imageParentHeight,
                                          width: imageParentWidth,
@@ -981,7 +981,7 @@ final class TimeLineViewCell: NSView {
                 imageTop = (imageTop) - imageHeight - 8
             } else {
                 let imageWidth: CGFloat = min(300, screenBounds.width - 80)
-                let imageHeight: CGFloat = 80
+                let imageHeight: CGFloat = SettingsData.previewHeight
                 imageParentView.frame = CGRect(x: nameLeft,
                                                y: (imageTop) - imageHeight,
                                                width: imageWidth,

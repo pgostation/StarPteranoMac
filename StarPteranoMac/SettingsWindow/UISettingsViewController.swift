@@ -32,6 +32,8 @@ final class UISettingsViewController: NSViewController {
         view.iconSizeStepper.target = self
         view.fontSizeStepper.action = #selector(fontSizeAction(_:))
         view.fontSizeStepper.target = self
+        view.previewHeightStepper.action = #selector(previewHeightAction(_:))
+        view.previewHeightStepper.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -83,6 +85,16 @@ final class UISettingsViewController: NSViewController {
         
         MainViewController.refreshAllTimeLineViews()
     }
+    
+    @objc func previewHeightAction(_ sender: NSStepper) {
+        SettingsData.previewHeight = min(200, max(1, CGFloat(sender.integerValue)))
+        
+        guard let view = self.view as? UISettingsView else { return }
+        view.setProperties()
+        view.needsLayout = true
+        
+        MainViewController.refreshAllTimeLineViews()
+    }
 }
 
 final class UISettingsView: NSView {
@@ -97,6 +109,8 @@ final class UISettingsView: NSView {
     let iconSizeLabel = CATextLayer()
     let fontSizeStepper = NSStepper()
     let fontSizeLabel = CATextLayer()
+    let previewHeightStepper = NSStepper()
+    let previewHeightLabel = CATextLayer()
     
     init() {
         super.init(frame: SettingsWindow.contentRect)
@@ -114,6 +128,8 @@ final class UISettingsView: NSView {
         self.layer?.addSublayer(iconSizeLabel)
         self.addSubview(fontSizeStepper)
         self.layer?.addSublayer(fontSizeLabel)
+        self.addSubview(previewHeightStepper)
+        self.layer?.addSublayer(previewHeightLabel)
         
         setProperties()
     }
@@ -152,7 +168,7 @@ final class UISettingsView: NSView {
         darkmodeButton.state = SettingsData.forceDarkMode ? .on : .off
         
         iconSizeStepper.integerValue = Int(SettingsData.iconSize)
-        iconSizeStepper.maxValue = 999
+        iconSizeStepper.maxValue = 200
         
         iconSizeLabel.string = I18n.get("LABEL_ICONSIZE") + ": " + "\(Int(SettingsData.iconSize))"
         iconSizeLabel.fontSize = 12
@@ -160,12 +176,20 @@ final class UISettingsView: NSView {
         iconSizeLabel.foregroundColor = NSColor.black.cgColor
         
         fontSizeStepper.integerValue = Int(SettingsData.fontSize)
-        fontSizeStepper.maxValue = 999
+        fontSizeStepper.maxValue = 100
         
         fontSizeLabel.string = I18n.get("LABEL_FONTSIZE") + ": " + "\(Int(SettingsData.fontSize))"
         fontSizeLabel.fontSize = 12
         fontSizeLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
         fontSizeLabel.foregroundColor = NSColor.black.cgColor
+        
+        previewHeightStepper.integerValue = Int(SettingsData.previewHeight)
+        previewHeightStepper.maxValue = 100
+        
+        previewHeightLabel.string = I18n.get("LABEL_PREVIEWHEIGHT") + ": " + "\(Int(SettingsData.previewHeight))"
+        previewHeightLabel.fontSize = 12
+        previewHeightLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
+        previewHeightLabel.foregroundColor = NSColor.black.cgColor
     }
     
     override func layout() {
@@ -227,6 +251,17 @@ final class UISettingsView: NSView {
                                        y: SettingsWindow.contentRect.height - 100,
                                        width: 20,
                                        height: 30)
+        
+        let previewHeightSize = previewHeightLabel.preferredFrameSize()
+        previewHeightLabel.frame = NSRect(x: 250,
+                                          y: SettingsWindow.contentRect.height - 150,
+                                          width: previewHeightSize.width,
+                                          height: 20)
+        
+        previewHeightStepper.frame = NSRect(x: previewHeightLabel.frame.maxX + 5,
+                                            y: SettingsWindow.contentRect.height - 150,
+                                            width: 20,
+                                            height: 30)
     }
 }
 

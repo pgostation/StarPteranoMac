@@ -633,6 +633,25 @@ final class SettingsData {
         }
     }
     
+    // プレビュー画像の高さ
+    static var previewHeight: CGFloat {
+        get {
+            let value = defaults.integer(forKey: "previewHeight")
+            if value > 0 {
+                return CGFloat(value)
+            }
+            return 90
+        }
+        set(newValue) {
+            let intValue = Int(newValue)
+            if intValue > 0 && intValue != 90 {
+                defaults.set(intValue, forKey: "previewHeight")
+            } else {
+                defaults.removeObject(forKey: "previewHeight")
+            }
+        }
+    }
+    
     // 最近使った絵文字に追加
     static func addRecentEmoji(key: String, accessToken: String) {
         var list = recentEmojiList(accessToken: accessToken)

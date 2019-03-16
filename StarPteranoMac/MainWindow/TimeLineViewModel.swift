@@ -462,7 +462,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
                 imagesOffset = tmpOffset
             } else {
-                imagesOffset = 90 * CGFloat(mediaData.count)
+                imagesOffset = (SettingsData.previewHeight + 10) * CGFloat(mediaData.count)
             }
         } else {
             imagesOffset = 0
