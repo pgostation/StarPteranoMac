@@ -550,11 +550,7 @@ final class Menu: NSObject, NSMenuDelegate {
             return (iTunesInfo.get()?.title != nil)
         }
         else if item.title == I18n.get("Now Browsing") {
-            if let info = SafariInfo.get(), info.title != nil || info.url != nil {
-                return true
-            } else {
-                return false
-            }
+            return true
         }
         
         return true
