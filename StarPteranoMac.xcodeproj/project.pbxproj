@@ -18,6 +18,7 @@
 		12403B8922393D4C00C167B9 /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8822393D4C00C167B9 /* PollView.swift */; };
 		12403B8B223957C600C167B9 /* iTunesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8A223957C600C167B9 /* iTunesInfo.swift */; };
 		12403B8D223A809C00C167B9 /* SafariInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8C223A809C00C167B9 /* SafariInfo.swift */; };
+		12403B90223BD37000C167B9 /* FooterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8F223BD37000C167B9 /* FooterViewController.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
 		1243D3862225796A001DA334 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3852225796A001DA334 /* FollowingViewController.swift */; };
@@ -108,6 +109,7 @@
 		12403B8822393D4C00C167B9 /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
 		12403B8A223957C600C167B9 /* iTunesInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesInfo.swift; sourceTree = "<group>"; };
 		12403B8C223A809C00C167B9 /* SafariInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariInfo.swift; sourceTree = "<group>"; };
+		12403B8F223BD37000C167B9 /* FooterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterViewController.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D3832225795C001DA334 /* ProfileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAction.swift; sourceTree = "<group>"; };
@@ -196,6 +198,14 @@
 				120B0ED6222EA0FB00BC3181 /* SearchViewController.swift */,
 			);
 			path = SearchView;
+			sourceTree = "<group>";
+		};
+		12403B8E223BD35600C167B9 /* Footer */ = {
+			isa = PBXGroup;
+			children = (
+				12403B8F223BD37000C167B9 /* FooterViewController.swift */,
+			);
+			path = Footer;
 			sourceTree = "<group>";
 		};
 		1243D393222A8D92001DA334 /* NotificationView */ = {
@@ -321,6 +331,7 @@
 				128751BD218493A000BC8828 /* TootViewController */,
 				1243D393222A8D92001DA334 /* NotificationView */,
 				120B0ED5222EA0D200BC3181 /* SearchView */,
+				12403B8E223BD35600C167B9 /* Footer */,
 				128751C92184BD4000BC8828 /* ImageWindow */,
 				129F4335217E1CD3008E856D /* AppDelegate.swift */,
 				129F4337217E1CD4008E856D /* Assets.xcassets */,
@@ -547,6 +558,7 @@
 				12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */,
 				128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */,
 				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
+				12403B90223BD37000C167B9 /* FooterViewController.swift in Sources */,
 				12C044F622202A2700BE3A50 /* EmojiData.swift in Sources */,
 				12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
