@@ -1893,5 +1893,13 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
             }
         }
+        
+        override func keyDown(with event: NSEvent) {
+            if let cell = self.superview as? TimeLineViewCell {
+                cell.tableView?.myKeyDown(keyCode: event.keyCode, modifierFlags: event.modifierFlags)
+            }
+            
+            super.keyDown(with: event)
+        }
     }
 }
