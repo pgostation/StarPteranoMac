@@ -62,6 +62,7 @@ final class MainViewController: NSViewController {
         }
     }
     
+    private var timer: Timer?
     override func viewDidLayout() {
         guard let size = MainWindow.window?.frame.size else { return }
         
@@ -124,6 +125,15 @@ final class MainViewController: NSViewController {
                                           height: size.height)
             
             right = barList[index].frame.maxX
+        }
+        
+        // 0.3秒後に全ビューのレイアウトを更新
+        self.timer?.invalidate()
+        if #available(OSX 10.12, *) {
+            self.timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] timer in
+                MainViewController.refreshAllTimeLineViews()
+                self?.timer = nil
+            }
         }
     }
     

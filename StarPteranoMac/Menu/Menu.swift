@@ -436,13 +436,12 @@ final class Menu: NSObject, NSMenuDelegate {
         }
         if item.title == I18n.get("Now Playing") {
             if let info = iTunesInfo.get(), info.title != nil {
-                var textField: NSTextView? = nil
-                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                var textField = MainWindow.window?.firstResponder as? NSTextView
+                if textField == nil, let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                     textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
                 }
-                if textField == nil {
-                    textField = MainWindow.window?.firstResponder as? NSTextView
-                }
+                
+                // テキストを入力
                 if let textField = textField {
                     var str = "#NowPlaying \(info.title ?? "")"
                     if let album = info.album {
@@ -453,16 +452,38 @@ final class Menu: NSObject, NSMenuDelegate {
                     }
                     textField.string = str
                 }
+                
+                // アートワークを追加
+                if let artwork = info.artwork {
+                    // 一時ファイルに保存
+                    let tmpDir = NSTemporaryDirectory()
+                    let tmpUrl = URL(fileURLWithPath: tmpDir + "/artwork.jpg")
+                    
+                    let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: artwork.size.width, height: artwork.size.height))
+                    let imageData = imageRepresentation?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])
+                    if let imageData = imageData {
+                        do {
+                            try imageData.write(to: tmpUrl)
+                            
+                            if let tootView = textField?.superview as? TootView {
+                                tootView.imageCheckView.add(imageUrl: tmpUrl)
+                                
+                                for i in 1...3 {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 * Double(i)) {
+                                        tootView.refresh()
+                                    }
+                                }
+                            }
+                        } catch {}
+                    }
+                }
             }
         }
         if item.title == I18n.get("Now Browsing") {
             if let info = SafariInfo.get(), info.title != nil || info.url != nil {
-                var textField: NSTextView? = nil
-                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                var textField = MainWindow.window?.firstResponder as? NSTextView
+                if textField == nil, let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                     textField = ((tlVC.parent as? SubViewController)?.tootVC.view as? TootView)?.textField
-                }
-                if textField == nil {
-                    textField = MainWindow.window?.firstResponder as? NSTextView
                 }
                 if let textField = textField {
                     var str = "#NowBrowsing \(info.title ?? "")"
@@ -474,12 +495,9 @@ final class Menu: NSObject, NSMenuDelegate {
             }
         }
         if item.title == I18n.get("Add Image…") {
-            var tootVC: TootViewController? = nil
-            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+            var tootVC = ((MainWindow.window?.firstResponder as? NSTextView)?.superview as? TootView)?.imagesButton.target as? TootViewController
+            if tootVC == nil, let tlVC = TimeLineViewManager.getLastSelectedTLView() {
                 tootVC = (tlVC.parent as? SubViewController)?.tootVC
-            }
-            if tootVC == nil {
-                tootVC = ((MainWindow.window?.firstResponder as? NSTextView)?.superview as? TootView)?.imagesButton.target as? TootViewController
             }
             tootVC?.addImageAction()
         }
