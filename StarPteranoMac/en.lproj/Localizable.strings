@@ -69,6 +69,7 @@
 "SETTINGS_GENERAL" = "General";
 "SETTINGS_UI" = "UI";
 "SETTINGS_NOTIFICATIONS" = "Notifications";
+"SETTINGS_FILTER" = "Filter";
 "SETTINGS_SEARCH" = "Search";
 "SETTINGS_COLOR" = "Colors";
 "SETTINGS_DETAIL" = "Detail";
@@ -107,6 +108,14 @@
 "BUTTON_NOTIFY_FAVORITE" = "Notify Favorites";
 "BUTTON_NOTIFY_BOOST" = "Notify Boosts";
 "BUTTON_NOTIFY_FOLLOW" = "Notify Follows";
+
+// 抽出設定
+"FILTER_TAB_ACCOUNT" = "Account";
+"FILTER_TAB_KEYWORD" = "Keyword";
+"FILTER_TAB_REGEXP" = "RegExp";
+"FILTER_HELP_ACCOUNT" = "Enter account ID for filtering. Separated by \",\" or \"space\"";
+"FILTER_HELP_KEYWORD" = "Enter keywords for filtering. Separated by \",\" or \"space\"";
+"FILTER_HELP_REGEXP" = "Enter regular expression for filtering";
 
 // 詳細設定
 "BUTTON_LICENSE" = "Show Using Library Licenses";
@@ -168,6 +177,7 @@
 "ACTION_DM" = "DM";
 "ACTION_FAVORITES" = "Favorites";
 "ACTION_SEARCH" = "Search";
+"ACTION_FILTER" = "Filter";
 "ALERT_ADD_TAB" = "Adding a tab";
 
 // タイムライン画面

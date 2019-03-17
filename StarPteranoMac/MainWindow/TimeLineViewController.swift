@@ -25,6 +25,7 @@ final class TimeLineViewController: NSViewController {
         case notifications // 通知一覧
         case notificationMentions // 通知一覧(メンションのみ)
         case search // 検索
+        case filter // 抽出
     }
     
     let hostName: String
@@ -49,16 +50,10 @@ final class TimeLineViewController: NSViewController {
     }
     
     override func loadView() {
-        if self.type == .user || self.type == .mentions || self.type == .localTag || self.type == .federationTag || self.type == .direct || self.type == .favorites {
-            let view = TimeLineView(hostName: hostName, accessToken: accessToken, type: self.type, option: self.option, mentions: mentions)
-            view.vc = self
-            self.view = view
-        } else {
-            let view = TimeLineView(hostName: hostName, accessToken: accessToken, type: self.type, option: self.option, mentions: mentions)
-            view.vc = self
-            self.view = view
-        }
-        
+        let view = TimeLineView(hostName: hostName, accessToken: accessToken, type: self.type, option: self.option, mentions: mentions)
+        view.vc = self
+        self.view = view
+    
         // ヘッダービューを追加
         if self.type == .list && self.headerView == nil {
             // リスト選択用のポップアップ
@@ -76,6 +71,10 @@ final class TimeLineViewController: NSViewController {
                     self.view.superview?.superview?.superview?.needsLayout = true
                 }
             }
+        }
+        
+        if self.type == .filter {
+            (self.view as? TimeLineView)?.model.setFiltering()
         }
     }
     

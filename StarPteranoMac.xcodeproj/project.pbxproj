@@ -19,6 +19,10 @@
 		12403B8B223957C600C167B9 /* iTunesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8A223957C600C167B9 /* iTunesInfo.swift */; };
 		12403B8D223A809C00C167B9 /* SafariInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8C223A809C00C167B9 /* SafariInfo.swift */; };
 		12403B90223BD37000C167B9 /* FooterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8F223BD37000C167B9 /* FooterViewController.swift */; };
+		12403B92223DED7C00C167B9 /* FilterSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B91223DED7C00C167B9 /* FilterSettingsViewController.swift */; };
+		12403B95223E64E200C167B9 /* FilterAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B94223E64E200C167B9 /* FilterAccountViewController.swift */; };
+		12403B97223E64EE00C167B9 /* FilterKeywordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B96223E64EE00C167B9 /* FilterKeywordViewController.swift */; };
+		12403B99223E64FC00C167B9 /* FilterRegExpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B98223E64FC00C167B9 /* FilterRegExpViewController.swift */; };
 		1243D37F22256E5E001DA334 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1243D38122256E5E001DA334 /* Localizable.strings */; };
 		1243D3842225795C001DA334 /* ProfileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3832225795C001DA334 /* ProfileAction.swift */; };
 		1243D3862225796A001DA334 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D3852225796A001DA334 /* FollowingViewController.swift */; };
@@ -110,6 +114,10 @@
 		12403B8A223957C600C167B9 /* iTunesInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesInfo.swift; sourceTree = "<group>"; };
 		12403B8C223A809C00C167B9 /* SafariInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariInfo.swift; sourceTree = "<group>"; };
 		12403B8F223BD37000C167B9 /* FooterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterViewController.swift; sourceTree = "<group>"; };
+		12403B91223DED7C00C167B9 /* FilterSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettingsViewController.swift; sourceTree = "<group>"; };
+		12403B94223E64E200C167B9 /* FilterAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterAccountViewController.swift; sourceTree = "<group>"; };
+		12403B96223E64EE00C167B9 /* FilterKeywordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterKeywordViewController.swift; sourceTree = "<group>"; };
+		12403B98223E64FC00C167B9 /* FilterRegExpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRegExpViewController.swift; sourceTree = "<group>"; };
 		1243D38022256E5E001DA334 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D38222256E97001DA334 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1243D3832225795C001DA334 /* ProfileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileAction.swift; sourceTree = "<group>"; };
@@ -206,6 +214,17 @@
 				12403B8F223BD37000C167B9 /* FooterViewController.swift */,
 			);
 			path = Footer;
+			sourceTree = "<group>";
+		};
+		12403B93223E64BA00C167B9 /* FilterSettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				12403B91223DED7C00C167B9 /* FilterSettingsViewController.swift */,
+				12403B94223E64E200C167B9 /* FilterAccountViewController.swift */,
+				12403B96223E64EE00C167B9 /* FilterKeywordViewController.swift */,
+				12403B98223E64FC00C167B9 /* FilterRegExpViewController.swift */,
+			);
+			path = FilterSettingsView;
 			sourceTree = "<group>";
 		};
 		1243D393222A8D92001DA334 /* NotificationView */ = {
@@ -358,6 +377,7 @@
 				12C044FF2220FFC300BE3A50 /* DetailSettingsViewController.swift */,
 				12DF0D2E221C4345006A8C0B /* SettingsSelectProtectMode.swift */,
 				1243D38F2229FF2C001DA334 /* License.text */,
+				12403B93223E64BA00C167B9 /* FilterSettingsView */,
 			);
 			path = SettingsWindow;
 			sourceTree = "<group>";
@@ -556,11 +576,14 @@
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
 				12403B8D223A809C00C167B9 /* SafariInfo.swift in Sources */,
 				12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */,
+				12403B97223E64EE00C167B9 /* FilterKeywordViewController.swift in Sources */,
 				128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */,
 				128751B82184817D00BC8828 /* TimeLineViewModel.swift in Sources */,
+				12403B92223DED7C00C167B9 /* FilterSettingsViewController.swift in Sources */,
 				12403B90223BD37000C167B9 /* FooterViewController.swift in Sources */,
 				12C044F622202A2700BE3A50 /* EmojiData.swift in Sources */,
 				12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */,
+				12403B95223E64E200C167B9 /* FilterAccountViewController.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
@@ -568,6 +591,7 @@
 				1243D3842225795C001DA334 /* ProfileAction.swift in Sources */,
 				121A82402214E652008D3176 /* ClickableTextField.swift in Sources */,
 				128751AA2184340E00BC8828 /* MainViewController.swift in Sources */,
+				12403B99223E64FC00C167B9 /* FilterRegExpViewController.swift in Sources */,
 				120B0ED7222EA0FB00BC3181 /* SearchViewController.swift in Sources */,
 				1243D397222A8DC3001DA334 /* NotificationTableModel.swift in Sources */,
 				128751AE2184792500BC8828 /* EmojiImage.swift in Sources */,

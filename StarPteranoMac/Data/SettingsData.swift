@@ -152,6 +152,7 @@ final class SettingsData {
         case mentions = "Mentions"
         case users = "Users"
         case search = "Search"
+        case filter = "Filter"
     }
     static func tlMode(key: String) -> [TLMode] {
         if let string = defaults.string(forKey: "tlMode_\(key)") {
@@ -650,6 +651,93 @@ final class SettingsData {
                 defaults.removeObject(forKey: "previewHeight")
             }
         }
+    }
+    
+    // 抽出タブ(アカウントID)
+    private static var _filterAccounts: [String]?
+    static var filterAccounts: [String] {
+        get {
+            if let cache = _filterAccounts {
+                return cache
+            }
+            
+            var list: [String] = []
+            
+            if let str = defaults.string(forKey: "filterAccount") {
+                let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
+                for s in newStr.split(separator: "\n") {
+                    if s == "" { continue }
+                    list.append(String(s))
+                }
+            }
+            
+            _filterAccounts = list
+            return _filterAccounts!
+        }
+    }
+    
+    // 抽出タブ(キーワード)
+    private static var _filterKeywords: [String]?
+    static var filterKeywords: [String] {
+        get {
+            if let cache = _filterKeywords {
+                return cache
+            }
+            
+            var list: [String] = []
+            
+            if let str = defaults.string(forKey: "filterKeyword") {
+                let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
+                for s in newStr.split(separator: "\n") {
+                    if s == "" { continue }
+                    list.append(String(s))
+                }
+            }
+            
+            _filterKeywords = list
+            return _filterKeywords!
+        }
+    }
+    
+    // 抽出タブ(正規表現)
+    private static var _filterRegExp: NSRegularExpression?
+    static var filterRegExp: NSRegularExpression? {
+        get {
+            if let cache = _filterRegExp {
+                return cache
+            }
+            
+            var regexp: NSRegularExpression? = nil
+            
+            if let str = defaults.string(forKey: "filterRegExp") {
+                regexp = try? NSRegularExpression(pattern: str, options: NSRegularExpression.Options.allowCommentsAndWhitespace)
+            }
+            
+            _filterRegExp = regexp
+            return _filterRegExp
+        }
+    }
+    
+    // 抽出タブ(アカウントID)
+    static func setFilterAccount(str: String) {
+        defaults.set(str, forKey: "filterAccount")
+        _filterAccounts = nil
+    }
+    
+    // 抽出タブ(キーワード)
+    static func setFilterKeyword(str: String) {
+        defaults.set(str, forKey: "filterKeyword")
+        _filterKeywords = nil
+    }
+    
+    // 抽出タブ(正規表現)
+    static func setFilterRegExp(str: String) {
+        if str != "" {
+            defaults.set(str, forKey: "filterRegExp")
+        } else {
+            defaults.removeObject(forKey: "filterRegExp")
+        }
+        _filterRegExp = nil
     }
     
     // 最近使った絵文字に追加

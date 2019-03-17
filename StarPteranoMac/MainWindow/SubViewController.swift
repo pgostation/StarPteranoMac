@@ -64,7 +64,6 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         tabView.addNewTabButtonAction = #selector(newTabAction)
         tabView.addNewTabButtonTarget = self
         
-        //scrollView.scrollerStyle = .legacy
         scrollView.hasVerticalScroller = true
         scrollView.drawsBackground = false
     }
@@ -87,6 +86,11 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         if let item = self.selectedItem {
             addTab(mode: item)
+            
+            if item == .filter {
+                SettingsWindow.show()
+                SettingsViewController.instance?.filterAction()
+            }
         }
     }
     
@@ -121,6 +125,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             type = .home // これは使用しない
         case .search:
             type = .search
+        case .filter:
+            type = .filter
         }
         
         let vc: NSViewController
@@ -172,10 +178,11 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         selectedItem = nil
         
         do {
-            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION", "ACTION_LIST", "ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH"]
+            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION", "ACTION_LIST", "ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH", "ACTION_FILTER"]
             for str in menuItems {
-                // すでにタブがあるなら飛ばす
                 let mode = convert(title: I18n.get(str))
+                
+                // すでにタブがあるなら飛ばす
                 if existMenus.contains(mode) {
                     continue
                 }
@@ -228,6 +235,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             return .list
         } else if title == I18n.get("ACTION_SEARCH") {
             return .search
+        } else if title == I18n.get("ACTION_FILTER") {
+            return .filter
         }
         return .home
     }

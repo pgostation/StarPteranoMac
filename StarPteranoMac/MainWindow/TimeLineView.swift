@@ -136,6 +136,12 @@ class TimeLineView: NSTableView {
             return
         case .search:
             return
+        case .filter:
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.model.change(tableView: self, addList: [], accountList: [:])
+                self.model.setFiltering()
+            }
+            return
         }
         
         guard let requestUrl = url else { return }
@@ -547,6 +553,8 @@ class TimeLineView: NSTableView {
         case .notificationMentions:
             return
         case .search:
+            return
+        case .filter:
             return
         }
         

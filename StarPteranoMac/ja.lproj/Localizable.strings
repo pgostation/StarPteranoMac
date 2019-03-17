@@ -69,6 +69,7 @@
 "SETTINGS_GENERAL" = "一般";
 "SETTINGS_UI" = "UI";
 "SETTINGS_NOTIFICATIONS" = "通知";
+"SETTINGS_FILTER" = "抽出";
 "SETTINGS_SEARCH" = "検索";
 "SETTINGS_COLOR" = "色";
 "SETTINGS_DETAIL" = "詳細";
@@ -107,6 +108,14 @@
 "BUTTON_NOTIFY_FAVORITE" = "お気に入りを通知する";
 "BUTTON_NOTIFY_BOOST" = "ブーストを通知する";
 "BUTTON_NOTIFY_FOLLOW" = "フォローを通知する";
+
+// 抽出設定
+"FILTER_TAB_ACCOUNT" = "アカウント";
+"FILTER_TAB_KEYWORD" = "キーワード";
+"FILTER_TAB_REGEXP" = "正規表現";
+"FILTER_HELP_ACCOUNT" = "抽出するアカウントIDを入力してください。複数ある場合は「,」か「スペース」で区切ってください";
+"FILTER_HELP_KEYWORD" = "抽出する文字列を入力してください。複数ある場合は「,」か「スペース」で区切ってください";
+"FILTER_HELP_REGEXP" = "抽出に使用する正規表現を入力してください";
 
 // 詳細設定
 "BUTTON_LICENSE" = "使用ライブラリの著作権情報";
@@ -168,6 +177,7 @@
 "ACTION_DM" = "DM";
 "ACTION_FAVORITES" = "お気に入り";
 "ACTION_SEARCH" = "検索";
+"ACTION_FILTER" = "抽出";
 "ALERT_ADD_TAB" = "タブの追加";
 
 // タイムライン画面

@@ -22,6 +22,7 @@ final class SettingsViewController: NSViewController {
         view.generalButton.action = #selector(generalAction)
         view.uiButton.action = #selector(uiAction)
         view.notifyButton.action = #selector(notifyAction)
+        view.filterButton.action = #selector(filterAction)
         view.searchButton.action = #selector(searchAction)
         view.colorButton.action = #selector(colorAction)
         view.detailButton.action = #selector(detailAction)
@@ -93,6 +94,21 @@ final class SettingsViewController: NSViewController {
         self.view.addSubview(vc.view)
     }
     
+    @objc func filterAction() {
+        guard let view = self.view as? SettingsView else { return }
+        DispatchQueue.main.async {
+            view.clearHighlight()
+            view.filterButton.highlight(true)
+        }
+        
+        self.children.first?.view.removeFromSuperview()
+        self.children.first?.removeFromParent()
+        
+        let vc = FilterSettingsViewController()
+        self.addChild(vc)
+        self.view.addSubview(vc.view)
+    }
+    
     @objc func searchAction() {
         guard let view = self.view as? SettingsView else { return }
         DispatchQueue.main.async {
@@ -145,6 +161,7 @@ private class SettingsView: NSView {
     let generalButton = NSButton()
     let uiButton = NSButton()
     let notifyButton = NSButton()
+    let filterButton = NSButton()
     let searchButton = NSButton()
     let colorButton = NSButton()
     let detailButton = NSButton()
@@ -159,6 +176,7 @@ private class SettingsView: NSView {
         self.addSubview(generalButton)
         self.addSubview(uiButton)
         self.addSubview(notifyButton)
+        self.addSubview(filterButton)
         self.addSubview(searchButton)
         self.addSubview(colorButton)
         self.addSubview(detailButton)
@@ -191,6 +209,9 @@ private class SettingsView: NSView {
         notifyButton.title = I18n.get("SETTINGS_NOTIFICATIONS")
         setButtonStyle(button: notifyButton)
         
+        filterButton.title = I18n.get("SETTINGS_FILTER")
+        setButtonStyle(button: filterButton)
+        
         searchButton.title = I18n.get("SETTINGS_SEARCH")
         setButtonStyle(button: searchButton)
         
@@ -206,6 +227,7 @@ private class SettingsView: NSView {
         generalButton.highlight(false)
         uiButton.highlight(false)
         notifyButton.highlight(false)
+        filterButton.highlight(false)
         searchButton.highlight(false)
         colorButton.highlight(false)
         detailButton.highlight(false)
@@ -239,18 +261,23 @@ private class SettingsView: NSView {
                                     width: SettingsViewController.width,
                                     height: height)
         
-        /*searchButton.frame = NSRect(x: 0,
+        filterButton.frame = NSRect(x: 0,
                                     y: SettingsWindow.contentRect.height - height * 5,
+                                    width: SettingsViewController.width,
+                                    height: height)
+        
+        /*searchButton.frame = NSRect(x: 0,
+                                    y: SettingsWindow.contentRect.height - height * 6,
                                     width: SettingsViewController.width,
                                     height: height)*/
         
         colorButton.frame = NSRect(x: 0,
-                                   y: SettingsWindow.contentRect.height - height * 5,
+                                   y: SettingsWindow.contentRect.height - height * 6,
                                    width: SettingsViewController.width,
                                    height: height)
         
         detailButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 6,
+                                    y: SettingsWindow.contentRect.height - height * 7,
                                     width: SettingsViewController.width,
                                     height: height)
     }

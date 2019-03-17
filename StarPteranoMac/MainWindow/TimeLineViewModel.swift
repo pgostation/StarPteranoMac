@@ -245,6 +245,15 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     tableView.reloadData()
                 }
             }
+            
+            if tableView.type == .home || tableView.type == .local || tableView.type == .homeLocal {
+                let key = TimeLineViewManager.makeKey(hostName: tableView.hostName , accessToken: tableView.accessToken, type: .filter)
+                if let vc = TimeLineViewManager.get(key: key) {
+                    if vc.view.superview != nil {
+                        (vc.view as? TimeLineView)?.model.setFiltering()
+                    }
+                }
+            }
         }
     }
     
@@ -1830,6 +1839,73 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         
         self.filteredList = filteredList
         self.tableView?.reloadData()
+    }
+    
+    // 抽出
+    func setFiltering() {
+        guard let tableView = self.tableView else { return }
+        
+        // 抽出対象のmodelを取得
+        var srcList: [TimeLineViewModel] = []
+        let tlList: [SettingsData.TLMode] = [.homeLocal, .home, .local]
+        for type in tlList {
+            let key = TimeLineViewManager.makeKey(hostName: tableView.hostName , accessToken: tableView.accessToken, type: type)
+            if let vc = TimeLineViewManager.get(key: key) {
+                if let model = (vc.view as? TimeLineView)?.model {
+                    srcList.append(model)
+                }
+            }
+        }
+        
+        // 抽出対象がなければhomeを作り、5秒後に更新
+        if srcList.count == 0 {
+            let homeKey = TimeLineViewManager.makeKey(hostName: tableView.hostName, accessToken: tableView.accessToken, type: .home)
+            TimeLineViewManager.set(key: homeKey, vc: TimeLineViewController(hostName: tableView.hostName, accessToken: tableView.accessToken, type: .home))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                self.setFiltering()
+            }
+            return
+        }
+        
+        // 抽出作業 (複数のmodelがある場合、最初のしか利用しない)
+        if let model = srcList.first {
+            var newList: [AnalyzeJson.ContentData] = []
+            
+            for data in model.list {
+                if SettingsData.filterAccounts.contains(data.accountId) {
+                    // アカウントIDが一致
+                    newList.append(data)
+                } else {
+                    var flag = false
+                    // どれかキーワードが一致するか
+                    for keyword in SettingsData.filterKeywords {
+                        if data.content?.contains(keyword) == true {
+                            newList.append(data)
+                            flag = true
+                            break
+                        }
+                    }
+                    if !flag {
+                        // 正規表現が一致するか
+                        let str = data.content ?? ""
+                        if let result = SettingsData.filterRegExp?.matches(
+                            in: str,
+                            options: NSRegularExpression.MatchingOptions(),
+                            range: NSRange(location: 0, length: str.count))
+                        {
+                            if result.count > 0 {
+                                newList.append(data)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // 更新
+            if let tableView = self.tableView {
+                self.change(tableView: tableView, addList: newList, accountList: model.accountList)
+            }
+        }
     }
     
     class MyTextView: NSTextView {
