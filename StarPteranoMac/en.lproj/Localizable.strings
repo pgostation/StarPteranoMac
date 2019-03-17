@@ -7,166 +7,247 @@
 */
 
 // 基本
-"BUTTON_ADD" = "追加";
-"BUTTON_CANCEL" = "キャンセル";
+"BUTTON_ADD" = "Add";
+"BUTTON_CANCEL" = "Cancel";
 
 // Main Window
-"APPLICATION_NAME" = "星プテラノ";
+"APPLICATION_NAME" = "StarPterano";
 
 // Application Menu
-"About StarPterano" = "星プテラノについて";
-"Preferences…" = "環境設定…";
-"Hide StarPterano" = "星プテラノを隠す";
-"Hide Others" = "ほかを隠す";
-"Show All" = "すべてを表示";
-"Quit StarPterano" = "星プテラノを終了";
+"About StarPterano" = "About StarPterano";
+"Preferences…" = "Preferences…";
+"Hide StarPterano" = "Hide StarPterano";
+"Hide Others" = "Hide Others";
+"Show All" = "Show All";
+"Quit StarPterano" = "Quit StarPterano";
 
 // File Menu
-"File" = "ファイル";
-"Close" = "閉じる";
+"File" = "File";
+"New Window" = "New Window";
+"Close" = "Close";
 
 // Edit Menu
-"Edit" = "編集";
-"Undo" = "取り消す";
-"Redo" = "やり直す";
-"Cut" = "カット";
-"Copy" = "コピー";
-"Paste" = "ペースト";
-"Select All" = "すべてを選択";
+"Edit" = "Edit";
+"Undo" = "Undo";
+"Redo" = "Redo";
+"Cut" = "Cut";
+"Copy" = "Copy";
+"Paste" = "Paste";
+"Select All" = "Select All";
 
 // View Menu
-"View" = "表示";
-"Mini View" = "ミニビュー";
-"Compact View" = "コンパクトビュー";
-"Standard View" = "標準ビュー";
-"Full View" = "フルビュー";
-"Larger" = "拡大";
-"Smaller" = "縮小";
+"View" = "View";
+"Mini View" = "Mini View";
+"Compact View" = "Compact View";
+"Standard View" = "Standard View";
+"Full View" = "Full View";
+"Larger" = "Larger";
+"Smaller" = "Smaller";
+"Show User…" = "Show User…";
 
 // Toot Menu
-"Toot" = "トゥート";
-"New Toot" = "新規トゥート";
-"Now Playing" = "iTunesの曲名を挿入";
-"Now Browsing" = "Safariの情報を挿入";
-"Add Image…" = "画像を追加…";
-"Scheduled Toot…" = "予約投稿…";
+"Toot" = "Toot";
+"New Toot" = "New Toot";
+"Now Playing" = "Now Playing";
+"Now Browsing" = "Now Browsing";
+"Add Image…" = "Add Image…";
+"Scheduled Toot…" = "Scheduled Toot…";
 
 // Tool Menu
-"Tool" = "ツール";
-"Edit Profile…" = "プロフィール編集…";
+"Tool" = "Tool";
+"Edit Profile…" = "dit Profile…";
 
 // Window Menu
-"Window" = "ウインドウ";
+"Window" = "Window";
 
 // Help Menu
-"Help" = "ヘルプ";
+"Help" = "Help";
 
 // 設定画面
-"TITLE_PREFERENCES" = "環境設定";
-"SETTINGS_ACCOUNT" = "アカウント";
-"SETTINGS_GENERAL" = "一般";
+"TITLE_PREFERENCES" = "Preferences";
+"SETTINGS_ACCOUNT" = "Account";
+"SETTINGS_GENERAL" = "General";
 "SETTINGS_UI" = "UI";
-"SETTINGS_NOTIFICATIONS" = "通知";
-"SETTINGS_SEARCH" = "検索";
-"SETTINGS_DETAIL" = "詳細";
+"SETTINGS_NOTIFICATIONS" = "Notifications";
+"SETTINGS_SEARCH" = "Search";
+"SETTINGS_COLOR" = "Colors";
+"SETTINGS_DETAIL" = "Detail";
 
 // アカウント設定
-"BUTTON_DELETE" = "削除";
+"BUTTON_DELETE" = "Delete";
 
 // ログイン
-"PLACEHOLDER_INPUT_DOMAIN" = "ドメインを入力 (ex：mastodon.social)";
-"BUTTON_MASTODON_OAUTH" = "マストドン サーバーで認証";
-"ALERT_INPUT_DOMAIN" = "ドメインが入力されていません";
-"PLACEHOLDER_INPUT_CODE" = "コードを入力";
-"BUTTON_ENTER_CODE" = "コードを登録";
-"ALERT_INPUT_CODE_FAILURE" = "不正なコードのようです";
-"REQUEST_FAILED_CHECK_DOMAIN" = "サーバーへのリクエストに失敗しました。入力したドメインが正しいかチェックしてください";
+"PLACEHOLDER_INPUT_DOMAIN" = "Input domain. (ex：mastodon.social)";
+"BUTTON_MASTODON_OAUTH" = "Auth with Mastodon Server";
+"ALERT_INPUT_DOMAIN" = "There is not input domain.";
+"PLACEHOLDER_INPUT_CODE" = "Input code.";
+"BUTTON_ENTER_CODE" = "Enter code";
+"ALERT_INPUT_CODE_FAILURE" = "Code auth failure.";
+"REQUEST_FAILED_CHECK_DOMAIN" = "It's fail server request. Check the domain is correct.";
 
 // 一般設定
-"SETTINGS_PROTECTMODE" = "デフォルト公開範囲";
-"BUTTON_USESTREAMING" = "ストリーミングを使用";
-"BUTTON_DEFAULT_NSFW" = "メディアをデフォルトで閲覧注意";
-"BUTTON_CLEARCACHE" = "キャッシュをクリア";
+"SETTINGS_PROTECTMODE" = "Default Publishing Level";
+"BUTTON_USESTREAMING" = "Use Streaming";
+"BUTTON_DEFAULT_NSFW" = "Default NSFW (Not safe for work) for Media";
+"BUTTON_CLEARCACHE" = "CLear Cache";
 
 // UI設定
-"BUTTON_USING_COLOR" = "選択したセルに色をつける";
-"LABEL_ICONSIZE" = "アイコンサイズ";
-"BUTTON_LOAD_PREVIEW" = "画像プレビューを読み込む";
-"BUTTON_USE_ANIMATION" = "カスタム絵文字のアニメーション";
-"BUTTON_ABSOLUTE_TIME" = "絶対時間表示";
-"BUTTON_TRANSPARENT_WINDOW" = "透過ウィンドウ";
-"BUTTON_FORCE_DARKMODE" = "常にダークモード";
+"BUTTON_USING_COLOR" = "Use Background Colors";
+"LABEL_ICONSIZE" = "Icon Size";
+"LABEL_FONTSIZE" = "FOnt Size";
+"LABEL_PREVIEWHEIGHT" = "Preview Images Height";
+"BUTTON_LOAD_PREVIEW" = "Load Preview Images";
+"BUTTON_USE_ANIMATION" = "Custom Emoji Animation";
+"BUTTON_ABSOLUTE_TIME" = "Absolute Date";
+"BUTTON_TRANSPARENT_WINDOW" = "Transparent Window";
+"BUTTON_FORCE_DARKMODE" = "Always Dark Mode";
 
 // 通知設定
-"BUTTON_NOTIFY_MENTION" = "返信を通知する";
-"BUTTON_NOTIFY_FAVORITE" = "お気に入りを通知する";
-"BUTTON_NOTIFY_BOOST" = "ブーストを通知する";
-"BUTTON_NOTIFY_FOLLOW" = "フォローを通知する";
+"BUTTON_NOTIFY_MENTION" = "Notify Mentions";
+"BUTTON_NOTIFY_FAVORITE" = "Notify Favorites";
+"BUTTON_NOTIFY_BOOST" = "Notify Boosts";
+"BUTTON_NOTIFY_FOLLOW" = "Notify Follows";
+
+// 詳細設定
+"BUTTON_LICENSE" = "Show Using Library Licenses";
+"BUTTON_USE_STORAGE_CACHE" = "Use Storage Cache for Images";
+"LABEL_RAMCACHECOUNT" = "RAM cache for Images";
+
+// 色設定
+"SETTINGS_COLOR_USE_CUSTOM" = "Use Custom Colors";
+"SETTINGS_COLOR_RESET" = "Reset";
+"viewBgColor" = "Basic Bg";
+"contrastColor" = "Other Text";
+"cellBgColor" = "Toots Bg";
+"messageColor" = "Message Text";
+"idColor" = "Account ID";
+"dateColor" = "Date";
+"linkTextColor" = "Link Text";
+"nameColor" = "Screen Name";
+"detailButtonsColor" = "Button 1";
+"detailButtonsHiliteColor" = "Button 2";
+"selectedBgColor" = "Toot Bg (Selected)";
+"mentionedMeBgColor" = "Toot Bg (Mentioned)";
+"sameAccountBgColor" = "Toot Bg (Selected Account)";
+"mentionedBgColor" = "Toot Bg (Mention Toot)";
+"mentionedSameBgColor" = "Toot Bg (Mention Account)";
+"toMentionBgColor" = "Toot Bg (Mention to Selected)";
+"directBar" = "Direct Messages";
+"privateBar" = "Private";
+"unlistedBar" = "Home";
 
 // 詳細アクション
-"ACTION_OPEN_WITH_BROWSER" = "ブラウザで開く";
-"ACTION_DELETE_TOOT" = "このトゥートを削除";
-"ALERT_DELETE_TOOT_FAILURE" = "トゥートの削除に失敗しました";
-"ACTION_COPY_TOOT" = "トゥートをコピー";
-"ACTION_REPORT_TOOT" = "このトゥートを通報する";
-"ALERT_INPUT_REPORT_REASON" = "通報理由を入力";
-"BUTTON_REPORT" = "通報";
-"ALERT_REASON_IS_NIL" = "理由が入力されていません";
-"ALERT_REPORT_TOOT_FAILURE" = "通報に失敗しました";
-"ACTION_DESELECT" = "選択を解除";
+"ACTION_OPEN_WITH_BROWSER" = "Open with Web Browser";
+"ACTION_DELETE_TOOT" = "Delete This Toot";
+"ALERT_DELETE_TOOT_FAILURE" = "Delete the toot failure.";
+"ACTION_COPY_TOOT" = "Copy This Toot";
+"ACTION_REPORT_TOOT" = "Report This Toot";
+"ALERT_INPUT_REPORT_REASON" = "Input report reason";
+"BUTTON_REPORT" = "Report";
+"ALERT_REASON_IS_NIL" = "Input the Reason.";
+"ALERT_REPORT_TOOT_FAILURE" = "Report failure.";
+"ACTION_DESELECT" = "Deselect";
 
 // 何分前
-"DATETIME_NOW" = "今";
-"DATETIME_%D_SECS_AGO" = "%d秒";
-"DATETIME_%D_MINS_AGO" = "%d分";
-"DATETIME_%D_HOURS_AGO" = "%d時間";
-"DATETIME_%D_HOURS_HALF_AGO" = "%d時間半";
-"DATETIME_%D_DAYS_AGO" = "%d日";
-"DATETIME_%D_YEARS_AGO" = "%d年";
+"DATETIME_NOW" = "Now";
+"DATETIME_%D_SECS_AGO" = "%ds";
+"DATETIME_%D_MINS_AGO" = "%dm";
+"DATETIME_%D_HOURS_AGO" = "%dh";
+"DATETIME_%D_HOURS_HALF_AGO" = "%d.5h";
+"DATETIME_%D_DAYS_AGO" = "%dd";
+"DATETIME_%D_YEARS_AGO" = "%dy";
 
 // タイムライン変更
-"ACTION_HOME" = "ホーム";
-"ACTION_LOCAL" = "ローカル";
-"ACTION_HOMELOCAL" = "ローカル+ホーム";
-"ACTION_FEDERATION" = "連合";
-"ACTION_LIST" = "リスト";
-"ACTION_NOTIFICATIONS" = "通知";
-"ACTION_MENTIONS" = "返信";
+"ACTION_HOME" = "Home";
+"ACTION_LOCAL" = "LTL";
+"ACTION_HOMELOCAL" = "Merged";
+"ACTION_FEDERATION" = "FTL";
+"ACTION_LIST" = "Lists";
+"ACTION_NOTIFICATIONS" = "Notifications";
+"ACTION_MENTIONS" = "Mentions";
 "ACTION_DM" = "DM";
-"ACTION_FAVORITES" = "お気に入り";
-"ACTION_SEARCH" = "検索";
-"ACTION_USERS" = "ユーザー指定…";
-"ALERT_ADD_TAB" = "タブの追加";
+"ACTION_FAVORITES" = "Favorites";
+"ACTION_SEARCH" = "Search";
+"ALERT_ADD_TAB" = "Adding a tab";
 
 // タイムライン画面
-"BUTTON_SHOW_MORE" = "もっと見る";
-"BUTTON_HIDE_REDO" = "やっぱり隠す";
+"BUTTON_SHOW_MORE" = "Show more";
+"BUTTON_HIDE_REDO" = "Hide this";
 "BOOSTED_BY_%@" = "🔁 %@";
-"SUBTIMELINE_RELATIONS" = "💬会話";
+"SUBTIMELINE_RELATIONS" = "💬Relations";
+"THIS_TOOT_IS_DIRECT_MESSAGE" = "Direct Message";
+"ALERT_TEXT_EXISTS" = "Already Text Exists";
 
 // 公開範囲
-"TITLE_PROTECTMODE" = "公開範囲";
-"PROTECTMODE_PUBLIC" = "🌐 公開";
-"PROTECTMODE_UNLISTED" = "🔓 未収載";
-"PROTECTMODE_PRIVATE" = "🔐 フォロワー限定";
-"PROTECTMODE_DIRECT" = "✉️ ダイレクト";
+"PROTECTMODE_PUBLIC" = "🌐 Public";
+"PROTECTMODE_UNLISTED" = "🔓 Unlisted";
+"PROTECTMODE_PRIVATE" = "🔐 Followers-Only";
+"PROTECTMODE_DIRECT" = "✉️ Direct";
 
 // 絵文字キーボード
-"BUTTON_SPACEKEY" = "空白";
-"SEARCH_PLACEHOLDER" = "検索";
+"BUTTON_SPACEKEY" = "Space";
+"SEARCH_PLACEHOLDER" = "Search";
 
 // 画像確認画面
-"BUTTON_DELETE_IMAGE" = "削除";
-"BUTTON_NSFW" = "閲覧注意";
+"BUTTON_DELETE_IMAGE" = "Delete";
+"BUTTON_NSFW" = "NSFW (Not Safe for Work)";
 
-// システム通知
-"NOTIFY_MENTION" = "返信されました";
-"NOTIFY_FAV" = "お気に入りされました";
-"NOTIFY_BOOST" = "ブーストされました";
-"NOTIFY_FOLLOW" = "フォローされました";
+// フォロー状態表示
+"RELATIONSHIP_FOLLOWING_AND_FOLLOWED" = "⇄Following\n";
+"RELATIONSHIP_FOLLOWING" = "Following.\n";
+"RELATIONSHIP_FOLLOWED" = "Followed by.\n";
+"RELATIONSHIP_REQUESTED" = "Requested.\n";
+"RELATIONSHIP_ENDORSED" = "Endorsed.\n";
+"RELATIONSHIP_MUTING" = "Muting.\n";
+"RELATIONSHIP_MUTING_NOTIFICATION" = "Muting notifs.\n";
+"RELATIONSHIP_DOMAIN_BLOCKING" = "Domain blocking.\n";
+"RELATIONSHIP_BLOCKING" = "Blocking.\n";
+"RELATIONSHIP_HIDE_BOOST" = "Hiding boosts.\n";
+
+// フォローアクション
+"ACTION_UNFOLLOW" = "Unfollow";
+"ACTION_FOLLOW" = "Follow";
+"ACTION_REMOTE_FOLLOW" = "Remote follow";
+"ACTION_UNBLOCK" = "Unblock";
+"ACTION_BLOCK" = "Block";
+"ACTION_UNMUTE" = "Unmute";
+"ACTION_MUTE" = "Mute";
+"ACTION_OPEN_WITH_SAFARI" = "Open with Safari";
+"ACTION_ADD_TO_LIST" = "Add to lists";
+"ACTION_HIDE_BOOST" = "Hide boost";
+"ALERT_UNFOLLOW" = "Confirm";
+
+// 通知
+"NOTIFY_MENTION" = "is Mentioned:";
+"NOTIFY_FAV" = "is Favorited:";
+"NOTIFY_BOOST" = "is Boosted:";
+"NOTIFY_FOLLOW" = "is Followed by:";
 
 // 通知画面
-"NOTIFICATION_MENTION" = "返信しました";
-"NOTIFICATION_BOOST" = "🔁ブーストしました";
-"NOTIFICATION_FAV" = "🌟お気に入りしました";
-"NOTIFICATION_FOLLOW" = "➕フォローしました";
+"NOTIFICATION_MENTION" = "is Mentioned";
+"NOTIFICATION_BOOST" = "🔁is Boosted";
+"NOTIFICATION_FAV" = "🌟is Favorited";
+"NOTIFICATION_FOLLOW" = "is Followed";
+
+// 検索画面
+"SEARCH_SEG_TAG" = "Tag";
+"SEARCH_SEG_ACCOUNT" = "User";
+
+// 投票
+"ACTION_POLLS" = "Set polls";
+"ALERT_IMAGE_AND_POLLS" = "Can't toot polls and images at same time";
+"EXPIRES_TIME:" = "Expires:";
+"BUTTON_SET" = "Set";
+"ALERT_POLL_TWO_TEXT" = "It have to least 2 polls";
+"ALERT_SAME_POLL" = "There are same polls";
+"POLLS_MULTIPLE" = "Multiple choices allow";
+"POLLS_HIDE_TOTAL" = "Hide totals until poll ends";
+"POLL_OPTION" = "Choice ";
+"BUTTON_VOTE_DONE" = "Done";
+"VOTE_TOTAL:" = "Total:";
+"POLLS_EXPIRED" = "Expired";
+"VOTED_LABEL" = "Voted";
+
+// フッター
+"PLACEHOLDER_SEARCH" = "Search";
+"TOOLTIP_API_REMAIN" = "AP Remain";

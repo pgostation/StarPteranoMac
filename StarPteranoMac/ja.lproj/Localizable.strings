@@ -43,7 +43,7 @@
 "Full View" = "フルビュー";
 "Larger" = "拡大";
 "Smaller" = "縮小";
-"Show user…" = "ユーザーを表示…";
+"Show User…" = "ユーザーを表示…";
 
 // Toot Menu
 "Toot" = "トゥート";
@@ -168,7 +168,6 @@
 "ACTION_DM" = "DM";
 "ACTION_FAVORITES" = "お気に入り";
 "ACTION_SEARCH" = "検索";
-"ACTION_USERS" = "ユーザー指定…";
 "ALERT_ADD_TAB" = "タブの追加";
 
 // タイムライン画面
@@ -180,7 +179,6 @@
 "ALERT_TEXT_EXISTS" = "すでに文字列が入力されています";
 
 // 公開範囲
-"TITLE_PROTECTMODE" = "公開範囲";
 "PROTECTMODE_PUBLIC" = "🌐 公開";
 "PROTECTMODE_UNLISTED" = "🔓 未収載";
 "PROTECTMODE_PRIVATE" = "🔐 フォロワー限定";

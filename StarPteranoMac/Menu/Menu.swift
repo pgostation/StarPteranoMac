@@ -145,7 +145,7 @@ final class Menu: NSObject, NSMenuDelegate {
             }
             viewMenu.addItem(NSMenuItem.separator())
             do {
-                let menuItem1 = NSMenuItem(title: I18n.get("Show user…"), action: #selector(doViewMenu(_:)), keyEquivalent: "u")
+                let menuItem1 = NSMenuItem(title: I18n.get("Show User…"), action: #selector(doViewMenu(_:)), keyEquivalent: "u")
                 menuItem1.target = menuTarget
                 viewMenu.addItem(menuItem1)
             }
@@ -316,7 +316,7 @@ final class Menu: NSObject, NSMenuDelegate {
             SettingsData.fontSize -= 1
             MainViewController.refreshAllTimeLineViews()
         }
-        else if item.title == I18n.get("Show user…") {
+        else if item.title == I18n.get("Show User…") {
             let vc = TimeLineViewManager.getLastSelectedTLView()
             let hostName = (vc as? TimeLineViewController)?.hostName ?? (vc as? NotificationViewController)?.hostName
             let accessToken = (vc as? TimeLineViewController)?.accessToken ?? (vc as? NotificationViewController)?.accessToken
@@ -324,7 +324,7 @@ final class Menu: NSObject, NSMenuDelegate {
             let subAccountList = SettingsData.recentMentionList(accessToken: accessToken ?? "") + SettingsData.followingList(accessToken: accessToken ?? "")
             
             AccountDialog.showWithTextInput(
-                message: I18n.get("Show user…"),
+                message: I18n.get("Show User…"),
                 okName: "OK",
                 cancelName: "Cancel",
                 defaultText: nil,
