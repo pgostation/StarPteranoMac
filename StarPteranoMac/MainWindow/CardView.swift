@@ -83,7 +83,6 @@ final class CardView: NSView {
     
     private func setProperties() {
         self.isHidden = true
-        //self.clipsToBounds = true
         self.wantsLayer = true
         if !SettingsData.isTransparentWindow {
             self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
@@ -96,7 +95,6 @@ final class CardView: NSView {
         imageView.wantsLayer = true
         imageView.layer?.opacity = 0.6
         
-        //titleLabel.numberOfLines = 0
         titleLabel.lineBreakMode = .byCharWrapping
         titleLabel.textColor = ThemeColor.nameColor
         titleLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
@@ -110,7 +108,6 @@ final class CardView: NSView {
         titleLabel.isBezeled = false
         titleLabel.drawsBackground = false
         
-        //bodyLabel.numberOfLines = 0
         bodyLabel.lineBreakMode = .byCharWrapping
         bodyLabel.textColor = ThemeColor.contrastColor
         bodyLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
@@ -124,7 +121,6 @@ final class CardView: NSView {
         bodyLabel.isBezeled = false
         bodyLabel.drawsBackground = false
         
-        //domainLabel.textAlignment = .center
         domainLabel.textColor = ThemeColor.messageColor
         domainLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         domainLabel.wantsLayer = true

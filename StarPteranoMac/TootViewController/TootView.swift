@@ -90,7 +90,6 @@ final class TootView: NSView {
         spoilerTextField.isEditable = true
         spoilerTextField.layer?.borderColor = ThemeColor.messageColor.cgColor
         spoilerTextField.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
-        //spoilerTextField.tag = UIUtils.responderTag2
         spoilerTextField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         spoilerTextField.textContainerInset = NSSize.init(width: 1, height: 5)
         spoilerTextField.insertionPointColor = ThemeColor.contrastColor
@@ -110,7 +109,6 @@ final class TootView: NSView {
         textField.isEditable = true
         textField.layer?.borderColor = ThemeColor.messageColor.cgColor
         textField.layer?.borderWidth = 1 / (NSScreen.main?.backingScaleFactor ?? 1)
-        //textField.tag = UIUtils.responderTag
         textField.font = NSFont.systemFont(ofSize: SettingsData.fontSize)
         textField.textContainerInset = NSSize.init(width: 1, height: 5)
         textField.insertionPointColor = ThemeColor.contrastColor

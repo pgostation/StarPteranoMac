@@ -445,10 +445,6 @@ private class TapView: NSButton {
         let selectedTextRange = textView.selectedRange()
         let caretPosition = selectedTextRange.location
         
-        // この方法では入力済みの絵文字が消えてしまう
-        //guard let viewText = textView.text else { return }
-        // textView.text = viewText.prefix(location) + self.text + viewText.suffix(viewText.count - caretPosition)
-        
         for _ in 0..<max(0, caretPosition - location) {
             textView.deleteBackward(nil)
         }

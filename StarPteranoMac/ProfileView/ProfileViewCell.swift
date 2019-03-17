@@ -187,7 +187,6 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         idLabel.layer?.shadowOpacity = 1.0
         idLabel.layer?.shadowRadius = 1.0
         idLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
-        //idLabel.adjustsFontSizeToFitWidth = true
         idLabel.isBordered = false
         idLabel.isSelectable = false
         idLabel.isEditable = false
@@ -326,9 +325,7 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
         
         // フォロー関連
         actionButton.title = "…"
-        //actionButton.titleLabel?.font = NSFont.boldSystemFont(ofSize: 32)
         actionButton.layer?.backgroundColor = ThemeColor.detailButtonsColor.cgColor
-        //actionButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
         actionButton.layer?.cornerRadius = 10
         actionButton.layer?.borderColor = ThemeColor.detailButtonsColor.cgColor
         actionButton.layer?.borderWidth = 1
@@ -407,9 +404,6 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 if relationshipData.requested == 1 {
                     text += I18n.get("RELATIONSHIP_REQUESTED")
                 }
-                /*if relationshipData.endorsed == 1 {
-                 text += I18n.get("RELATIONSHIP_ENDORSED")
-                 }*/
                 
                 // ミュート
                 if relationshipData.muting == 1 {

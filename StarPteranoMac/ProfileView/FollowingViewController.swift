@@ -299,7 +299,6 @@ final class FollowingTableModel: NSObject, NSTableViewDataSource, NSTableViewDel
             } else {
                 cell.followButton.title = "+"
                 cell.followButton.font = NSFont.boldSystemFont(ofSize: 32)
-                //cell.followButton.setTitleColor(NSColor.blue, for: .normal)
                 cell.followButton.layer?.backgroundColor = NSColor.gray.cgColor
                 cell.followButton.target = cell
                 cell.followButton.action = #selector(cell.followAction)
@@ -337,7 +336,6 @@ private final class FollowingTableCell: NSView {
         self.addSubview(nameLabel)
         self.addSubview(idLabel)
         self.addSubview(followButton)
-        //self.layer.addSublayer(self.lineLayer)
         
         setProperties()
     }
@@ -349,7 +347,6 @@ private final class FollowingTableCell: NSView {
     private func setProperties() {
         // 固定プロパティは初期化時に設定
         self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-        //self.isOpaque = true
         
         self.iconView.layer?.cornerRadius = 5
         
@@ -362,7 +359,6 @@ private final class FollowingTableCell: NSView {
         self.nameLabel.isSelectable = false
         self.nameLabel.drawsBackground = false
         self.nameLabel.isBordered = false
-        //self.nameLabel.isOpaque = true
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
@@ -371,7 +367,6 @@ private final class FollowingTableCell: NSView {
         self.idLabel.isSelectable = false
         self.idLabel.drawsBackground = false
         self.idLabel.isBordered = false
-        //self.idLabel.isOpaque = true
         
         self.lineLayer.backgroundColor = ThemeColor.separatorColor.cgColor
         self.lineLayer.isOpaque = true
@@ -381,7 +376,6 @@ private final class FollowingTableCell: NSView {
         iconCoverView.action = #selector(tapAccountAction)
         
         self.followButton.layer?.backgroundColor = ThemeColor.detailButtonsColor.cgColor
-        //self.followButton.setTitleColor(ThemeColor.idColor, for: .normal)
         self.followButton.layer?.cornerRadius = 8
         self.followButton.alphaValue = 0
     }

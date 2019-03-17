@@ -86,19 +86,8 @@ final class ImageUpload {
         request.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         request.httpBody = createBodyWith(parameters: params, filePathKey: filePathKey, data: data, boundary: boundary)
         
-        /*var waitIndicator: WaitIndicator? = nil
-        DispatchQueue.main.async {
-            waitIndicator = WaitIndicator()
-            waitIndicator?.alpha = 0.6
-            UIUtils.getFrontViewController()?.view.addSubview(waitIndicator!)
-        }*/
-        
         // mediaアップロードPOST
         let task = MastodonRequest.session.dataTask(with: request, completionHandler: { data, response, error in
-            /*DispatchQueue.main.async {
-                waitIndicator?.removeFromSuperview()
-            }*/
-            
             if let response = response as? HTTPURLResponse {
                 print("statusCode=\(response.statusCode)")
                 print("#allHeaderFields=\(response.allHeaderFields)")

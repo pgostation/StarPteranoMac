@@ -65,9 +65,6 @@ final class EmojiView: NSView, NSTextFieldDelegate {
         closeButton.title = "✖️"
         
         spaceButton.title = I18n.get("BUTTON_SPACEKEY")
-        //spaceButton.setTitleColor(ThemeColor.mainButtonsTitleColor, for: .normal)
-        //spaceButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        //spaceButton.clipsToBounds = true
         
         searchField.placeholderString = I18n.get("SEARCH_PLACEHOLDER")
     }
@@ -294,10 +291,6 @@ private final class EmojiInputScrollView: NSScrollView {
         }
         let range = textView.selectedRange()
         textView.insertText("\(prefixStr):" + button.key + ":\u{200b}", replacementRange: range)// U+200bはゼロ幅のスペース
-        
-        // ダークモードでテキストが黒に戻ってしまう問題対策として、もう一度フォントを設定
-        //textView.textColor = ThemeColor.messageColor
-        //textView.font = NSFont.systemFont(ofSize: SettingsData.fontSize + 5)
         
         addRecent(key: button.key)
     }

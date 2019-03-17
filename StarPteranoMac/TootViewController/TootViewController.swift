@@ -39,8 +39,6 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         view.protectButton.action = #selector(protectAction)
         view.cwButton.target = self
         view.cwButton.action = #selector(cwAction)
-        //view.scheduledButton.target = self
-        //view.scheduledButton.action = #selector(scheduleAction)
         view.emojiButton.target = self
         view.emojiButton.action = #selector(emojiAction)
     }

@@ -57,8 +57,6 @@ final class MastodonStreaming: NSObject, WebSocketDelegate, WebSocketPongDelegat
             self.timer?.invalidate()
             self.timer = nil
             
-            //MainViewController.instance?.showNotify(text: I18n.get("NOTIFY_DISCONNECTED_STREAMING"))
-            
             MainViewController.setLamp(accessToken: accessToken)
         }
     }

@@ -80,7 +80,6 @@ final class PollView: NSView {
                 let label = NSTextField()
                 label.stringValue = "\(vote)"
                 label.textColor = ThemeColor.contrastColor
-                //label.adjustsFontSizeToFitWidth = true
                 label.isEditable = false
                 label.isSelectable = false
                 label.isBordered = false
@@ -91,7 +90,6 @@ final class PollView: NSView {
             let label = NSTextField()
             label.stringValue = option.0
             label.textColor = ThemeColor.contrastColor
-            //label.adjustsFontSizeToFitWidth = true
             label.isEditable = false
             label.isSelectable = false
             label.isBordered = false
@@ -102,7 +100,6 @@ final class PollView: NSView {
             button.title = "+"
             button.isBordered = false
             button.layer?.backgroundColor = NSColor.blue.cgColor
-            //button.clipsToBounds = true
             button.layer?.cornerRadius = 8
             buttons.append(button)
             if data.expired == true || data.voted == true {
@@ -113,7 +110,6 @@ final class PollView: NSView {
         
         totalLabel.stringValue = I18n.get("VOTE_TOTAL:") + "\(data.votes_count)"
         totalLabel.textColor = ThemeColor.contrastColor
-        //totalLabel.adjustsFontSizeToFitWidth = true
         totalLabel.isEditable = false
         totalLabel.isSelectable = false
         totalLabel.isBordered = false
@@ -148,7 +144,6 @@ final class PollView: NSView {
             }
         }
         expiredLabel.textColor = ThemeColor.contrastColor
-        //expiredLabel.adjustsFontSizeToFitWidth = true
         expiredLabel.isEditable = false
         expiredLabel.isSelectable = false
         expiredLabel.isBordered = false
@@ -157,7 +152,6 @@ final class PollView: NSView {
         if let voted = data.voted, voted == true {
             votedLabel.stringValue = I18n.get("VOTED_LABEL")
             votedLabel.textColor = ThemeColor.contrastColor
-            //votedLabel.adjustsFontSizeToFitWidth = true
         }
         votedLabel.isEditable = false
         votedLabel.isSelectable = false

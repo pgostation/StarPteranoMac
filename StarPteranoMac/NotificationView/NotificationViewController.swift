@@ -134,17 +134,6 @@ final class NotificationViewController: NSViewController {
                             // 表示を更新
                             view.notificationModel.change(addList: list)
                             view.reloadData()
-                            
-                            // 新着マークを表示
-                            if let created_at = view.notificationModel.getNewestCreatedAt() {
-                                let date = DecodeToot.decodeTime(text: created_at)
-                                let lastDate = SettingsData.newestNotifyDate(accessToken: strongSelf.accessToken)
-                                if lastDate == nil || date > lastDate! {
-                                    if view.window == nil {
-                                        //MainViewController.instance?.markNotificationButton(accessToken: strongSelf.accessToken, to: true)
-                                    }
-                                }
-                            }
                         }
                     }
                 } catch {

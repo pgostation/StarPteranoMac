@@ -173,10 +173,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                         self.list.removeLast(self.list.count - 5000)
                     }
                     
-                    if isStreaming {
-                        //self.animationCellsCount = addList2.count
-                    }
-                    
                     if isNewRefresh && addList.count >= 40 {
                         // 再読み込み用のセルをつける
                         self.list.insert(AnalyzeJson.emptyContentData(), at: 0)
@@ -191,36 +187,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     
                     if addList2.count <= 3 && tableView.visibleRect.maxY >= tableView.preparedContentRect.maxY - 60 {
                         // 一番上の場合、ずれさせる
-                    } else {
-                        /*DispatchQueue.main.async {
-                         // スクロールして、表示していたツイートがあまりずれないようにする
-                         tableView.reloadData()
-                         let oldOffsetY = tableView.contentOffset.y
-                         let indexPath = IndexPath(row: min(self.cellCount, addList2.count), section: 0)
-                         tableView.scrollToRow(at: indexPath,
-                         at: UITableViewScrollPosition.top,
-                         animated: false)
-                         tableView.contentOffset.y = max(0, tableView.contentOffset.y + oldOffsetY)
-                         }*/
                     }
                     
                     if isStreaming {
                         tableView.reloadData()
-                        
-                        /*self.inAnimating = true
-                         
-                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                         self.animationCellsCount = 0
-                         var indexPathList: [IndexPath] = []
-                         for i in 0..<self.animationCellsCount {
-                         indexPathList.append(IndexPath(item: i, section: 0))
-                         }
-                         tableView.reloadData()
-                         
-                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                         self.inAnimating = false
-                         }
-                         }*/
                     }
                 } else {
                     // すでにあるデータを更新する
@@ -320,7 +290,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     // セルの数
     private var isFirstView = true
     func numberOfRows(in tableView: NSTableView) -> Int {
-        var list = self.filteredList ?? self.list
+        let list = self.filteredList ?? self.list
         
         if list.count == 0, isFirstView {
             isFirstView = false
@@ -530,8 +500,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         let msgView = MyTextView()
         msgView.linkTextAttributes = [NSAttributedString.Key.foregroundColor: ThemeColor.linkTextColor]
         msgView.textContainer?.lineBreakMode = .byCharWrapping
-        //msgView.isOpaque = true
-        //msgView.isScrollEnabled = false
         msgView.isEditable = false
         msgView.delegate = self // URLタップ用
         msgView.textStorage?.append(attributedText)
@@ -539,7 +507,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         msgView.textColor = ThemeColor.messageColor
         msgView.drawsBackground = false
         msgView.isSelectable = true
-        //msgView.cachingFlag = true
         
         let messageView = msgView
         
@@ -585,18 +552,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             }
         }
         
-        /*if row < self.animationCellsCount {
-         let screenCellCount: Int
-         if SettingsData.isMiniView == .superMini {
-         screenCellCount = Int(tableView.frame.height / (10 + SettingsData.fontSize))
-         } else {
-         screenCellCount = Int(tableView.frame.height / (23 + SettingsData.fontSize * 1.5))
-         }
-         if row > screenCellCount {
-         return NSView()
-         }
-         }*/
-        
         if index >= list.count {
             if self.showAutoPagerizeCell, let timelineView = tableView as? TimeLineView {
                 let delayTime: Double = self.filteredList != nil ? 2.0 : 0.0
@@ -636,7 +591,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             cell?.messageView = messageView
             strongSelf.setCellColor(cell: cell)
             if cell?.isMiniView != .normal && strongSelf.selectedRow != row {
-                //(messageView as? NSTextField)?.numberOfLines = 1
                 messageView.sizeToFit()
             }
             let y = cell.isMiniView == .superMini ? -9 : cell.detailDateLabel?.frame.maxY ?? cell.spolerTextLabel?.frame.maxY ?? ((cell.isMiniView != .normal ? -9 : 5) + SettingsData.fontSize)
@@ -648,7 +602,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             let cell = NSView()
             cell.wantsLayer = true
             cell.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
-            //cell.selectionStyle = .none
             let loadButton = NSButton()
             loadButton.title = "🔄"
             loadButton.frame = NSRect(x: 0, y: 0, width: tableView.frame.width, height: SettingsData.isMiniView == .normal ? 60 : (SettingsData.isMiniView == .miniView ? 44 : 30))
@@ -741,7 +694,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         cell.visibility = data.visibility
         
         if cell.isMiniView != .normal && self.selectedRow != row {
-            //(messageView as? NSTextField)?.numberOfLines = 1
             messageView.sizeToFit()
         }
         
@@ -769,8 +721,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     }
                 })
                 cell.spolerTextLabel?.textStorage?.append(attributedText)
-                //cell.spolerTextLabel?.numberOfLines = 0
-                //cell.spolerTextLabel?.lineBreakMode = .byCharWrapping
                 cell.spolerTextLabel?.frame.size.width = tableView.frame.width - 70
                 cell.spolerTextLabel?.sizeToFit()
                 cell.spolerTextLabel?.drawsBackground = false
@@ -812,8 +762,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     timelineView.refreshOld(id: timelineView.model.getLastTootId())
                 }
                 let cell = NSView()
-                //cell.backgroundColor = ThemeColor.viewBgColor
-                //cell.selectionStyle = .none
                 return cell
             }
             
@@ -826,7 +774,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         // 詳細表示の場合
         if self.selectedRow == row || SettingsData.isMiniView == .full {
             cell.showDetail = true
-            //cell.isSelected = true
             
             self.selectedAccountId = account?.id
             self.inReplyToTootId = data.in_reply_to_id
@@ -946,8 +893,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.applicationLabel?.isBordered = false
                 cell.applicationLabel?.drawsBackground = false
                 cell.applicationLabel?.isEditable = false
-                //cell.applicationLabel?.textAlignment = .right
-                //cell.applicationLabel?.adjustsFontSizeToFitWidth = true
                 cell.applicationLabel?.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
                 cell.applicationLabel?.sizeToFit()
             }
@@ -996,8 +941,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.iconView?.wantsLayer = true
                 cell.iconView?.layer?.cornerRadius = 5
                 cell.iconView?.imageScaling = NSImageScaling.scaleProportionallyUpOrDown
-                //cell.iconView?.clipsToBounds = true
-                //cell.iconView?.insets = UIEdgeInsetsMake(5, 5, 5, 5)
                 
                 let iconSize = cell.isMiniView != .normal ? SettingsData.iconSize - 4 : SettingsData.iconSize
                 
@@ -1055,7 +998,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.detailDateLabel?.isEditable = false
                 cell.detailDateLabel?.isSelectable = false
                 cell.detailDateLabel?.drawsBackground = false
-                //cell.detailDateLabel?.textAlignment = .right
                 cell.addSubview(cell.detailDateLabel!)
             } else {
                 cell.date = date
@@ -1148,8 +1090,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     // リンク先のファイル名を表示
                     let label = MyTextField()
                     label.stringValue = String((media.remote_url ?? "").split(separator: "/").last ?? "")
-                    //label.textAlignment = .center
-                    //label.numberOfLines = 0
                     label.lineBreakMode = .byCharWrapping
                     label.textColor = ThemeColor.linkTextColor
                     cell.imageViews.last?.addSubview(label)
@@ -1225,7 +1165,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             cell.continueView?.alignment = .center
             cell.continueView?.isBezeled = false
             cell.continueView?.drawsBackground = false
-            //cell.continueView?.textAlignment = .center
             cell.addSubview(cell.continueView!)
         }
         
@@ -1488,42 +1427,36 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         } else if self.selectedRow != nil && self.selectedRow == cell.indexPath {
             // 選択色
             cell.layer?.backgroundColor = ThemeColor.selectedBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.selectedBgColor
             cell.nameLabel.backgroundColor = ThemeColor.selectedBgColor
             cell.idLabel.backgroundColor = ThemeColor.selectedBgColor
             cell.dateLabel.backgroundColor = ThemeColor.selectedBgColor
         } else if self.selectedAccountId == cell.accountId && self.inReplyToTootId == cell.id {
             // 選択したアカウントと同一で、返信先のトゥートの色
             cell.layer?.backgroundColor = ThemeColor.mentionedMeBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.mentionedMeBgColor
             cell.nameLabel.backgroundColor = ThemeColor.mentionedMeBgColor
             cell.idLabel.backgroundColor = ThemeColor.mentionedMeBgColor
             cell.dateLabel.backgroundColor = ThemeColor.mentionedMeBgColor
         } else if self.selectedAccountId == cell.accountId && cell.accountId != "" {
             // 選択したアカウントと同一のアカウントの色
             cell.layer?.backgroundColor = ThemeColor.sameAccountBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.sameAccountBgColor
             cell.nameLabel.backgroundColor = ThemeColor.sameAccountBgColor
             cell.idLabel.backgroundColor = ThemeColor.sameAccountBgColor
             cell.dateLabel.backgroundColor = ThemeColor.sameAccountBgColor
         } else if self.inReplyToTootId == cell.id && cell.id != "" {
             // 返信先のトゥートの色
             cell.layer?.backgroundColor = ThemeColor.mentionedBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.mentionedBgColor
             cell.nameLabel.backgroundColor = ThemeColor.mentionedBgColor
             cell.idLabel.backgroundColor = ThemeColor.mentionedBgColor
             cell.dateLabel.backgroundColor = ThemeColor.mentionedBgColor
         } else if self.inReplyToAccountId == cell.accountId && cell.accountId != nil {
             // 返信先のアカウントの色
             cell.layer?.backgroundColor = ThemeColor.mentionedSameBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.mentionedSameBgColor
             cell.nameLabel.backgroundColor = ThemeColor.mentionedSameBgColor
             cell.idLabel.backgroundColor = ThemeColor.mentionedSameBgColor
             cell.dateLabel.backgroundColor = ThemeColor.mentionedSameBgColor
         } else if mentionContains(selectedAccountId: self.selectedAccountId, mentions: cell.mentionsList) {
             // メンションが選択中アカウントの場合の色
             cell.layer?.backgroundColor = ThemeColor.toMentionBgColor.cgColor
-            //cell.messageView?.backgroundColor = ThemeColor.toMentionBgColor
             cell.nameLabel.backgroundColor = ThemeColor.toMentionBgColor
             cell.idLabel.backgroundColor = ThemeColor.toMentionBgColor
             cell.dateLabel.backgroundColor = ThemeColor.toMentionBgColor
@@ -1536,7 +1469,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 cell.dateLabel.backgroundColor = NSColor.clear
             } else {
                 cell.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
-                //cell.messageView?.backgroundColor = ThemeColor.cellBgColor
                 cell.nameLabel.backgroundColor = ThemeColor.cellBgColor
                 cell.idLabel.backgroundColor = ThemeColor.cellBgColor
                 cell.dateLabel.backgroundColor = ThemeColor.cellBgColor
@@ -1544,37 +1476,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
     }
     
-    // セルを使い回す
-    //private static var usingList: [TimeLineViewCell] = []
-    //private static var recycleList: [TimeLineViewCell] = []
+    // セルを取得
     private static var timeDate = Date()
     private func getCell(view: TimeLineView, height: CGFloat) -> TimeLineViewCell {
-        /*if Date().timeIntervalSince(TimeLineViewModel.timeDate) >= 1 {
-            for (index, cell) in TimeLineViewModel.usingList.enumerated().reversed() {
-                if cell.superview == nil {
-                    TimeLineViewModel.recycleList.append(cell)
-                    TimeLineViewModel.usingList.remove(at: index)
-                    
-                    if TimeLineViewModel.recycleList.count > 10 {
-                        for _ in 0..<TimeLineViewModel.recycleList.count - 10 {
-                            let cell = TimeLineViewModel.recycleList.popLast()
-                            cell?.prepareForReuse()
-                        }
-                    }
-                }
-            }
-            TimeLineViewModel.timeDate = Date()
-        }*/
-        
-        let cell: TimeLineViewCell
-        //if let tmpCell = TimeLineViewModel.recycleList.popLast() {
-        //    tmpCell.prepareForReuse()
-        //    cell = tmpCell
-        //} else {
-            cell = TimeLineViewCell()
-        //}
+        let cell = TimeLineViewCell()
         cell.tableView = view
-        //TimeLineViewModel.usingList.append(cell)
         
         if SettingsData.isMiniView == .superMini {
             cell.nameLabel.isHidden = true
@@ -1593,7 +1499,6 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         guard let timelineView = notification.object as? TimeLineView else { return }
         
         let row = timelineView.selectedRow // timelineView.model.selectedRow ?? 0
-        //timelineView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
         
         selectRow(timelineView: timelineView, row: row)
     }
@@ -1889,7 +1794,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     
     // 会話部分のデータを取り出す
     func getMentionsData(data: AnalyzeJson.ContentData) -> [AnalyzeJson.ContentData] {
-        var list = self.filteredList ?? self.list
+        let list = self.filteredList ?? self.list
         var mentionContents: [AnalyzeJson.ContentData] = [data]
         
         var in_reply_to_id = data.in_reply_to_id

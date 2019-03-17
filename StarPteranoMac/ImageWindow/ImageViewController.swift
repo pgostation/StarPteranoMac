@@ -52,7 +52,6 @@ final class ImageViewController: NSViewController {
         // 画像クリックボタン追加
         view.addSubview(coverButton)
         coverButton.frame = imageView.frame
-        //coverButton.isTransparent = true
         coverButton.target = self
         coverButton.action = #selector(tapAction)
         

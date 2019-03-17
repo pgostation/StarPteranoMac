@@ -29,7 +29,7 @@ final class SafariInfo {
             let output: NSAppleEventDescriptor = scriptObject.executeAndReturnError(&error)
             if let error = error {
                 for key in error.allKeys {
-                    print("\(key) = \(error.value(forKey: key as! String))")
+                    print("\(key) = \(String(describing: error.value(forKey: key as! String)))")
                 }
             } else {
                 let info = Info(title: output.atIndex(1)?.stringValue,

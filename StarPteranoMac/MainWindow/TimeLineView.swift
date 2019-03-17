@@ -43,8 +43,6 @@ class TimeLineView: NSTableView {
         
         self.headerView = nil
         
-        //self.separatorStyle = .none
-        
         if type != .mentions {
         } else {
             // 会話表示
@@ -174,10 +172,8 @@ class TimeLineView: NSTableView {
                             
                             strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: strongSelf.accountList)
                             
-                            //DispatchQueue.main.sync {
-                                // テーブルビューを更新
-                                strongSelf.reloadData()
-                            //}
+                            // テーブルビューを更新
+                            strongSelf.reloadData()
                             
                             // ローカルにホームを統合する場合
                             if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
@@ -188,10 +184,8 @@ class TimeLineView: NSTableView {
                                         let contentList = [contentData]
                                         homeLocalTlView.model.change(tableView: homeLocalTlView, addList: contentList, accountList: strongSelf.accountList)
                                         
-                                        //DispatchQueue.main.sync {
-                                            // テーブルビューを更新
-                                            homeLocalTlView.reloadData()
-                                        //}
+                                        // テーブルビューを更新
+                                        homeLocalTlView.reloadData()
                                     }
                                 }
                             }
@@ -289,12 +283,6 @@ class TimeLineView: NSTableView {
         if self.streamingObject?.isConnecting != true && self.streamingObject?.isConnected != true {
             if self.type == .home {
                 self.streaming(streamingType: "user")
-                
-                /*// 新着通知のチェック
-                let notificationViewController = NotificationViewController()
-                if notificationViewController.view != nil {
-                    // viewを参照することで、loadViewさせる
-                }*/
             }
             else if (self.type == .local || self.type == .homeLocal) {
                 self.streaming(streamingType: "public:local")
@@ -403,13 +391,8 @@ class TimeLineView: NSTableView {
                                 return
                             }
                             
-                            var offsetY: CGFloat = 0
-                            var returnFlag = false
-                            //DispatchQueue.main.sync {
-                                //offsetY = self.contentOffset.y
-                                
-                                returnFlag = offsetY > 60 || (self.isManualLoading && self.model.getFirstTootId() != nil)
-                            //}
+                            let offsetY: CGFloat = 0
+                            let returnFlag = offsetY > 60 || (self.isManualLoading && self.model.getFirstTootId() != nil)
                             
                             if returnFlag {
                                 // スクロール位置が一番上でない場合、テーブルビューには反映せず裏に持っておく

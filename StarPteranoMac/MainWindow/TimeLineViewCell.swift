@@ -88,35 +88,28 @@ final class TimeLineViewCell: NSView {
         self.wantsLayer = true
         
         // 固定プロパティは初期化時に設定
-        //self.clipsToBounds = true
         if SettingsData.isTransparentWindow {
             self.layer?.backgroundColor = NSColor.clear.cgColor
         } else {
             self.layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
         }
-        //self.isOpaque = true
-        //self.selectionStyle = .none
         
         self.nameLabel.textColor = ThemeColor.nameColor
         self.nameLabel.font = NSFont.boldSystemFont(ofSize: SettingsData.fontSize)
         self.nameLabel.backgroundColor = ThemeColor.cellBgColor
         self.nameLabel.isBordered = false
         self.nameLabel.isEditable = false
-        //self.nameLabel.isOpaque = true
         
         self.idLabel.textColor = ThemeColor.idColor
         self.idLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.idLabel.backgroundColor = ThemeColor.cellBgColor
         self.idLabel.isBordered = false
         self.idLabel.isEditable = false
-        //self.idLabel.isOpaque = true
         
         self.dateLabel.textColor = ThemeColor.dateColor
         self.dateLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         self.dateLabel.alignment = .right
         self.dateLabel.backgroundColor = ThemeColor.cellBgColor
-        //self.dateLabel.adjustsFontSizeToFitWidth = true
-        //self.dateLabel.isOpaque = true
         self.dateLabel.isBordered = false
         self.dateLabel.isEditable = false
         
@@ -469,14 +462,6 @@ final class TimeLineViewCell: NSView {
             menu.addItem(deleteItem)
         }
         
-        /*
-        // 通報する
-        let reportItem = NSMenuItem(title: I18n.get("ACTION_REPORT_TOOT"),
-                                      action: #selector(reportAction),
-                                      keyEquivalent: "")
-        reportItem.target = self
-        menu.addItem(reportItem)*/
-        
         // ペーストボードにコピー
         let copyItem = NSMenuItem(title: I18n.get("ACTION_COPY_TOOT"),
                                     action: #selector(copyAction),
@@ -490,17 +475,6 @@ final class TimeLineViewCell: NSView {
                                   keyEquivalent: "")
         browserItem.target = self
         menu.addItem(browserItem)
-        
-        /*
-         // 生データを表示
-         alertController.addAction(UIAlertAction(
-         title: "生データを表示",
-         style: UIAlertActionStyle.default,
-         handler: { _ in
-         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-         Dialog.show(message: self.contentData)
-         }
-         }))*/
     }
     
     // 選択解除
@@ -517,45 +491,6 @@ final class TimeLineViewCell: NSView {
                 Dialog.show(message: I18n.get("ALERT_DELETE_TOOT_FAILURE") + "\n " + error.localizedDescription)
             }
         })
-    }
-    
-    @objc func reportAction() {
-        /*
-        Dialog.showWithTextInput(
-            message: I18n.get("ALERT_INPUT_REPORT_REASON"),
-            okName: I18n.get("BUTTON_REPORT"),
-            cancelName: I18n.get("BUTTON_CANCEL"),
-            defaultText: nil,
-            callback: { textField, result in
-                if !result { return }
-                
-                if textField.stringValue == nil || textField.text!.count == 0 {
-                    Dialog.show(message: I18n.get("ALERT_REASON_IS_NIL"))
-                    return
-                }
-                
-                guard let hostName = SettingsData.hostName else { return }
-                
-                let url = URL(string: "https://\(hostName)/api/v1/reports")!
-                
-                let bodyDict = ["account_id": accountId,
-                                "status_ids": id,
-                                "comment": textField.text!]
-                
-                try? MastodonRequest.post(url: url, body: bodyDict) { (data, response, error) in
-                    if let error = error {
-                        Dialog.show(message: I18n.get("ALERT_REPORT_TOOT_FAILURE") + "\n" + error.localizedDescription)
-                    } else {
-                        if let response = response as? HTTPURLResponse {
-                            if response.statusCode == 200 {
-                                //
-                            } else {
-                                Dialog.show(message: I18n.get("ALERT_REPORT_TOOT_FAILURE") + "\nHTTP status \(response.statusCode)")
-                            }
-                        }
-                    }
-                }
-        }) */
     }
     
     @objc func copyAction() {
