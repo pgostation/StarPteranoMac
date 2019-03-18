@@ -194,11 +194,11 @@ final class PollView: NSView {
     private func voteRequest() {
         let url = URL(string: "https://\(hostName)/api/v1/polls/\(data.id)/votes")!
         
-        var choiceArray: [String] = []
+        var choiceArray: [Int] = []
         
         for (i, button) in self.buttons.enumerated() {
             if button.layer?.backgroundColor == ThemeColor.cellBgColor.cgColor {
-                choiceArray.append(data.options[i].0)
+                choiceArray.append(i)
             }
         }
         
