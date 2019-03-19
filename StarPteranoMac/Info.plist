@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Getting information from Safari for &quot;Now Browsing&quot;</string>
+	<string>Getting information from Safari for &quot;Now Browsing&quot; and iTunes for &quot;Now Playing&quot;</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

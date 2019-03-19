@@ -9,10 +9,6 @@
 import Foundation
 import ScriptingBridge
 
-@objc fileprivate protocol SafariApplication {
-    @objc optional var windows: [Any] { get }
-}
-
 final class SafariInfo {
     static func get() -> Info? {
         // AppleScriptでSafariのタブ情報取得 (entitlementsとInfo.plistに権限がいる)

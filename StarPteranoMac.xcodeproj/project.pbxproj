@@ -14,6 +14,7 @@
 		120B0EDB2231563100BC3181 /* HashtagCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDA2231563100BC3181 /* HashtagCache.swift */; };
 		120B0EDD2233D36100BC3181 /* ColorSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */; };
 		120B0EDF2233DBEE00BC3181 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B0EDE2233DBEE00BC3181 /* CustomColor.swift */; };
+		120B3B7D2241129000E60ECF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 120B3B7F2241129000E60ECF /* InfoPlist.strings */; };
 		121A82402214E652008D3176 /* ClickableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121A823F2214E652008D3176 /* ClickableTextField.swift */; };
 		12403B8922393D4C00C167B9 /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8822393D4C00C167B9 /* PollView.swift */; };
 		12403B8B223957C600C167B9 /* iTunesInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12403B8A223957C600C167B9 /* iTunesInfo.swift */; };
@@ -58,7 +59,6 @@
 		128751D12185445A00BC8828 /* TootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751D02185445A00BC8828 /* TootView.swift */; };
 		128751D32185497600BC8828 /* ImageCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751D22185497600BC8828 /* ImageCheckView.swift */; };
 		128D4E552189AE51003BDEF4 /* TimeLineViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128D4E542189AE51003BDEF4 /* TimeLineViewManager.swift */; };
-		1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1291FC432180B03A009B8788 /* InfoPlist.strings */; };
 		1291FC462181FD8B009B8788 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC452181FD8B009B8788 /* SettingsViewController.swift */; };
 		1291FC4821834628009B8788 /* AccountSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4721834628009B8788 /* AccountSettingsViewController.swift */; };
 		1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4A21835D5A009B8788 /* Dialog.swift */; };
@@ -109,6 +109,8 @@
 		120B0EDA2231563100BC3181 /* HashtagCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagCache.swift; sourceTree = "<group>"; };
 		120B0EDC2233D36100BC3181 /* ColorSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSettingsViewController.swift; sourceTree = "<group>"; };
 		120B0EDE2233DBEE00BC3181 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		120B3B7E2241129000E60ECF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		120B3B802241129900E60ECF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		121A823F2214E652008D3176 /* ClickableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableTextField.swift; sourceTree = "<group>"; };
 		12403B8822393D4C00C167B9 /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
 		12403B8A223957C600C167B9 /* iTunesInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iTunesInfo.swift; sourceTree = "<group>"; };
@@ -154,7 +156,6 @@
 		128751D02185445A00BC8828 /* TootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TootView.swift; sourceTree = "<group>"; };
 		128751D22185497600BC8828 /* ImageCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCheckView.swift; sourceTree = "<group>"; };
 		128D4E542189AE51003BDEF4 /* TimeLineViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeLineViewManager.swift; sourceTree = "<group>"; };
-		1291FC432180B03A009B8788 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
 		1291FC452181FD8B009B8788 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		1291FC4721834628009B8788 /* AccountSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewController.swift; sourceTree = "<group>"; };
 		1291FC4A21835D5A009B8788 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
@@ -357,7 +358,7 @@
 				129F4339217E1CD4008E856D /* MainMenu.xib */,
 				129F433C217E1CD4008E856D /* Info.plist */,
 				129F433D217E1CD4008E856D /* StarPteranoMac.entitlements */,
-				1291FC432180B03A009B8788 /* InfoPlist.strings */,
+				120B3B7F2241129000E60ECF /* InfoPlist.strings */,
 				1243D38122256E5E001DA334 /* Localizable.strings */,
 			);
 			path = StarPteranoMac;
@@ -502,7 +503,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				129F4338217E1CD4008E856D /* Assets.xcassets in Resources */,
-				1291FC442180B03A009B8788 /* InfoPlist.strings in Resources */,
+				120B3B7D2241129000E60ECF /* InfoPlist.strings in Resources */,
 				1243D37F22256E5E001DA334 /* Localizable.strings in Resources */,
 				129F433B217E1CD4008E856D /* MainMenu.xib in Resources */,
 				1243D3902229FF2C001DA334 /* License.text in Resources */,
@@ -649,6 +650,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		120B3B7F2241129000E60ECF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				120B3B7E2241129000E60ECF /* ja */,
+				120B3B802241129900E60ECF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		1243D38122256E5E001DA334 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

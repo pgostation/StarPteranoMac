@@ -10,6 +10,7 @@
 	<true/>
 	<key>com.apple.security.temporary-exception.apple-events</key>
 	<array>
+		<string>com.apple.iTunes</string>
 		<string>com.apple.Safari</string>
 	</array>
 </dict>

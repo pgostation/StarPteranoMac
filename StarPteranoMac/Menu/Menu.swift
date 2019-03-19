@@ -459,7 +459,7 @@ final class Menu: NSObject, NSMenuDelegate {
                     let tmpDir = NSTemporaryDirectory()
                     let tmpUrl = URL(fileURLWithPath: tmpDir + "/artwork.jpg")
                     
-                    let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: artwork.size.width, height: artwork.size.height))
+                    let imageRepresentation = artwork.representations.first as? NSBitmapImageRep
                     let imageData = imageRepresentation?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])
                     if let imageData = imageData {
                         do {
@@ -545,12 +545,6 @@ final class Menu: NSObject, NSMenuDelegate {
             if MainWindow.window != nil {
                 return false
             }
-        }
-        else if item.title == I18n.get("Now Playing") {
-            return (iTunesInfo.get()?.title != nil)
-        }
-        else if item.title == I18n.get("Now Browsing") {
-            return true
         }
         
         return true
