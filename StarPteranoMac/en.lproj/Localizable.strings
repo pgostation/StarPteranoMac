@@ -244,6 +244,7 @@
 "NOTIFICATION_BOOST" = "🔁is Boosted";
 "NOTIFICATION_FAV" = "🌟is Favorited";
 "NOTIFICATION_FOLLOW" = "is Followed";
+"FILTER_NOTIFICATION_TITLE" = "is Filtered";
 
 // 検索画面
 "SEARCH_SEG_TAG" = "Tag";

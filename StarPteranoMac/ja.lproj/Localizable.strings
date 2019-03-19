@@ -238,6 +238,7 @@
 "NOTIFY_FAV" = "お気に入りされました";
 "NOTIFY_BOOST" = "ブーストされました";
 "NOTIFY_FOLLOW" = "フォローされました";
+"FILTER_NOTIFICATION_TITLE" = "抽出されました";
 
 // 通知画面
 "NOTIFICATION_MENTION" = "返信しました";

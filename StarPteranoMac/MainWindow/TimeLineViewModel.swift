@@ -130,6 +130,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 if isStreaming {
                     tableView.reloadData()
                 }
+                
+                self.notify(dataList: addList2)
             } else if let firstDate1 = self.list.first?.created_at, let firstDate2 = addList2.first?.created_at, let lastDate1 = self.list.last?.created_at, let lastDate2 = addList2.last?.created_at {
                 
                 if addList2.count == 1 && isBoosted {
@@ -192,6 +194,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     if isStreaming {
                         tableView.reloadData()
                     }
+                    
+                    self.notify(dataList: addList2)
                 } else {
                     // すでにあるデータを更新する
                     var index = 0
@@ -257,6 +261,43 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    // 抽出でのローカル通知
+    private func notify(dataList: [AnalyzeJson.ContentData]) {
+        if self.tableView == nil { return }
+        
+        switch self.tableView!.type {
+        case .filter0:
+            if !SettingsData.filterLocalNotification(index: 0) {
+                return
+            }
+        case .filter1:
+            if !SettingsData.filterLocalNotification(index: 1) {
+                return
+            }
+        case .filter2:
+            if !SettingsData.filterLocalNotification(index: 2) {
+                return
+            }
+        case .filter3:
+            if !SettingsData.filterLocalNotification(index: 3) {
+                return
+            }
+        default:
+            return
+        }
+        
+        if let data = dataList.first {
+            let notification = NSUserNotification()
+            notification.title = I18n.get("FILTER_NOTIFICATION_TITLE")
+            notification.subtitle = data.accountId
+            notification.informativeText = String((data.content ?? "").prefix(50))
+            notification.userInfo = ["created_at": data.created_at ?? ""]
+            DispatchQueue.main.async {
+                NSUserNotificationCenter.default.deliver(notification)
             }
         }
     }
