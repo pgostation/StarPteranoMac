@@ -157,6 +157,10 @@ final class NotificationTableCell: NSView {
     
     // リプライボタンをクリックした時の処理
     @objc func replyAction() {
+        innerReplyAction(isAll: false)
+    }
+    
+    func innerReplyAction(isAll: Bool) {
         self.tableView?.selectedDate = Date()
         
         if let vc = TootViewController.get(accessToken: tableView?.accessToken), let view = vc.view as? TootView, view.textField.string.count > 0 {
@@ -185,6 +189,24 @@ final class NotificationTableCell: NSView {
             DispatchQueue.main.async {
                 if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
                     view.textField.string = "@\(self.idLabel.stringValue) "
+                    
+                    // 全員に返信
+                    if isAll || MainViewController.modifierFlags.contains(NSEvent.ModifierFlags.shift) {
+                        let string = self.statusLabel.string
+                        let regex = try? NSRegularExpression(pattern: "@[a-zA-Z0-9_]+",
+                                                             options: NSRegularExpression.Options())
+                        let matches = regex?.matches(in: string,
+                                                     options: NSRegularExpression.MatchingOptions(),
+                                                     range: NSMakeRange(0, string.count))
+                        for result in matches ?? [] {
+                            for i in 0..<result.numberOfRanges {
+                                let idStr = (string as NSString).substring(with: result.range(at: i))
+                                if idStr != "@" + (SettingsData.accountUsername(accessToken: self.tableView?.accessToken ?? "") ?? "") && idStr != "@\(self.idLabel.stringValue)" {
+                                    view.textField.string += idStr + " "
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

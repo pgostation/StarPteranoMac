@@ -353,18 +353,28 @@ final class TimeLineViewCell: NSView {
             DispatchQueue.main.async {
                 if let vc = TootViewController.get(accessToken: self.tableView?.accessToken), let view = vc.view as? TootView {
                     view.textField.string = "@\(self.idLabel.stringValue) "
-                    if isAll || MainViewController.modifierFlags.contains(NSEvent.ModifierFlags.shift){
+                    
+                    // 全員に返信
+                    if isAll || MainViewController.modifierFlags.contains(NSEvent.ModifierFlags.shift) {
                         let string = self.messageView?.string ?? ""
-                        let regex = try? NSRegularExpression(pattern: "@[a-zA-Z_]+",
+                        let regex = try? NSRegularExpression(pattern: "@[a-zA-Z0-9_]+",
                                                              options: NSRegularExpression.Options())
                         let matches = regex?.matches(in: string,
                                                      options: NSRegularExpression.MatchingOptions(),
                                                      range: NSMakeRange(0, string.count))
                         for result in matches ?? [] {
                             for i in 0..<result.numberOfRanges {
-                                view.textField.string += (string as NSString).substring(with: result.range(at: i)) + " "
+                                let idStr = (string as NSString).substring(with: result.range(at: i))
+                                if idStr != "@" + (SettingsData.accountUsername(accessToken: self.tableView?.accessToken ?? "") ?? "") && idStr != "@\(self.idLabel.stringValue)" {
+                                    view.textField.string += idStr + " "
+                                }
                             }
                         }
+                    }
+                    
+                    let acctStr = self.idLabel.stringValue
+                    if acctStr != "" {
+                        SettingsData.addRecentMention(key: acctStr, accessToken: self.tableView?.accessToken ?? "")
                     }
                 }
             }
