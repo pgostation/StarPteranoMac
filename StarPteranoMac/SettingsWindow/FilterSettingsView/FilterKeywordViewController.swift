@@ -9,10 +9,14 @@
 import Cocoa
 
 final class FilterKeywordViewController: NSViewController {
-    init() {
+    let index: Int
+    
+    init(index: Int) {
+        self.index = index
+        
         super.init(nibName: nil, bundle: nil)
         
-        let view = FilterKeywordView()
+        let view = FilterKeywordView(index: index)
         self.view = view
     }
     
@@ -23,7 +27,7 @@ final class FilterKeywordViewController: NSViewController {
     override func viewDidDisappear() {
         guard let view = self.view as? FilterKeywordView else { return }
         
-        SettingsData.setFilterKeyword(str: view.textView.stringValue)
+        SettingsData.setFilterKeyword(index: index, str: view.textView.stringValue)
     }
 }
 
@@ -31,20 +35,20 @@ final class FilterKeywordView: NSView {
     let helpLabel = NSTextField()
     let textView = NSTextField()
     
-    init() {
+    init(index: Int) {
         super.init(frame: FilterSettingsView.contentRect)
         
         self.addSubview(helpLabel)
         self.addSubview(textView)
         
-        setProperties()
+        setProperties(index: index)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setProperties() {
+    private func setProperties(index: Int) {
         helpLabel.stringValue = I18n.get("FILTER_HELP_KEYWORD")
         helpLabel.isEditable = false
         helpLabel.isBordered = false
@@ -52,7 +56,7 @@ final class FilterKeywordView: NSView {
         helpLabel.drawsBackground = false
         helpLabel.maximumNumberOfLines = 2
         
-        textView.stringValue = SettingsData.filterKeywords.joined(separator: " ")
+        textView.stringValue = SettingsData.filterKeywords(index: index).joined(separator: " ")
         textView.maximumNumberOfLines = 20
     }
     
@@ -63,8 +67,8 @@ final class FilterKeywordView: NSView {
                                  height: 50)
         
         textView.frame = NSRect(x: 10,
-                                y: 5,
+                                y: 25,
                                 width: self.frame.width - 20,
-                                height: self.frame.height - 65)
+                                height: self.frame.height - 85)
     }
 }

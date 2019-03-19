@@ -9,7 +9,11 @@
 import Cocoa
 
 final class FilterSettingsViewController: NSViewController, NSTabViewDelegate {
-    init() {
+    let index: Int
+    
+    init(index: Int) {
+        self.index = index
+        
         super.init(nibName: nil, bundle: nil)
         
         let view = FilterSettingsView()
@@ -31,15 +35,19 @@ final class FilterSettingsViewController: NSViewController, NSTabViewDelegate {
         if let identifier = tabView.selectedTabViewItem?.identifier {
             switch identifier as? String {
             case "FILTER_TAB_ACCOUNT":
-                let vc = FilterAccountViewController()
+                let vc = FilterAccountViewController(index: index)
                 self.addChild(vc)
                 self.view.addSubview(vc.view)
             case "FILTER_TAB_KEYWORD":
-                let vc = FilterKeywordViewController()
+                let vc = FilterKeywordViewController(index: index)
                 self.addChild(vc)
                 self.view.addSubview(vc.view)
             case "FILTER_TAB_REGEXP":
-                let vc = FilterRegExpViewController()
+                let vc = FilterRegExpViewController(index: index)
+                self.addChild(vc)
+                self.view.addSubview(vc.view)
+            case "FILTER_TAB_OPTION":
+                let vc = FilterOptionViewController(index: index)
                 self.addChild(vc)
                 self.view.addSubview(vc.view)
             default:
@@ -70,7 +78,7 @@ final class FilterSettingsView: NSView {
     }
     
     private func setProperties() {
-        let items = ["FILTER_TAB_ACCOUNT", "FILTER_TAB_KEYWORD", "FILTER_TAB_REGEXP"]
+        let items = ["FILTER_TAB_ACCOUNT", "FILTER_TAB_KEYWORD", "FILTER_TAB_REGEXP", "FILTER_TAB_OPTION"]
         for item in items {
             let tabItem = NSTabViewItem(identifier: item)
             tabItem.label = I18n.get(item)
@@ -86,9 +94,9 @@ final class FilterSettingsView: NSView {
                             width: viewWidth,
                             height: SettingsWindow.contentRect.height)
         
-        tabView.frame = NSRect(x: viewWidth / 2 - 400 / 2,
+        tabView.frame = NSRect(x: viewWidth / 2 - 500 / 2,
                                y: SettingsWindow.contentRect.height - 30,
-                               width: 400,
+                               width: 500,
                                height: 25)
     }
 }

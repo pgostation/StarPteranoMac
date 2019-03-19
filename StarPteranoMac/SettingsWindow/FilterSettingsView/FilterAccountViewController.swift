@@ -9,10 +9,14 @@
 import Cocoa
 
 final class FilterAccountViewController: NSViewController {
-    init() {
+    let index: Int
+    
+    init(index: Int) {
+        self.index = index
+        
         super.init(nibName: nil, bundle: nil)
         
-        let view = FilterAccountView()
+        let view = FilterAccountView(index: index)
         self.view = view
     }
     
@@ -23,7 +27,7 @@ final class FilterAccountViewController: NSViewController {
     override func viewDidDisappear() {
         guard let view = self.view as? FilterAccountView else { return }
         
-        SettingsData.setFilterAccount(str: view.textView.stringValue)
+        SettingsData.setFilterAccount(index: index, str: view.textView.stringValue)
     }
 }
 
@@ -31,27 +35,27 @@ final class FilterAccountView: NSView {
     let helpLabel = NSTextField()
     let textView = NSTextField()
     
-    init() {
+    init(index: Int) {
         super.init(frame: FilterSettingsView.contentRect)
         
         self.addSubview(helpLabel)
         self.addSubview(textView)
         
-        setProperties()
+        setProperties(index: index)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setProperties() {
+    private func setProperties(index: Int) {
         helpLabel.stringValue = I18n.get("FILTER_HELP_ACCOUNT")
         helpLabel.isEditable = false
         helpLabel.isBordered = false
         helpLabel.isSelectable = false
         helpLabel.drawsBackground = false
         
-        textView.stringValue = SettingsData.filterAccounts.joined(separator: " ")
+        textView.stringValue = SettingsData.filterAccounts(index: index).joined(separator: " ")
         textView.maximumNumberOfLines = 20
     }
     
@@ -62,8 +66,8 @@ final class FilterAccountView: NSView {
                                  height: 50)
         
         textView.frame = NSRect(x: 10,
-                                y: 5,
+                                y: 25,
                                 width: self.frame.width - 20,
-                                height: self.frame.height - 65)
+                                height: self.frame.height - 85)
     }
 }

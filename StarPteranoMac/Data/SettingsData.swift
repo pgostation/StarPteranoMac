@@ -152,7 +152,10 @@ final class SettingsData {
         case mentions = "Mentions"
         case users = "Users"
         case search = "Search"
-        case filter = "Filter"
+        case filter0 = "Filter0"
+        case filter1 = "Filter1"
+        case filter2 = "Filter2"
+        case filter3 = "Filter3"
     }
     static func tlMode(key: String) -> [TLMode] {
         if let string = defaults.string(forKey: "tlMode_\(key)") {
@@ -653,91 +656,105 @@ final class SettingsData {
         }
     }
     
-    // 抽出タブ(アカウントID)
-    private static var _filterAccounts: [String]?
-    static var filterAccounts: [String] {
-        get {
-            if let cache = _filterAccounts {
-                return cache
-            }
-            
-            var list: [String] = []
-            
-            if let str = defaults.string(forKey: "filterAccount") {
-                let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
-                for s in newStr.split(separator: "\n") {
-                    if s == "" { continue }
-                    list.append(String(s))
-                }
-            }
-            
-            _filterAccounts = list
-            return _filterAccounts!
-        }
+    // 抽出タブの名前
+    static func filterName(index: Int) -> String? {
+        return defaults.string(forKey: "filterName\(index)")
     }
-    
-    // 抽出タブ(キーワード)
-    private static var _filterKeywords: [String]?
-    static var filterKeywords: [String] {
-        get {
-            if let cache = _filterKeywords {
-                return cache
-            }
-            
-            var list: [String] = []
-            
-            if let str = defaults.string(forKey: "filterKeyword") {
-                let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
-                for s in newStr.split(separator: "\n") {
-                    if s == "" { continue }
-                    list.append(String(s))
-                }
-            }
-            
-            _filterKeywords = list
-            return _filterKeywords!
-        }
-    }
-    
-    // 抽出タブ(正規表現)
-    private static var _filterRegExp: NSRegularExpression?
-    static var filterRegExp: NSRegularExpression? {
-        get {
-            if let cache = _filterRegExp {
-                return cache
-            }
-            
-            var regexp: NSRegularExpression? = nil
-            
-            if let str = defaults.string(forKey: "filterRegExp") {
-                regexp = try? NSRegularExpression(pattern: str, options: NSRegularExpression.Options.allowCommentsAndWhitespace)
-            }
-            
-            _filterRegExp = regexp
-            return _filterRegExp
-        }
-    }
-    
-    // 抽出タブ(アカウントID)
-    static func setFilterAccount(str: String) {
-        defaults.set(str, forKey: "filterAccount")
-        _filterAccounts = nil
-    }
-    
-    // 抽出タブ(キーワード)
-    static func setFilterKeyword(str: String) {
-        defaults.set(str, forKey: "filterKeyword")
-        _filterKeywords = nil
-    }
-    
-    // 抽出タブ(正規表現)
-    static func setFilterRegExp(str: String) {
+    static func setFilterName(index: Int, str: String) {
         if str != "" {
-            defaults.set(str, forKey: "filterRegExp")
+            defaults.set(str, forKey: "filterName\(index)")
         } else {
-            defaults.removeObject(forKey: "filterRegExp")
+            defaults.removeObject(forKey: "filterName\(index)")
         }
-        _filterRegExp = nil
+    }
+    
+    // 抽出タブのローカル通知
+    static func filterLocalNotification(index: Int) -> Bool {
+        return defaults.bool(forKey: "filterLocalNotification\(index)")
+    }
+    static func setFilterLocalNotification(index: Int, isOn: Bool) {
+        defaults.set(isOn, forKey: "filterLocalNotification\(index)")
+    }
+    
+    // 抽出タブ(アカウントID)
+    private static var _filterAccounts: [Int: [String]?] = [:]
+    static func filterAccounts(index: Int) -> [String] {
+        if let cache = _filterAccounts[index], let cache2 = cache {
+            return cache2
+        }
+        
+        var list: [String] = []
+        
+        if let str = defaults.string(forKey: "filterAccount\(index)") {
+            let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
+            for s in newStr.split(separator: "\n") {
+                if s == "" { continue }
+                list.append(String(s))
+            }
+        }
+        
+        _filterAccounts[index] = list
+        return list
+    }
+    
+    // 抽出タブ(キーワード)
+    private static var _filterKeywords: [Int: [String]?] = [:]
+    static func filterKeywords(index: Int) ->  [String] {
+        if let cache = _filterKeywords[index], let cache2 = cache {
+            return cache2
+        }
+        
+        var list: [String] = []
+        
+        if let str = defaults.string(forKey: "filterKeyword\(index)") {
+            let newStr = str.replacingOccurrences(of: ",", with: "\n").replacingOccurrences(of: " ", with: "\n")
+            for s in newStr.split(separator: "\n") {
+                if s == "" { continue }
+                list.append(String(s))
+            }
+        }
+        
+        _filterKeywords[index] = list
+        return list
+    }
+    
+    // 抽出タブ(正規表現)
+    private static var _filterRegExp: [Int: NSRegularExpression?] = [:]
+    static func filterRegExp(index: Int) -> NSRegularExpression? {
+        if let cache = _filterRegExp[index], let cache2 = cache {
+            return cache2
+        }
+        
+        var regexp: NSRegularExpression? = nil
+        
+        if let str = defaults.string(forKey: "filterRegExp\(index)") {
+            regexp = try? NSRegularExpression(pattern: str, options: NSRegularExpression.Options.allowCommentsAndWhitespace)
+        }
+        
+        _filterRegExp[index] = regexp
+        return regexp
+    }
+    
+    // 抽出タブ(アカウントID)
+    static func setFilterAccount(index: Int, str: String) {
+        defaults.set(str, forKey: "filterAccount\(index)")
+        _filterAccounts[index] = nil
+    }
+    
+    // 抽出タブ(キーワード)
+    static func setFilterKeyword(index: Int, str: String) {
+        defaults.set(str, forKey: "filterKeyword\(index)")
+        _filterKeywords[index] = nil
+    }
+    
+    // 抽出タブ(正規表現)
+    static func setFilterRegExp(index: Int, str: String) {
+        if str != "" {
+            defaults.set(str, forKey: "filterRegExp\(index)")
+        } else {
+            defaults.removeObject(forKey: "filterRegExp\(index)")
+        }
+        _filterRegExp[index] = nil
     }
     
     // 最近使った絵文字に追加

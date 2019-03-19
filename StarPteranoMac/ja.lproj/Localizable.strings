@@ -113,9 +113,12 @@
 "FILTER_TAB_ACCOUNT" = "アカウント";
 "FILTER_TAB_KEYWORD" = "キーワード";
 "FILTER_TAB_REGEXP" = "正規表現";
+"FILTER_TAB_OPTION" = "オプション";
 "FILTER_HELP_ACCOUNT" = "抽出するアカウントIDを入力してください。複数ある場合は「,」か「スペース」で区切ってください";
 "FILTER_HELP_KEYWORD" = "抽出する文字列を入力してください。複数ある場合は「,」か「スペース」で区切ってください";
 "FILTER_HELP_REGEXP" = "抽出に使用する正規表現を入力してください";
+"PLACEHOLDER_NAME" = "名前";
+"BUTTON_LOCAL_NOTIFICATION" = "通知する";
 
 // 詳細設定
 "BUTTON_LICENSE" = "使用ライブラリの著作権情報";
@@ -177,7 +180,10 @@
 "ACTION_DM" = "DM";
 "ACTION_FAVORITES" = "お気に入り";
 "ACTION_SEARCH" = "検索";
-"ACTION_FILTER" = "抽出";
+"ACTION_FILTER0" = "抽出1";
+"ACTION_FILTER1" = "抽出2";
+"ACTION_FILTER2" = "抽出3";
+"ACTION_FILTER3" = "抽出4";
 "ALERT_ADD_TAB" = "タブの追加";
 
 // タイムライン画面

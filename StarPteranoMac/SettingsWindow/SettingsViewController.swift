@@ -22,7 +22,10 @@ final class SettingsViewController: NSViewController {
         view.generalButton.action = #selector(generalAction)
         view.uiButton.action = #selector(uiAction)
         view.notifyButton.action = #selector(notifyAction)
-        view.filterButton.action = #selector(filterAction)
+        view.filter0Button.action = #selector(filter0Action)
+        view.filter1Button.action = #selector(filter1Action)
+        view.filter2Button.action = #selector(filter2Action)
+        view.filter3Button.action = #selector(filter3Action)
         view.searchButton.action = #selector(searchAction)
         view.colorButton.action = #selector(colorAction)
         view.detailButton.action = #selector(detailAction)
@@ -94,17 +97,48 @@ final class SettingsViewController: NSViewController {
         self.view.addSubview(vc.view)
     }
     
-    @objc func filterAction() {
+    @objc func filter0Action() {
+        filterAction(index: 0)
+        DispatchQueue.main.async {
+            guard let view = self.view as? SettingsView else { return }
+            view.filter0Button.highlight(true)
+        }
+    }
+    
+    @objc func filter1Action() {
+        filterAction(index: 1)
+        DispatchQueue.main.async {
+            guard let view = self.view as? SettingsView else { return }
+            view.filter1Button.highlight(true)
+        }
+    }
+    
+    @objc func filter2Action() {
+        filterAction(index: 2)
+        DispatchQueue.main.async {
+            guard let view = self.view as? SettingsView else { return }
+            view.filter2Button.highlight(true)
+        }
+    }
+    
+    @objc func filter3Action() {
+        filterAction(index: 3)
+        DispatchQueue.main.async {
+            guard let view = self.view as? SettingsView else { return }
+            view.filter3Button.highlight(true)
+        }
+    }
+    
+    private func filterAction(index: Int) {
         guard let view = self.view as? SettingsView else { return }
         DispatchQueue.main.async {
             view.clearHighlight()
-            view.filterButton.highlight(true)
         }
         
         self.children.first?.view.removeFromSuperview()
         self.children.first?.removeFromParent()
         
-        let vc = FilterSettingsViewController()
+        let vc = FilterSettingsViewController(index: index)
         self.addChild(vc)
         self.view.addSubview(vc.view)
     }
@@ -161,7 +195,10 @@ private class SettingsView: NSView {
     let generalButton = NSButton()
     let uiButton = NSButton()
     let notifyButton = NSButton()
-    let filterButton = NSButton()
+    let filter0Button = NSButton()
+    let filter1Button = NSButton()
+    let filter2Button = NSButton()
+    let filter3Button = NSButton()
     let searchButton = NSButton()
     let colorButton = NSButton()
     let detailButton = NSButton()
@@ -176,7 +213,10 @@ private class SettingsView: NSView {
         self.addSubview(generalButton)
         self.addSubview(uiButton)
         self.addSubview(notifyButton)
-        self.addSubview(filterButton)
+        self.addSubview(filter0Button)
+        self.addSubview(filter1Button)
+        self.addSubview(filter2Button)
+        self.addSubview(filter3Button)
         self.addSubview(searchButton)
         self.addSubview(colorButton)
         self.addSubview(detailButton)
@@ -209,8 +249,17 @@ private class SettingsView: NSView {
         notifyButton.title = I18n.get("SETTINGS_NOTIFICATIONS")
         setButtonStyle(button: notifyButton)
         
-        filterButton.title = I18n.get("SETTINGS_FILTER")
-        setButtonStyle(button: filterButton)
+        filter0Button.title = I18n.get("SETTINGS_FILTER") + "1"
+        setButtonStyle(button: filter0Button)
+        
+        filter1Button.title = I18n.get("SETTINGS_FILTER") + "2"
+        setButtonStyle(button: filter1Button)
+        
+        filter2Button.title = I18n.get("SETTINGS_FILTER") + "3"
+        setButtonStyle(button: filter2Button)
+        
+        filter3Button.title = I18n.get("SETTINGS_FILTER") + "4"
+        setButtonStyle(button: filter3Button)
         
         searchButton.title = I18n.get("SETTINGS_SEARCH")
         setButtonStyle(button: searchButton)
@@ -227,14 +276,17 @@ private class SettingsView: NSView {
         generalButton.highlight(false)
         uiButton.highlight(false)
         notifyButton.highlight(false)
-        filterButton.highlight(false)
+        filter0Button.highlight(false)
+        filter1Button.highlight(false)
+        filter2Button.highlight(false)
+        filter3Button.highlight(false)
         searchButton.highlight(false)
         colorButton.highlight(false)
         detailButton.highlight(false)
     }
     
     override func layout() {
-        let height: CGFloat = 40
+        let height: CGFloat = 30
         
         backView.frame = NSRect(x: 0,
                                 y: 0,
@@ -261,23 +313,38 @@ private class SettingsView: NSView {
                                     width: SettingsViewController.width,
                                     height: height)
         
-        filterButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 5,
-                                    width: SettingsViewController.width,
-                                    height: height)
+        filter0Button.frame = NSRect(x: 0,
+                                     y: SettingsWindow.contentRect.height - height * 5,
+                                     width: SettingsViewController.width,
+                                     height: height)
+        
+        filter1Button.frame = NSRect(x: 0,
+                                     y: SettingsWindow.contentRect.height - height * 6,
+                                     width: SettingsViewController.width,
+                                     height: height)
+        
+        filter2Button.frame = NSRect(x: 0,
+                                     y: SettingsWindow.contentRect.height - height * 7,
+                                     width: SettingsViewController.width,
+                                     height: height)
+        
+        filter3Button.frame = NSRect(x: 0,
+                                     y: SettingsWindow.contentRect.height - height * 8,
+                                     width: SettingsViewController.width,
+                                     height: height)
         
         /*searchButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 6,
+                                    y: SettingsWindow.contentRect.height - height * 9,
                                     width: SettingsViewController.width,
                                     height: height)*/
         
         colorButton.frame = NSRect(x: 0,
-                                   y: SettingsWindow.contentRect.height - height * 6,
+                                   y: SettingsWindow.contentRect.height - height * 9,
                                    width: SettingsViewController.width,
                                    height: height)
         
         detailButton.frame = NSRect(x: 0,
-                                    y: SettingsWindow.contentRect.height - height * 7,
+                                    y: SettingsWindow.contentRect.height - height * 10,
                                     width: SettingsViewController.width,
                                     height: height)
     }

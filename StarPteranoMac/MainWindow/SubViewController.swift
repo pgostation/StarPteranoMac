@@ -72,6 +72,18 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         let item = PgoTabItem(identifier: mode.rawValue)
         item.label = I18n.get("ACTION_" + mode.rawValue.uppercased())
         item.identifier = mode.rawValue
+        switch mode {
+        case .filter0:
+            item.filterName = SettingsData.filterName(index: 0)
+        case .filter1:
+            item.filterName = SettingsData.filterName(index: 1)
+        case .filter2:
+            item.filterName = SettingsData.filterName(index: 2)
+        case .filter3:
+            item.filterName = SettingsData.filterName(index: 3)
+        default:
+            break
+        }
         tabView.addTabViewItem(item)
     }
     
@@ -87,9 +99,21 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         if let item = self.selectedItem {
             addTab(mode: item)
             
-            if item == .filter {
+            switch item {
+            case .filter0:
                 SettingsWindow.show()
-                SettingsViewController.instance?.filterAction()
+                SettingsViewController.instance?.filter0Action()
+            case .filter1:
+                SettingsWindow.show()
+                SettingsViewController.instance?.filter1Action()
+            case .filter2:
+                SettingsWindow.show()
+                SettingsViewController.instance?.filter2Action()
+            case .filter3:
+                SettingsWindow.show()
+                SettingsViewController.instance?.filter3Action()
+            default:
+                break
             }
         }
     }
@@ -125,8 +149,14 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             type = .home // これは使用しない
         case .search:
             type = .search
-        case .filter:
-            type = .filter
+        case .filter0:
+            type = .filter0
+        case .filter1:
+            type = .filter1
+        case .filter2:
+            type = .filter2
+        case .filter3:
+            type = .filter3
         }
         
         let vc: NSViewController
@@ -178,7 +208,7 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         selectedItem = nil
         
         do {
-            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION", "ACTION_LIST", "ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH", "ACTION_FILTER"]
+            let menuItems = ["ACTION_HOME", "ACTION_LOCAL", "ACTION_HOMELOCAL", "ACTION_FEDERATION", "ACTION_LIST", "ACTION_NOTIFICATIONS", "ACTION_MENTIONS", "ACTION_DM", "ACTION_FAVORITES", "ACTION_SEARCH", "ACTION_FILTER0", "ACTION_FILTER1", "ACTION_FILTER2", "ACTION_FILTER3"]
             for str in menuItems {
                 let mode = convert(title: I18n.get(str))
                 
@@ -191,6 +221,18 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
                 let menuItem = NSMenuItem(title: I18n.get(str),
                                           action: #selector(menuAction(_:)),
                                           keyEquivalent: "")
+                switch menuItem.title {
+                case I18n.get("ACTION_FILTER0"):
+                    menuItem.title += " " + (SettingsData.filterName(index: 0) ?? "")
+                case I18n.get("ACTION_FILTER1"):
+                    menuItem.title += " " + (SettingsData.filterName(index: 1) ?? "")
+                case I18n.get("ACTION_FILTER2"):
+                    menuItem.title += " " + (SettingsData.filterName(index: 2) ?? "")
+                case I18n.get("ACTION_FILTER3"):
+                    menuItem.title += " " + (SettingsData.filterName(index: 3) ?? "")
+                default:
+                    break
+                }
                 menuItem.target = self
                 menu.addItem(menuItem)
                 
@@ -235,8 +277,14 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             return .list
         } else if title == I18n.get("ACTION_SEARCH") {
             return .search
-        } else if title == I18n.get("ACTION_FILTER") {
-            return .filter
+        } else if title.hasPrefix(I18n.get("ACTION_FILTER0")) {
+            return .filter0
+        } else if title.hasPrefix(I18n.get("ACTION_FILTER1")) {
+            return .filter1
+        } else if title.hasPrefix(I18n.get("ACTION_FILTER2")) {
+            return .filter2
+        } else if title.hasPrefix(I18n.get("ACTION_FILTER3")) {
+            return .filter3
         }
         return .home
     }

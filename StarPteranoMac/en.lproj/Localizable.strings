@@ -110,12 +110,15 @@
 "BUTTON_NOTIFY_FOLLOW" = "Notify Follows";
 
 // 抽出設定
-"FILTER_TAB_ACCOUNT" = "Account";
-"FILTER_TAB_KEYWORD" = "Keyword";
+"FILTER_TAB_ACCOUNT" = "Accounts";
+"FILTER_TAB_KEYWORD" = "Keywords";
 "FILTER_TAB_REGEXP" = "RegExp";
+"FILTER_TAB_OPTION" = "Options";
 "FILTER_HELP_ACCOUNT" = "Enter account ID for filtering. Separated by \",\" or \"space\"";
 "FILTER_HELP_KEYWORD" = "Enter keywords for filtering. Separated by \",\" or \"space\"";
 "FILTER_HELP_REGEXP" = "Enter regular expression for filtering";
+"PLACEHOLDER_NAME" = "Name";
+"BUTTON_LOCAL_NOTIFICATION" = "Use Notification Center";
 
 // 詳細設定
 "BUTTON_LICENSE" = "Show Using Library Licenses";
@@ -177,7 +180,10 @@
 "ACTION_DM" = "DM";
 "ACTION_FAVORITES" = "Favorites";
 "ACTION_SEARCH" = "Search";
-"ACTION_FILTER" = "Filter";
+"ACTION_FILTER0" = "Filter 1";
+"ACTION_FILTER1" = "Filter 2";
+"ACTION_FILTER2" = "Filter 3";
+"ACTION_FILTER3" = "Filter 4";
 "ALERT_ADD_TAB" = "Adding a tab";
 
 // タイムライン画面

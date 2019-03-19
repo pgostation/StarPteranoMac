@@ -136,7 +136,7 @@ class TimeLineView: NSTableView {
             return
         case .search:
             return
-        case .filter:
+        case .filter0, .filter1, .filter2, .filter3:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.model.change(tableView: self, addList: [], accountList: [:])
                 self.model.setFiltering()
@@ -554,7 +554,7 @@ class TimeLineView: NSTableView {
             return
         case .search:
             return
-        case .filter:
+        case .filter0, .filter1, .filter2, .filter3:
             return
         }
         

@@ -230,7 +230,7 @@ final class PgoTabView: NSTabView {
                 itemViews[index].layer?.borderWidth = 0
             }
                 
-            itemViews[index].nameLabel.stringValue = item.label
+            itemViews[index].nameLabel.stringValue = item.filterName ?? item.label
             itemViews[index].nameLabel.font = (isSelected && _bold) ? NSFont.boldSystemFont(ofSize: 12) : NSFont.systemFont(ofSize: 12)
             itemViews[index].nameLabel.textColor = isSelected ? ThemeColor.contrastColor : ThemeColor.dateColor
             itemViews[index].nameLabel.sizeToFit()
@@ -285,6 +285,8 @@ final class PgoTabItem: NSTabViewItem {
             (tabView as? PgoTabView)?.refresh()
         }
     }
+    
+    var filterName: String? = nil
     
     // 削除前に呼ばれる
     func willRemove() {

@@ -25,7 +25,10 @@ final class TimeLineViewController: NSViewController {
         case notifications // 通知一覧
         case notificationMentions // 通知一覧(メンションのみ)
         case search // 検索
-        case filter // 抽出
+        case filter0 // 抽出1
+        case filter1 // 抽出2
+        case filter2 // 抽出3
+        case filter3 // 抽出4
     }
     
     let hostName: String
@@ -73,8 +76,11 @@ final class TimeLineViewController: NSViewController {
             }
         }
         
-        if self.type == .filter {
+        switch self.type {
+        case .filter0, .filter1, .filter2, .filter3:
             (self.view as? TimeLineView)?.model.setFiltering()
+        default:
+            break
         }
     }
     

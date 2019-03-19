@@ -9,10 +9,14 @@
 import Cocoa
 
 final class FilterRegExpViewController: NSViewController {
-    init() {
+    let index: Int
+    
+    init(index: Int) {
+        self.index = index
+        
         super.init(nibName: nil, bundle: nil)
         
-        let view = FilterRegExpView()
+        let view = FilterRegExpView(index: index)
         self.view = view
     }
     
@@ -23,7 +27,7 @@ final class FilterRegExpViewController: NSViewController {
     override func viewDidDisappear() {
         guard let view = self.view as? FilterRegExpView else { return }
         
-        SettingsData.setFilterRegExp(str: view.textView.stringValue)
+        SettingsData.setFilterRegExp(index: index, str: view.textView.stringValue)
     }
 }
 
@@ -31,20 +35,20 @@ final class FilterRegExpView: NSView {
     let helpLabel = NSTextField()
     let textView = NSTextField()
     
-    init() {
+    init(index: Int) {
         super.init(frame: FilterSettingsView.contentRect)
         
         self.addSubview(helpLabel)
         self.addSubview(textView)
         
-        setProperties()
+        setProperties(index: index)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setProperties() {
+    private func setProperties(index: Int) {
         helpLabel.stringValue = I18n.get("FILTER_HELP_REGEXP")
         helpLabel.isEditable = false
         helpLabel.isBordered = false
@@ -52,7 +56,7 @@ final class FilterRegExpView: NSView {
         helpLabel.drawsBackground = false
         helpLabel.maximumNumberOfLines = 2
         
-        textView.stringValue = SettingsData.filterRegExp?.pattern ?? ""
+        textView.stringValue = SettingsData.filterRegExp(index: index)?.pattern ?? ""
     }
     
     override func layout() {

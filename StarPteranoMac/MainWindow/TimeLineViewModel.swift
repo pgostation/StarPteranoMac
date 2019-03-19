@@ -246,11 +246,15 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
             }
             
+            // 抽出タブに反映
             if tableView.type == .home || tableView.type == .local || tableView.type == .homeLocal {
-                let key = TimeLineViewManager.makeKey(hostName: tableView.hostName , accessToken: tableView.accessToken, type: .filter)
-                if let vc = TimeLineViewManager.get(key: key) {
-                    if vc.view.superview != nil {
-                        (vc.view as? TimeLineView)?.model.setFiltering()
+                let typeList: [SettingsData.TLMode] = [.filter0, .filter1, .filter2, .filter3]
+                for type in typeList {
+                    let key = TimeLineViewManager.makeKey(hostName: tableView.hostName , accessToken: tableView.accessToken, type: type)
+                    if let vc = TimeLineViewManager.get(key: key) {
+                        if vc.view.superview != nil {
+                            (vc.view as? TimeLineView)?.model.setFiltering()
+                        }
                     }
                 }
             }
@@ -1871,14 +1875,28 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         if let model = srcList.first {
             var newList: [AnalyzeJson.ContentData] = []
             
+            let index: Int
+            switch tableView.type {
+            case .filter0:
+                index = 0
+            case .filter1:
+                index = 1
+            case .filter2:
+                index = 2
+            case .filter3:
+                index = 3
+            default:
+                index = 0
+            }
+            
             for data in model.list {
-                if SettingsData.filterAccounts.contains(data.accountId) {
+                if SettingsData.filterAccounts(index: index).contains(data.accountId) {
                     // アカウントIDが一致
                     newList.append(data)
                 } else {
                     var flag = false
                     // どれかキーワードが一致するか
-                    for keyword in SettingsData.filterKeywords {
+                    for keyword in SettingsData.filterKeywords(index: index) {
                         if data.content?.contains(keyword) == true {
                             newList.append(data)
                             flag = true
@@ -1888,7 +1906,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     if !flag {
                         // 正規表現が一致するか
                         let str = data.content ?? ""
-                        if let result = SettingsData.filterRegExp?.matches(
+                        if let result = SettingsData.filterRegExp(index: index)?.matches(
                             in: str,
                             options: NSRegularExpression.MatchingOptions(),
                             range: NSRange(location: 0, length: str.count))
