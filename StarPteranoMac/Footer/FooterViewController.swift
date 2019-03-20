@@ -22,6 +22,9 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
         self.view = view
         
         view.searchField.delegate = self
+        
+        view.refreshButton.target = self
+        view.refreshButton.action = #selector(refreshAction)
     }
     
     required init?(coder: NSCoder) {
@@ -50,12 +53,35 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
                 }
             }
         }
+        
+        (view as? FooterView)?.refresh()
+        
+        
+        if let subVC = self.parent as? SubViewController {
+            if let tlView = subVC.scrollView.documentView as? TimeLineView {
+                switch tlView.type {
+                case .notifications, .notificationMentions, .search:
+                    (view as? FooterView)?.refreshButton.isHidden = true
+                default:
+                    break
+                }
+            }
+        }
     }
     
     // 残りAPIの表示
     func showRemain(remain: Int, maxCount: Int) {
         DispatchQueue.main.async {
             (self.view as? FooterView)?.remainApiLabel.stringValue = "\(remain) / \(maxCount)"
+        }
+    }
+    
+    // タイムラインを更新
+    @objc func refreshAction() {
+        if let subVC = self.parent as? SubViewController {
+            if let tlView = subVC.scrollView.documentView as? TimeLineView {
+                tlView.refresh()
+            }
         }
     }
     
@@ -74,6 +100,7 @@ final class FooterView: NSView {
     let hostName: String
     let accessToken: String
     
+    let refreshButton = NSButton()
     let streamingLampView = NSView()
     let remainApiLabel = MyTextField()
     let searchField = NSSearchField()
@@ -84,6 +111,7 @@ final class FooterView: NSView {
         
         super.init(frame: NSRect(x: 0, y: 0, width: 0, height: 20))
         
+        self.addSubview(refreshButton)
         self.addSubview(streamingLampView)
         self.addSubview(remainApiLabel)
         self.addSubview(searchField)
@@ -100,6 +128,9 @@ final class FooterView: NSView {
         streamingLampView.wantsLayer = true
         streamingLampView.layer?.backgroundColor = NSColor.clear.cgColor
         streamingLampView.layer?.cornerRadius = 6
+        
+        refreshButton.title = "↺"
+        refreshButton.isBordered = false
         
         remainApiLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         remainApiLabel.textColor = NSColor.gray
@@ -120,6 +151,14 @@ final class FooterView: NSView {
     func refresh() {
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         
+        if SettingsData.isStreamingMode {
+            streamingLampView.isHidden = false
+            refreshButton.isHidden = true
+        } else {
+            streamingLampView.isHidden = true
+            refreshButton.isHidden = false
+        }
+        
         streamingLampView.layer?.borderColor = ThemeColor.contrastColor.withAlphaComponent(0.5).cgColor
         streamingLampView.layer?.borderWidth = 2
     }
@@ -134,6 +173,11 @@ final class FooterView: NSView {
                                          y: 4,
                                          width: 12,
                                          height: 12)
+        
+        refreshButton.frame = NSRect(x: 2,
+                                     y: 2,
+                                     width: 16,
+                                     height: 16)
         
         remainApiLabel.frame = NSRect(x: 30,
                                       y: 0,
