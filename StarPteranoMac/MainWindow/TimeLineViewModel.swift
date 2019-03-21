@@ -291,10 +291,14 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         }
         
         if let data = dataList.first {
+            let content = DecodeToot.decodeContentFast(content: data.content, emojis: nil, callback: nil)
+            
+            let screenName = self.accountList[data.accountId]?.display_name ?? ""
+            
             let notification = NSUserNotification()
             notification.title = I18n.get("FILTER_NOTIFICATION_TITLE")
-            notification.subtitle = data.accountId
-            notification.informativeText = String((data.content ?? "").prefix(50))
+            notification.subtitle = screenName + " " + data.accountId
+            notification.informativeText = String(content.0.string.prefix(50))
             notification.userInfo = ["created_at": data.created_at ?? ""]
             DispatchQueue.main.async {
                 NSUserNotificationCenter.default.deliver(notification)
