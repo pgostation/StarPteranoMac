@@ -28,6 +28,7 @@ final class FilterRegExpViewController: NSViewController {
         guard let view = self.view as? FilterRegExpView else { return }
         
         SettingsData.setFilterRegExp(index: index, str: view.textView.stringValue)
+        SettingsData.setFilterRegExpOrigStr(index: index, str: view.textView.stringValue)
     }
 }
 
@@ -56,7 +57,7 @@ final class FilterRegExpView: NSView {
         helpLabel.drawsBackground = false
         helpLabel.maximumNumberOfLines = 2
         
-        textView.stringValue = SettingsData.filterRegExp(index: index)?.pattern ?? ""
+        textView.stringValue = SettingsData.filterRegExp(index: index)?.pattern ?? SettingsData.filterRegExpOrigStr(index: index) ?? ""
     }
     
     override func layout() {

@@ -694,6 +694,18 @@ final class SettingsData {
         defaults.set(isOn, forKey: "filterLocalNotification\(index)")
     }
     
+    // 抽出タブ(正規表現の元文字列)
+    static func filterRegExpOrigStr(index: Int) -> String? {
+        return defaults.string(forKey: "filterRegExpOrigStr\(index)")
+    }
+    static func setFilterRegExpOrigStr(index: Int, str: String) {
+        if str != "" {
+            defaults.set(str, forKey: "filterRegExpOrigStr\(index)")
+        } else {
+            defaults.removeObject(forKey: "filterRegExpOrigStr\(index)")
+        }
+    }
+    
     // 抽出タブ(アカウントID)
     private static var _filterAccounts: [Int: [String]?] = [:]
     static func filterAccounts(index: Int) -> [String] {
