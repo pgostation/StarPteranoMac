@@ -45,7 +45,6 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
                 streamingLampView.toolTip = I18n.get("TOOLTIP_LAMP_DISCONNECTED")
             } else {
                 streamingLampView.layer?.backgroundColor = NSColor.clear.cgColor
-                streamingLampView.toolTip = nil
             }
         }
         
@@ -157,7 +156,7 @@ final class FooterView: NSView {
     func refresh() {
         self.layer?.backgroundColor = ThemeColor.viewBgColor.cgColor
         
-        if SettingsData.isStreamingMode {
+        if SettingsData.isStreamingMode && streamingLampView.layer?.backgroundColor != NSColor.clear.cgColor {
             streamingLampView.isHidden = false
             refreshButton.isHidden = true
         } else {

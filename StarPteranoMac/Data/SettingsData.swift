@@ -619,6 +619,92 @@ final class SettingsData {
         }
     }
     
+    // メンションプッシュ通知を有効にするかどうか
+    static var pushNotifyMentions: Bool {
+        get {
+            if let string = defaults.string(forKey: "pushNotifyMentions") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "pushNotifyMentions")
+            } else {
+                defaults.removeObject(forKey: "pushNotifyMentions")
+            }
+        }
+    }
+    
+    // お気に入りプッシュ通知を有効にするかどうか
+    static var pushNotifyFavorites: Bool {
+        get {
+            if let string = defaults.string(forKey: "pushNotifyFavorites") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "pushNotifyFavorites")
+            } else {
+                defaults.removeObject(forKey: "pushNotifyFavorites")
+            }
+        }
+    }
+    
+    // ブーストプッシュ通知を有効にするかどうか
+    static var pushNotifyBoosts: Bool {
+        get {
+            if let string = defaults.string(forKey: "pushNotifyBoosts") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "pushNotifyBoosts")
+            } else {
+                defaults.removeObject(forKey: "pushNotifyBoosts")
+            }
+        }
+    }
+    
+    // フォロープッシュ通知を有効にするかどうか
+    static var pushNotifyFollows: Bool {
+        get {
+            if let string = defaults.string(forKey: "pushNotifyFollows") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "pushNotifyFollows")
+            } else {
+                defaults.removeObject(forKey: "pushNotifyFollows")
+            }
+        }
+    }
+    
+    // プッシュ通知用のデバイストークンを登録
+    static var deviceToken: String? {
+        get {
+            return defaults.string(forKey: "deviceToken")
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                defaults.set(newValue, forKey: "deviceToken")
+            } else {
+                defaults.removeObject(forKey: "deviceToken")
+            }
+        }
+    }
+    
     // 画像ファイルのストレージキャッシュを使うかどうか (ただし、APNGと動画は常にキャッシュする)
     static var useStorageCache: Bool {
         get {
@@ -692,6 +778,14 @@ final class SettingsData {
     }
     static func setFilterLocalNotification(index: Int, isOn: Bool) {
         defaults.set(isOn, forKey: "filterLocalNotification\(index)")
+    }
+    
+    // 抽出タブのプッシュ通知
+    static func filterPushNotification(index: Int) -> Bool {
+        return defaults.bool(forKey: "filterPushNotification\(index)")
+    }
+    static func setFilterPushNotification(index: Int, isOn: Bool) {
+        defaults.set(isOn, forKey: "filterPushNotification\(index)")
     }
     
     // 抽出タブ(正規表現の元文字列)

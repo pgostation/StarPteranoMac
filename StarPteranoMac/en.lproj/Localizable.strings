@@ -109,6 +109,10 @@
 "BUTTON_NOTIFY_FAVORITE" = "Notify Favorites";
 "BUTTON_NOTIFY_BOOST" = "Notify Boosts";
 "BUTTON_NOTIFY_FOLLOW" = "Notify Follows";
+"BUTTON_PUSH_NOTIFY_MENTION" = "Notify Mentions to iPhone App";
+"BUTTON_PUSH_NOTIFY_FAVORITE" = "Notify Favorites to iPhone App";
+"BUTTON_PUSH_NOTIFY_BOOST" = "Notify Boosts to iPhone App";
+"BUTTON_PUSH_NOTIFY_FOLLOW" = "Notify Follows to iPhone App";
 
 // 抽出設定
 "FILTER_TAB_ACCOUNT" = "Accounts";
@@ -120,6 +124,8 @@
 "FILTER_HELP_REGEXP" = "Enter regular expression for filtering";
 "PLACEHOLDER_NAME" = "Name";
 "BUTTON_LOCAL_NOTIFICATION" = "Use Notification Center";
+"BUTTON_PUSH_NOTIFICATION" = "Push Notifications to iPhone App";
+"PLACEHOLDER_DEVICETOKEN" = "StarPterano iPhone - device token";
 
 // 詳細設定
 "BUTTON_LICENSE" = "Show Using Library Licenses";

@@ -286,7 +286,7 @@ private class SettingsView: NSView {
     }
     
     override func layout() {
-        let height: CGFloat = 35
+        let height: CGFloat = 40
         
         backView.frame = NSRect(x: 0,
                                 y: 0,

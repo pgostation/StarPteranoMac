@@ -269,23 +269,22 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     private func notify(dataList: [AnalyzeJson.ContentData]) {
         if self.tableView == nil { return }
         
+        var localNotify = false
+        var pushNotify = false
+        
         switch self.tableView!.type {
         case .filter0:
-            if !SettingsData.filterLocalNotification(index: 0) {
-                return
-            }
+            localNotify = SettingsData.filterLocalNotification(index: 0)
+            pushNotify = SettingsData.filterPushNotification(index: 0)
         case .filter1:
-            if !SettingsData.filterLocalNotification(index: 1) {
-                return
-            }
+            localNotify = SettingsData.filterLocalNotification(index: 1)
+            pushNotify = SettingsData.filterPushNotification(index: 1)
         case .filter2:
-            if !SettingsData.filterLocalNotification(index: 2) {
-                return
-            }
+            localNotify = SettingsData.filterLocalNotification(index: 2)
+            pushNotify = SettingsData.filterPushNotification(index: 2)
         case .filter3:
-            if !SettingsData.filterLocalNotification(index: 3) {
-                return
-            }
+            localNotify = SettingsData.filterLocalNotification(index: 3)
+            pushNotify = SettingsData.filterPushNotification(index: 3)
         default:
             return
         }
@@ -295,13 +294,35 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             
             let screenName = self.accountList[data.accountId]?.display_name ?? ""
             
-            let notification = NSUserNotification()
-            notification.title = I18n.get("FILTER_NOTIFICATION_TITLE")
-            notification.subtitle = screenName + " " + data.accountId
-            notification.informativeText = String(content.0.string.prefix(50))
-            notification.userInfo = ["created_at": data.created_at ?? ""]
-            DispatchQueue.main.async {
-                NSUserNotificationCenter.default.deliver(notification)
+            // ローカル通知
+            if localNotify {
+                let notification = NSUserNotification()
+                notification.title = I18n.get("FILTER_NOTIFICATION_TITLE")
+                notification.subtitle = screenName + " " + data.accountId
+                notification.informativeText = String(content.0.string.prefix(50))
+                notification.userInfo = ["created_at": data.created_at ?? ""]
+                DispatchQueue.main.async {
+                    NSUserNotificationCenter.default.deliver(notification)
+                }
+            }
+            
+            // プッシュ通知
+            if pushNotify, let token = SettingsData.deviceToken {
+                guard let path = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                guard let fileData = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
+                guard let firebaseUrl = String(data: fileData, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
+                let newTitleStr = I18n.get("FILTER_NOTIFICATION_TITLE") + " " + (data.accountId)
+                let bodyStr = String(content.0.string.prefix(50))
+                
+                var urlStr = "\(firebaseUrl)?"
+                urlStr += "title=\(newTitleStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
+                urlStr += "&body=\(bodyStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
+                urlStr += "&token=\(token)"
+                
+                if let url = URL(string: urlStr) {
+                    let urlSession = URLSession.shared.dataTask(with: url)
+                    urlSession.resume()
+                }
             }
         }
     }

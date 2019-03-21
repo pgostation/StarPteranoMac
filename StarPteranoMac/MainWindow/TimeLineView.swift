@@ -426,18 +426,24 @@ class TimeLineView: NSTableView {
                         guard let typeStr = json["type"] as? String else { return }
                         
                         var titleStr = "%@"
+                        var localNotify = false
+                        var pushNotify = false
                         switch typeStr {
                         case "mention":
-                            if !SettingsData.notifyMentions { return }
+                            localNotify = SettingsData.notifyMentions
+                            pushNotify = SettingsData.pushNotifyMentions
                             titleStr = I18n.get("NOTIFY_MENTION")
                         case "favourite":
-                            if !SettingsData.notifyFavorites { return }
+                            localNotify = SettingsData.notifyFavorites
+                            pushNotify = SettingsData.pushNotifyFavorites
                             titleStr = I18n.get("NOTIFY_FAV")
                         case "reblog":
-                            if !SettingsData.notifyBoosts { return }
+                            localNotify = SettingsData.notifyBoosts
+                            pushNotify = SettingsData.pushNotifyBoosts
                             titleStr = I18n.get("NOTIFY_BOOST")
                         case "follow":
-                            if !SettingsData.notifyFollows { return }
+                            localNotify = SettingsData.notifyFollows
+                            pushNotify = SettingsData.pushNotifyFollows
                             titleStr = I18n.get("NOTIFY_FOLLOW")
                         default:
                             return
@@ -448,14 +454,36 @@ class TimeLineView: NSTableView {
                         let contentHtmlStr = (json["status"] as? [String: Any])?["content"] as? String
                         let contentStr = DecodeToot.decodeContent(content: contentHtmlStr, emojis: nil, callback: nil)
                         
-                        let notification = NSUserNotification()
-                        notification.title = titleStr
-                        notification.subtitle = acctStr
-                        notification.informativeText = String(contentStr.0.string.prefix(50))
-                        notification.userInfo = ["accessToken" : self.accessToken,
-                                                 "created_at": (json["created_at"] as? String) ?? ""]
-                        DispatchQueue.main.async {
-                            NSUserNotificationCenter.default.deliver(notification)
+                        // ローカル通知
+                        if localNotify {
+                            let notification = NSUserNotification()
+                            notification.title = titleStr
+                            notification.subtitle = acctStr
+                            notification.informativeText = String(contentStr.0.string.prefix(50))
+                            notification.userInfo = ["accessToken" : self.accessToken,
+                                                     "created_at": (json["created_at"] as? String) ?? ""]
+                            DispatchQueue.main.async {
+                                NSUserNotificationCenter.default.deliver(notification)
+                            }
+                        }
+                        
+                        // プッシュ通知
+                        if pushNotify, let token = SettingsData.deviceToken {
+                            guard let path = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                            guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
+                            guard let firebaseUrl = String(data: data, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
+                            let newTitleStr = titleStr + " " + (acctStr ?? "")
+                            let bodyStr = String(contentStr.0.string.prefix(50))
+                            
+                            var urlStr = "\(firebaseUrl)?"
+                            urlStr += "title=\(newTitleStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
+                            urlStr += "&body=\(bodyStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
+                            urlStr += "&token=\(token)"
+                            
+                            if let url = URL(string: urlStr) {
+                                let urlSession = URLSession.shared.dataTask(with: url)
+                                urlSession.resume()
+                            }
                         }
                         
                         // 通知TL画面を更新する/更新フラグを立てる

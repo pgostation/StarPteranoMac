@@ -109,6 +109,11 @@
 "BUTTON_NOTIFY_FAVORITE" = "お気に入りを通知する";
 "BUTTON_NOTIFY_BOOST" = "ブーストを通知する";
 "BUTTON_NOTIFY_FOLLOW" = "フォローを通知する";
+"BUTTON_PUSH_NOTIFY_MENTION" = "返信をiPhoneアプリに通知する";
+"BUTTON_PUSH_NOTIFY_FAVORITE" = "お気に入りをiPhoneアプリに通知する";
+"BUTTON_PUSH_NOTIFY_BOOST" = "ブーストをiPhoneアプリに通知する";
+"BUTTON_PUSH_NOTIFY_FOLLOW" = "フォローをiPhoneアプリに通知する";
+"PLACEHOLDER_DEVICETOKEN" = "iPhone版星プテラノのプッシュ通知用トークン";
 
 // 抽出設定
 "FILTER_TAB_ACCOUNT" = "アカウント";
@@ -120,6 +125,7 @@
 "FILTER_HELP_REGEXP" = "抽出に使用する正規表現を入力してください";
 "PLACEHOLDER_NAME" = "名前";
 "BUTTON_LOCAL_NOTIFICATION" = "通知する";
+"BUTTON_PUSH_NOTIFICATION" = "iPhoneアプリに通知する";
 
 // 詳細設定
 "BUTTON_LICENSE" = "使用ライブラリの著作権情報";

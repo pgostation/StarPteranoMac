@@ -1,0 +1,6 @@
+[submodule "Carthage/Checkouts/MMTabBarView"]
+	path = Carthage/Checkouts/MMTabBarView
+	url = https://github.com/ViennaRSS/MMTabBarView.git
+[submodule "Carthage/Checkouts/LYTabView"]
+	path = Carthage/Checkouts/LYTabView
+	url = https://github.com/robin/LYTabView.git
