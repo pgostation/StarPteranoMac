@@ -529,6 +529,24 @@ final class SettingsData {
         }
     }
     
+    // NSFWを無視するか
+    static var ignoreNSFW: Bool {
+        get {
+            if let string = defaults.string(forKey: "ignoreNSFW") {
+                let value = (string == "ON")
+                return value
+            }
+            return false
+        }
+        set(newValue) {
+            if newValue {
+                defaults.set("ON", forKey: "ignoreNSFW")
+            } else {
+                defaults.removeObject(forKey: "ignoreNSFW")
+            }
+        }
+    }
+    
     // メンション通知を有効にするかどうか
     static var notifyMentions: Bool {
         get {

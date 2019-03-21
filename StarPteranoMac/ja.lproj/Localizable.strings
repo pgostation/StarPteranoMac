@@ -90,6 +90,7 @@
 "SETTINGS_PROTECTMODE" = "デフォルト公開範囲";
 "BUTTON_USESTREAMING" = "ストリーミングを使用";
 "BUTTON_DEFAULT_NSFW" = "メディアをデフォルトで閲覧注意";
+"BUTTON_IGNORE_NSFW" = "閲覧注意の画像でも常に表示する";
 "BUTTON_CLEARCACHE" = "キャッシュをクリア";
 
 // UI設定

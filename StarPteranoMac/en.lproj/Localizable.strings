@@ -90,6 +90,7 @@
 "SETTINGS_PROTECTMODE" = "Default Publishing Level";
 "BUTTON_USESTREAMING" = "Use Streaming";
 "BUTTON_DEFAULT_NSFW" = "Default NSFW (Not safe for work) for Media";
+"BUTTON_IGNORE_NSFW" = "Ignore NSFW (Not safe for work)";
 "BUTTON_CLEARCACHE" = "CLear Cache";
 
 // UI設定

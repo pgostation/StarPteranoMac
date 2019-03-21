@@ -21,6 +21,8 @@ final class GeneralSettingsViewController: NSViewController {
         view.useStreamingButton.target = self
         view.defaultNSFWButton.action = #selector(defaultNSFWAction(_:))
         view.defaultNSFWButton.target = self
+        view.ignoreNSFWButton.action = #selector(ignoreNSFWAction(_:))
+        view.ignoreNSFWButton.target = self
     }
     
     required init?(coder: NSCoder) {
@@ -60,12 +62,22 @@ final class GeneralSettingsViewController: NSViewController {
             MainWindow.show()
         }
     }
+    
+    @objc func ignoreNSFWAction(_ sender: NSButton) {
+        SettingsData.ignoreNSFW = (sender.state == .on)
+        
+        MainWindow.window?.close()
+        DispatchQueue.main.async {
+            MainWindow.show()
+        }
+    }
 }
 
 final class GeneralSettingsView: NSView {
     let protectModeButton = NSButton()
     let useStreamingButton = NSButton()
     let defaultNSFWButton = NSButton()
+    let ignoreNSFWButton = NSButton()
     
     init() {
         super.init(frame: SettingsWindow.contentRect)
@@ -73,6 +85,7 @@ final class GeneralSettingsView: NSView {
         self.addSubview(protectModeButton)
         self.addSubview(useStreamingButton)
         self.addSubview(defaultNSFWButton)
+        self.addSubview(ignoreNSFWButton)
         
         setProperties()
     }
@@ -110,6 +123,10 @@ final class GeneralSettingsView: NSView {
         defaultNSFWButton.title = I18n.get("BUTTON_DEFAULT_NSFW")
         setCheckboxStyle(button: defaultNSFWButton)
         defaultNSFWButton.state = SettingsData.defaultNSFW ? .on : .off
+        
+        ignoreNSFWButton.title = I18n.get("BUTTON_IGNORE_NSFW")
+        setCheckboxStyle(button: ignoreNSFWButton)
+        ignoreNSFWButton.state = SettingsData.ignoreNSFW ? .on : .off
     }
     
     override func layout() {
@@ -134,5 +151,10 @@ final class GeneralSettingsView: NSView {
                                          y: SettingsWindow.contentRect.height - 150 + 5,
                                          width: 200,
                                          height: 20)
+        
+        ignoreNSFWButton.frame = NSRect(x: 30,
+                                        y: SettingsWindow.contentRect.height - 200 + 5,
+                                        width: 200,
+                                        height: 20)
     }
 }

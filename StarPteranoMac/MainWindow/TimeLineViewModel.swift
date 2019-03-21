@@ -1118,7 +1118,9 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     coverButton.frame = NSRect(x: 0, y: 0, width: 500, height: 500)
                     
                     if data.sensitive == 1 || data.spoiler_text != "" {
-                        imageView.isHidden = true
+                        if !SettingsData.ignoreNSFW {
+                            imageView.isHidden = true
+                        }
                     }
                     
                     cell.previewUrls.append(media.preview_url ?? "")
