@@ -38,9 +38,35 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         setProperties()
         
+        // 設定してあるタブを追加
         let tlModes = SettingsData.tlMode(key: hostName + "," + accessToken)
         for mode in tlModes {
             addTab(mode: mode)
+        }
+        
+        // ウィンドウ作成時に抽出ビューを作成しておく
+        for mode in tlModes {
+            if mode == .filter0 || mode == .filter1 || mode == .filter2 || mode == .filter3 {
+                let filterKey = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+                if TimeLineViewManager.get(key: filterKey) == nil {
+                    let vc: NSViewController?
+                    switch mode {
+                    case .filter0:
+                        vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .filter0)
+                    case .filter1:
+                        vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .filter1)
+                    case .filter2:
+                        vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .filter2)
+                    case .filter3:
+                        vc = TimeLineViewController(hostName: hostName, accessToken: accessToken, type: .filter3)
+                    default:
+                        vc = nil
+                    }
+                    if let vc = vc {
+                        TimeLineViewManager.set(key: filterKey, vc: vc)
+                    }
+                }
+            }
         }
         
         if tlModes.count == 0 {
