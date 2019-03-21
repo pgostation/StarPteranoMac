@@ -45,11 +45,16 @@ final class iTunesInfo {
                 }
             } else {
                 // アートワーク情報
-                let artworkImage: NSImage?
+                var artworkImage: NSImage? = nil
                 if let data = output.atIndex(4)?.data {
-                    artworkImage = NSImage(data: data)
-                } else {
-                    artworkImage = nil
+                    if let origImage = NSImage(data: data) {
+                        let smallImage = ImageUtils.small(image: origImage, pixels: 300 * 300)
+                        if let tiff = smallImage.tiffRepresentation {
+                            let imgRep = NSBitmapImageRep(data: tiff)
+                            let smallImageData = imgRep?.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+                            artworkImage = NSImage(data: smallImageData ?? data)
+                        }
+                    }
                 }
                 
                 // infoをセット

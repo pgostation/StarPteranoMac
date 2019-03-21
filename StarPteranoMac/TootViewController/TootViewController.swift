@@ -90,6 +90,7 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
             view.imageCheckView.urls = []
             view.imageCheckView.deleteAll()
             view.imageCheckView.closeAction()
+            view.refresh()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 // 画像をアップロードしてから投稿
                 let group = DispatchGroup()

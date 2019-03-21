@@ -26,16 +26,20 @@ final class ImageUpload {
         } else if imageUrl.path.lowercased().hasSuffix(".png") {
             self.filename = "image.png"
             self.mimetype = "image/png"
-            var imageData: Data?
+            var imageData: Data? = nil
             guard let image = NSImage(contentsOfFile: imageUrl.path) else { return }
             if filePathKey == "avatar" || filePathKey == "header" {
                 let smallImage = ImageUtils.small(image: image, pixels: 800 * 800)
-                let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: smallImage.size.width, height: smallImage.size.height))
-                imageData = imageRepresentation?.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+                if let tiff = smallImage.tiffRepresentation {
+                    let imgRep = NSBitmapImageRep(data: tiff)
+                    imageData = imgRep?.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+                }
             } else {
                 let smallImage = ImageUtils.small(image: image, pixels: ImageUtils.maxPixels(hostName: hostName))
-                let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: smallImage.size.width, height: smallImage.size.height))
-                imageData = imageRepresentation?.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+                if let tiff = smallImage.tiffRepresentation {
+                    let imgRep = NSBitmapImageRep(data: tiff)
+                    imageData = imgRep?.representation(using: NSBitmapImageRep.FileType.png, properties: [:])
+                }
             }
             
             let data: Data = imageData ?? (try! Data(contentsOf: imageUrl))
@@ -44,20 +48,25 @@ final class ImageUpload {
             guard let image = NSImage(contentsOfFile: imageUrl.path) else { return }
             
             // JPEG圧縮
-            var imageData: Data
+            var imageData: Data? = nil
             if filePathKey == "avatar" || filePathKey == "header" {
                 let smallImage = ImageUtils.small(image: image, pixels: 800 * 800)
-                let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: smallImage.size.width, height: smallImage.size.height))
-                imageData = (imageRepresentation?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!)!
+                if let tiff = smallImage.tiffRepresentation {
+                    let imgRep = NSBitmapImageRep(data: tiff)
+                    imageData = imgRep?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])
+                }
             } else {
                 let smallImage = ImageUtils.small(image: image, pixels: ImageUtils.maxPixels(hostName: hostName))
-                let imageRepresentation = NSBitmapImageRep(focusedViewRect: NSRect(x: 0, y: 0, width: smallImage.size.width, height: smallImage.size.height))
-                imageData = (imageRepresentation?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])!)!
+                if let tiff = smallImage.tiffRepresentation {
+                    let imgRep = NSBitmapImageRep(data: tiff)
+                    imageData = imgRep?.representation(using: NSBitmapImageRep.FileType.jpeg, properties: [:])
+                }
             }
             
+            let data: Data = imageData ?? (try! Data(contentsOf: imageUrl))
             self.filename = "image.jpeg"
             self.mimetype = "image/jpeg"
-            self.uploadData(httpMethod: httpMethod, uploadUrl: uploadUrl, filePathKey: filePathKey, data: imageData, accessToken: accessToken, callback: callback)
+            self.uploadData(httpMethod: httpMethod, uploadUrl: uploadUrl, filePathKey: filePathKey, data: data, accessToken: accessToken, callback: callback)
         }
     }
     
