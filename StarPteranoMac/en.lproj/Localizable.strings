@@ -268,4 +268,7 @@
 
 // フッター
 "PLACEHOLDER_SEARCH" = "Search";
-"TOOLTIP_API_REMAIN" = "AP Remain";
+"TOOLTIP_API_REMAIN" = "API Remain";
+"TOOLTIP_LAMP_STREAMING" = "Streaming";
+"TOOLTIP_LAMP_CONNECTING" = "Connecting...";
+"TOOLTIP_LAMP_DISCONNECTED" = "Disconnected";

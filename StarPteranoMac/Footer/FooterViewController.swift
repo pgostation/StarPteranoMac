@@ -33,14 +33,20 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
     
     // ストリーミングランプを更新
     func setLamp(isOn: Bool?, isConnecting: Bool) {
-        if isOn == true {
-            (view as? FooterView)?.streamingLampView.layer?.backgroundColor = NSColor.green.cgColor
-        } else if isConnecting {
-            (view as? FooterView)?.streamingLampView.layer?.backgroundColor = NSColor.yellow.cgColor
-        } else if isOn == false {
-            (view as? FooterView)?.streamingLampView.layer?.backgroundColor = NSColor.red.cgColor
-        } else {
-            (view as? FooterView)?.streamingLampView.layer?.backgroundColor = NSColor.clear.cgColor
+        if let streamingLampView = (view as? FooterView)?.streamingLampView {
+            if isOn == true {
+                streamingLampView.layer?.backgroundColor = NSColor.green.cgColor
+                streamingLampView.toolTip = I18n.get("TOOLTIP_LAMP_STREAMING")
+            } else if isConnecting {
+                streamingLampView.layer?.backgroundColor = NSColor.yellow.cgColor
+                streamingLampView.toolTip = I18n.get("TOOLTIP_LAMP_CONNECTING")
+            } else if isOn == false {
+                streamingLampView.layer?.backgroundColor = NSColor.red.cgColor
+                streamingLampView.toolTip = I18n.get("TOOLTIP_LAMP_DISCONNECTED")
+            } else {
+                streamingLampView.layer?.backgroundColor = NSColor.clear.cgColor
+                streamingLampView.toolTip = nil
+            }
         }
         
         // 検索フィールドの表示/非表示

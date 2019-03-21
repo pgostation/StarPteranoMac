@@ -270,3 +270,6 @@
 // フッター
 "PLACEHOLDER_SEARCH" = "検索";
 "TOOLTIP_API_REMAIN" = "API残り";
+"TOOLTIP_LAMP_STREAMING" = "ストリーミング中";
+"TOOLTIP_LAMP_CONNECTING" = "ストリーミング接続試行中・・・";
+"TOOLTIP_LAMP_DISCONNECTED" = "ストリーミング切断";
