@@ -705,6 +705,18 @@ final class SettingsData {
         }
     }
     
+    // プッシュ通知の二重送信防止
+    static var lastSendUrlStr: String? {
+        get {
+            return defaults.string(forKey: "lastSendUrlStr")
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                defaults.set(newValue, forKey: "lastSendUrlStr")
+            }
+        }
+    }
+    
     // 画像ファイルのストレージキャッシュを使うかどうか (ただし、APNGと動画は常にキャッシュする)
     static var useStorageCache: Bool {
         get {

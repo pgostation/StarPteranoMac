@@ -480,9 +480,12 @@ class TimeLineView: NSTableView {
                             urlStr += "&body=\(bodyStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
                             urlStr += "&token=\(token)"
                             
-                            if let url = URL(string: urlStr) {
-                                let urlSession = URLSession.shared.dataTask(with: url)
-                                urlSession.resume()
+                            if urlStr != SettingsData.lastSendUrlStr {
+                                if let url = URL(string: urlStr) {
+                                    let urlSession = URLSession.shared.dataTask(with: url)
+                                    urlSession.resume()
+                                }
+                                SettingsData.lastSendUrlStr = urlStr
                             }
                         }
                         
