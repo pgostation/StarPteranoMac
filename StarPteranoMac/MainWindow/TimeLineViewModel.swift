@@ -256,9 +256,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 for type in typeList {
                     let key = TimeLineViewManager.makeKey(hostName: tableView.hostName , accessToken: tableView.accessToken, type: type)
                     if let vc = TimeLineViewManager.get(key: key) {
-                        if vc.view.superview != nil {
-                            (vc.view as? TimeLineView)?.model.setFiltering()
-                        }
+                        (vc.view as? TimeLineView)?.model.setFiltering()
                     }
                 }
             }
