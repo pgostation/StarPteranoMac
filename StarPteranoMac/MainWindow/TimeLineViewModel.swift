@@ -198,6 +198,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     self.notify(dataList: addList2)
                 } else {
                     // すでにあるデータを更新する
+                    var addFlag = false
                     var index = 0
                     for newContent in addList2 {
                         var flag = false
@@ -217,6 +218,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                             if (listData.id ?? "") < (newContent.id ?? "") {
                                 self.list.insert(newContent, at: index)
                                 flag = true
+                                addFlag = true
                                 
                                 // 選択位置がずれないようにする
                                 if self.selectedRow != nil && index < self.selectedRow! {
@@ -238,6 +240,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                         } else {
                             tableView.reloadData()
                         }
+                    }
+                    
+                    if addFlag {
+                        self.notify(dataList: addList2)
                     }
                 }
             }
@@ -317,9 +323,12 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 urlStr += "&body=\(bodyStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
                 urlStr += "&token=\(token)"
                 
-                if let url = URL(string: urlStr) {
-                    let urlSession = URLSession.shared.dataTask(with: url)
-                    urlSession.resume()
+                if urlStr != SettingsData.lastSendUrlStr {
+                    if let url = URL(string: urlStr) {
+                        let urlSession = URLSession.shared.dataTask(with: url)
+                        urlSession.resume()
+                        SettingsData.lastSendUrlStr = urlStr
+                    }
                 }
             }
         }
