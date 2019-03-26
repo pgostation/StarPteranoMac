@@ -316,7 +316,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 guard let fileData = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
                 guard let firebaseUrl = String(data: fileData, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
                 let newTitleStr = I18n.get("FILTER_NOTIFICATION_TITLE") + " " + (data.accountId)
-                let bodyStr = String(content.0.string.prefix(50))
+                let bodyStr = String(content.0.string.prefix(80))
                 
                 var urlStr = "\(firebaseUrl)?"
                 urlStr += "title=\(newTitleStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"

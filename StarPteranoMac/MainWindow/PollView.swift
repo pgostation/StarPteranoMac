@@ -99,6 +99,7 @@ final class PollView: NSView {
             let button = NSButton()
             button.title = "+"
             button.isBordered = false
+            button.wantsLayer = true
             button.layer?.backgroundColor = NSColor.blue.cgColor
             button.layer?.cornerRadius = 8
             buttons.append(button)

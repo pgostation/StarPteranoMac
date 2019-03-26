@@ -473,7 +473,7 @@ class TimeLineView: NSTableView {
                             guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
                             guard let firebaseUrl = String(data: data, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
                             let newTitleStr = titleStr + " " + (acctStr ?? "")
-                            let bodyStr = String(contentStr.0.string.prefix(50))
+                            let bodyStr = String(contentStr.0.string.prefix(80))
                             
                             var urlStr = "\(firebaseUrl)?"
                             urlStr += "title=\(newTitleStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
