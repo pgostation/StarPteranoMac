@@ -323,11 +323,13 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 urlStr += "&body=\(bodyStr.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) ?? "")"
                 urlStr += "&token=\(token)"
                 
-                if urlStr != SettingsData.lastSendUrlStr {
+                if urlStr != SettingsData.lastSendUrlStr && PushLimit.isOK() {
                     if let url = URL(string: urlStr) {
                         let urlSession = URLSession.shared.dataTask(with: url)
                         urlSession.resume()
                         SettingsData.lastSendUrlStr = urlStr
+                        
+                        PushLimit.addCount()
                     }
                 }
             }

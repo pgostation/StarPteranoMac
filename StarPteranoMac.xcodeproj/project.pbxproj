@@ -36,6 +36,7 @@
 		1243D395222A8DB3001DA334 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D394222A8DB3001DA334 /* NotificationViewController.swift */; };
 		1243D397222A8DC3001DA334 /* NotificationTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D396222A8DC3001DA334 /* NotificationTableModel.swift */; };
 		1243D399222A8DD1001DA334 /* NotificationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1243D398222A8DD1001DA334 /* NotificationTableCell.swift */; };
+		125DA738224A6A980063FB89 /* PushLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125DA737224A6A980063FB89 /* PushLimit.swift */; };
 		12787A3D221ADEE700DE5FB5 /* LeakCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */; };
 		128751A82184225800BC8828 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A72184225800BC8828 /* ImageCache.swift */; };
 		128751AA2184340E00BC8828 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128751A92184340E00BC8828 /* MainViewController.swift */; };
@@ -135,6 +136,7 @@
 		1243D394222A8DB3001DA334 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		1243D396222A8DC3001DA334 /* NotificationTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableModel.swift; sourceTree = "<group>"; };
 		1243D398222A8DD1001DA334 /* NotificationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableCell.swift; sourceTree = "<group>"; };
+		125DA737224A6A980063FB89 /* PushLimit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushLimit.swift; sourceTree = "<group>"; };
 		12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakCounter.swift; sourceTree = "<group>"; };
 		128751A72184225800BC8828 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		128751A92184340E00BC8828 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				120B0EC8222C05FE00BC3181 /* ListData.swift */,
 				120B0EDA2231563100BC3181 /* HashtagCache.swift */,
 				120B0EDE2233DBEE00BC3181 /* CustomColor.swift */,
+				125DA737224A6A980063FB89 /* PushLimit.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				12C044F622202A2700BE3A50 /* EmojiData.swift in Sources */,
 				12DF0D2D221C408A006A8C0B /* ImageUpload.swift in Sources */,
 				12403B95223E64E200C167B9 /* FilterAccountViewController.swift in Sources */,
+				125DA738224A6A980063FB89 /* PushLimit.swift in Sources */,
 				129F4348217F54D8008E856D /* Menu.swift in Sources */,
 				128751C62184A37300BC8828 /* TimeLineViewCell.swift in Sources */,
 				129F434B217F5B1D008E856D /* I18n.swift in Sources */,
