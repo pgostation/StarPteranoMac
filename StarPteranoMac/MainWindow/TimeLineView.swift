@@ -469,7 +469,8 @@ class TimeLineView: NSTableView {
                         
                         // プッシュ通知
                         if pushNotify, let token = SettingsData.deviceToken {
-                            guard let path = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                            guard let tmpPath = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                            let path = ConvertPath.convert(src: tmpPath)
                             guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
                             guard let firebaseUrl = String(data: data, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
                             let newTitleStr = titleStr + " " + (acctStr ?? "")

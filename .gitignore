@@ -18,5 +18,6 @@ profile
 *.moved-aside
 GoogleService-Info.plist
 firebaseUrl.txt
+ConvertPath.swift
 
 Pods/*

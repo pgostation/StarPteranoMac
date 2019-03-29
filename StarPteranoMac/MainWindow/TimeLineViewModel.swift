@@ -312,7 +312,8 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             
             // プッシュ通知
             if pushNotify, let token = SettingsData.deviceToken {
-                guard let path = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                guard let tmpPath = Bundle.main.path(forResource: "firebaseUrl", ofType: "txt") else { return }
+                let path = ConvertPath.convert(src: tmpPath)
                 guard let fileData = try? Data(contentsOf: URL(fileURLWithPath: path)) else { return }
                 guard let firebaseUrl = String(data: fileData, encoding: String.Encoding.utf8)?.replacingOccurrences(of: "\n", with: "") else { return }
                 let newTitleStr = I18n.get("FILTER_NOTIFICATION_TITLE") + " " + (data.accountId)

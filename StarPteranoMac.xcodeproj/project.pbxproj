@@ -65,6 +65,7 @@
 		1291FC4B21835D5A009B8788 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4A21835D5A009B8788 /* Dialog.swift */; };
 		1291FC4E21835F08009B8788 /* MastodonRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC4D21835F08009B8788 /* MastodonRequest.swift */; };
 		1291FC532183EE3B009B8788 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1291FC522183EE3B009B8788 /* MainWindow.swift */; };
+		1298E78F224E6AAE0035F7EB /* ConvertPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1298E78E224E6AAE0035F7EB /* ConvertPath.swift */; };
 		129E89D622145DC300D3D13B /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129E89D522145DC300D3D13B /* CardView.swift */; };
 		129F4336217E1CD3008E856D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129F4335217E1CD3008E856D /* AppDelegate.swift */; };
 		129F4338217E1CD4008E856D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 129F4337217E1CD4008E856D /* Assets.xcassets */; };
@@ -165,6 +166,7 @@
 		1291FC4A21835D5A009B8788 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		1291FC4D21835F08009B8788 /* MastodonRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MastodonRequest.swift; sourceTree = "<group>"; };
 		1291FC522183EE3B009B8788 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		1298E78E224E6AAE0035F7EB /* ConvertPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertPath.swift; sourceTree = "<group>"; };
 		129E89D522145DC300D3D13B /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		129F4332217E1CD3008E856D /* StarPteranoMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StarPteranoMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		129F4335217E1CD3008E856D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -409,6 +411,7 @@
 				128751AB218478CA00BC8828 /* ImageUtils.swift */,
 				128751C72184B44600BC8828 /* MovieCache.swift */,
 				12787A3C221ADEE700DE5FB5 /* LeakCounter.swift */,
+				1298E78E224E6AAE0035F7EB /* ConvertPath.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -582,6 +585,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1298E78F224E6AAE0035F7EB /* ConvertPath.swift in Sources */,
 				1243D392222A0B4E001DA334 /* PgoTabView.swift in Sources */,
 				1243D38E2226BC22001DA334 /* MyAlertController.swift in Sources */,
 				128751A82184225800BC8828 /* ImageCache.swift in Sources */,
