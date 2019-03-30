@@ -222,6 +222,12 @@ final class TootView: NSView {
     
     class TootTextView: MyTextView {
         override func keyDown(with event: NSEvent) {
+            if self.hasMarkedText() {
+                // 変換中の場合
+                super.keyDown(with: event)
+                return
+            }
+            
             switch event.keyCode {
             case 36, 52, 76: // return, enter
                 if event.modifierFlags.contains(.command) { // cmd + return
