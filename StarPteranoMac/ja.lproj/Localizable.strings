@@ -44,6 +44,7 @@
 "Larger" = "拡大";
 "Smaller" = "縮小";
 "Show User…" = "ユーザーを表示…";
+"Mark All to Read" = "すべてを既読にする";
 
 // Toot Menu
 "Toot" = "トゥート";
@@ -279,3 +280,4 @@
 "TOOLTIP_LAMP_STREAMING" = "ストリーミング中";
 "TOOLTIP_LAMP_CONNECTING" = "ストリーミング接続試行中・・・";
 "TOOLTIP_LAMP_DISCONNECTED" = "ストリーミング切断";
+"TOOLTIP_READALL" = "既読にする";

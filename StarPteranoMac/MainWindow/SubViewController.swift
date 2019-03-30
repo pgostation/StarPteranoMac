@@ -149,8 +149,25 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         
         guard let mode = SettingsData.TLMode(rawValue: tabViewItem.identifier as? String ?? "") else { return }
         
-        let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+        let vc = SubViewController.getViewController(hostName: hostName, accessToken: accessToken, mode: mode)
         
+        scrollView.documentView = vc.view
+        
+        for child in self.children {
+            if child is TimeLineViewController || child is NotificationViewController || child is SearchViewController {
+                child.removeFromParent()
+            }
+        }
+        self.addChild(vc)
+        
+        var modes = SettingsData.tlMode(key: hostName + "," + accessToken)
+        modes.append(mode)
+        
+        refreshLamp()
+    }
+    
+    // 指定のViewControllerを取得もしくは生成
+    static func getViewController(hostName: String, accessToken: String, mode: SettingsData.TLMode) -> NSViewController {
         let type: TimeLineViewController.TimeLineType
         switch mode {
         case .home:
@@ -185,6 +202,8 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             type = .filter3
         }
         
+        let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+        
         let vc: NSViewController
         if type == .notifications || type == .notificationMentions {
             vc = TimeLineViewManager.get(key: key) ?? NotificationViewController(hostName: hostName, accessToken: accessToken, type: type)
@@ -193,21 +212,10 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         } else {
             vc = TimeLineViewManager.get(key: key) ?? TimeLineViewController(hostName: hostName, accessToken: accessToken, type: type)
         }
-        scrollView.documentView = vc.view
-        
-        for child in self.children {
-            if child is TimeLineViewController || child is NotificationViewController || child is SearchViewController {
-                child.removeFromParent()
-            }
-        }
-        self.addChild(vc)
         
         TimeLineViewManager.set(key: key, vc: vc)
         
-        var modes = SettingsData.tlMode(key: hostName + "," + accessToken)
-        modes.append(mode)
-        
-        refreshLamp()
+        return vc
     }
     
     static var notChange = false
@@ -330,6 +338,28 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
         } else {
             footerVC.setLamp(isOn: nil, isConnecting: false)
         }
+    }
+   
+    // 未読数を更新してタブに表示
+    func refreshUnreadCount() {
+        for (index, item) in self.tabView.items.enumerated() {
+            guard let identifier = item.identifier as? String else { continue }
+            guard let mode = SettingsData.TLMode(rawValue: identifier) else { continue }
+            
+            let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
+            let vc = TimeLineViewManager.get(key: key)
+            
+            if let view = vc?.view as? TimeLineView {
+                let unreadCount = view.model.unreadCount()
+                if unreadCount > 0 {
+                    self.tabView.items[index].infoString = "\(unreadCount)"
+                } else {
+                    self.tabView.items[index].infoString = ""
+                }
+            }
+        }
+        
+        self.tabView.refresh()
     }
     
     // 残りAPIの表示

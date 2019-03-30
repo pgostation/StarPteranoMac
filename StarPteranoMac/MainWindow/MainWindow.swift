@@ -72,6 +72,52 @@ final class MainWindow: NSWindow {
                 Dialog.show(message: message)
             }
         }
+        
+        // 自動更新タイマーを設定
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            timerAction()
+            setTimer()
+        }
+    }
+    
+    // 自動更新タイマーを設定
+    private static var refreshTimer: Timer?
+    private static func setTimer() {
+        refreshTimer = Timer.scheduledTimer(timeInterval: 5 * 60, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+    }
+    
+    // 自動更新を実施
+    @objc static func timerAction() {
+        if window?.isVisible != true { return }
+        
+        var delay: Double = 0
+        
+        // 全てのカラムを更新する
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            // 全てのタブを更新する
+            for tabItem in subVC.tabView.items {
+                let identifier = (tabItem.identifier as? String) ?? ""
+                guard let mode = SettingsData.TLMode(rawValue: identifier) else { continue }
+                
+                // ViewControllerが無ければ作る
+                let vc = SubViewController.getViewController(hostName: subVC.hostName, accessToken: subVC.accessToken, mode: mode)
+                
+                // 更新処理
+                if let vc = vc as? NotificationViewController {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        vc.add(isRefresh: true)
+                    }
+                } else if let view = vc.view as? TimeLineView {
+                    if view.streamingObject?.isConnected == true { continue } // ストリーミング中は無視
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                        view.refresh()
+                    }
+                }
+                
+                delay += 2 // 一気に更新すると重くなるので、2秒の間隔を空けて更新
+            }
+        }
     }
     
     private static func setFrame() {

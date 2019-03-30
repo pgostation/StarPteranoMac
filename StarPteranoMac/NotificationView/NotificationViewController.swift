@@ -77,7 +77,7 @@ final class NotificationViewController: NSViewController {
         }
         var excludeTypes = ""
         if self.type == .notificationMentions {
-            excludeTypes = "&exclude_types[]=follow&exclude_types[]=favourite&exclude_types[]=reblog"
+            excludeTypes = "&exclude_types[]=follow&exclude_types[]=favourite&exclude_types[]=reblog&exclude_types[]=poll"
         }
         
         guard let url = URL(string: "https://\(hostName)/api/v1/notifications?limit=15\(idStr)\(excludeTypes)") else { return }

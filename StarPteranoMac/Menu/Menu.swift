@@ -148,6 +148,10 @@ final class Menu: NSObject, NSMenuDelegate {
                 let menuItem1 = NSMenuItem(title: I18n.get("Show User…"), action: #selector(doViewMenu(_:)), keyEquivalent: "u")
                 menuItem1.target = menuTarget
                 viewMenu.addItem(menuItem1)
+                
+                let menuItem2 = NSMenuItem(title: I18n.get("Mark All to Read"), action: #selector(doViewMenu(_:)), keyEquivalent: "M")
+                menuItem2.target = menuTarget
+                viewMenu.addItem(menuItem2)
             }
             viewMenu.addItem(NSMenuItem.separator())
             do {
@@ -412,6 +416,14 @@ final class Menu: NSObject, NSMenuDelegate {
                             }
                         }
                     }
+            }
+        }
+        else if item.title == I18n.get("Mark All to Read") {
+            if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                if let view = tlVC.view as? TimeLineView {
+                    view.model.readAll()
+                    view.reloadData()
+                }
             }
         }
     }

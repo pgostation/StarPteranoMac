@@ -219,6 +219,7 @@ final class PgoTabView: NSTabView {
                 itemViews[index].layer?.backgroundColor = ThemeColor.cellBgColor.cgColor
             }
             
+            // 選択中かどうか
             if isSelected {
                 itemViews[index].layer?.borderWidth = 1
                 if _bold {
@@ -229,11 +230,20 @@ final class PgoTabView: NSTabView {
             } else {
                 itemViews[index].layer?.borderWidth = 0
             }
-                
+            
+            // ラベル
             itemViews[index].nameLabel.stringValue = item.filterName ?? item.label
             itemViews[index].nameLabel.font = (isSelected && _bold) ? NSFont.boldSystemFont(ofSize: 12) : NSFont.systemFont(ofSize: 12)
             itemViews[index].nameLabel.textColor = isSelected ? ThemeColor.contrastColor : ThemeColor.dateColor
             itemViews[index].nameLabel.sizeToFit()
+            
+            // 未読数
+            itemViews[index].infoLabel.stringValue = item.infoString
+            if item.infoString == "" {
+                itemViews[index].infoLabel.frame.size.width = 0
+            } else {
+                itemViews[index].infoLabel.sizeToFit()
+            }
         }
         
         self.needsLayout = true
@@ -287,6 +297,7 @@ final class PgoTabItem: NSTabViewItem {
     }
     
     var filterName: String? = nil
+    var infoString: String = ""
     
     // 削除前に呼ばれる
     func willRemove() {
@@ -326,6 +337,16 @@ private class PgoTabItemView: NSView {
         nameLabel.isSelectable = false
         nameLabel.isEditable = false
         nameLabel.alignment = .center
+        
+        infoLabel.font = NSFont.systemFont(ofSize: 12)
+        infoLabel.drawsBackground = false
+        infoLabel.isBordered = false
+        infoLabel.isSelectable = false
+        infoLabel.isEditable = false
+        infoLabel.wantsLayer = true
+        infoLabel.layer?.cornerRadius = 6
+        infoLabel.layer?.backgroundColor = ThemeColor.dateColor.cgColor
+        infoLabel.textColor = ThemeColor.viewBgColor
     }
     
     required init?(coder decoder: NSCoder) {
@@ -342,7 +363,7 @@ private class PgoTabItemView: NSView {
                                      width: self.frame.width,
                                      height: 20)
             
-            infoLabel.frame = NSRect(x: min(nameLabel.frame.maxY, self.frame.width - infoLabel.frame.width),
+            infoLabel.frame = NSRect(x: min(nameLabel.frame.maxX, self.frame.width - infoLabel.frame.width),
                                      y: 2,
                                      width: infoLabel.frame.width,
                                      height: 16)
@@ -354,7 +375,7 @@ private class PgoTabItemView: NSView {
                                      width: self.frame.width - 14 - max(14, infoLabel.frame.width),
                                      height: 18)
             
-            infoLabel.frame = NSRect(x: min(nameLabel.frame.maxY, self.frame.width - infoLabel.frame.width),
+            infoLabel.frame = NSRect(x: min(nameLabel.frame.maxX, self.frame.width - infoLabel.frame.width),
                                      y: 2,
                                      width: infoLabel.frame.width,
                                      height: 16)

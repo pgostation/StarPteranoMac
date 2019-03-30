@@ -25,6 +25,8 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
         
         view.refreshButton.target = self
         view.refreshButton.action = #selector(refreshAction)
+        view.readAllButton.target = self
+        view.readAllButton.action = #selector(readAllAction)
     }
     
     required init?(coder: NSCoder) {
@@ -90,6 +92,16 @@ final class FooterViewController: NSViewController, NSSearchFieldDelegate {
         }
     }
     
+    // 既読にする
+    @objc func readAllAction() {
+        if let subVC = self.parent as? SubViewController {
+            if let tlView = subVC.scrollView.documentView as? TimeLineView {
+                tlView.model.readAll()
+                tlView.reloadData()
+            }
+        }
+    }
+    
     // 検索開始
     func searchFieldDidStartSearching(_ sender: NSSearchField) {
         ((self.parent as? SubViewController)?.scrollView.documentView as? TimeLineView)?.search(string: sender.stringValue)
@@ -107,6 +119,7 @@ final class FooterView: NSView {
     
     let refreshButton = NSButton()
     let streamingLampView = NSView()
+    let readAllButton = NSButton()
     let remainApiLabel = MyTextField()
     let searchField = NSSearchField()
     
@@ -118,6 +131,7 @@ final class FooterView: NSView {
         
         self.addSubview(refreshButton)
         self.addSubview(streamingLampView)
+        self.addSubview(readAllButton)
         self.addSubview(remainApiLabel)
         self.addSubview(searchField)
         
@@ -136,6 +150,10 @@ final class FooterView: NSView {
         
         refreshButton.title = "↺"
         refreshButton.isBordered = false
+        
+        readAllButton.title = "◉"
+        readAllButton.isBordered = false
+        readAllButton.toolTip = I18n.get("TOOLTIP_READALL")
         
         remainApiLabel.font = NSFont.systemFont(ofSize: SettingsData.fontSize - 2)
         remainApiLabel.textColor = NSColor.gray
@@ -184,12 +202,17 @@ final class FooterView: NSView {
                                      width: 16,
                                      height: 16)
         
-        remainApiLabel.frame = NSRect(x: 30,
+        readAllButton.frame = NSRect(x: 22,
+                                     y: 2,
+                                     width: 16,
+                                     height: 16)
+        
+        remainApiLabel.frame = NSRect(x: 50,
                                       y: 0,
                                       width: 100,
                                       height: 20)
         
-        let fieldWidth = min(self.frame.size.width - 25, 150)
+        let fieldWidth = min(self.frame.size.width - 45, 150)
         searchField.frame = NSRect(x: superview.frame.width - fieldWidth - 5,
                                    y: 0,
                                    width: fieldWidth,

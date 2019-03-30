@@ -44,6 +44,7 @@
 "Larger" = "Larger";
 "Smaller" = "Smaller";
 "Show User…" = "Show User…";
+"Mark All to Read" = "Mark All to Read";
 
 // Toot Menu
 "Toot" = "Toot";
@@ -278,3 +279,4 @@
 "TOOLTIP_LAMP_STREAMING" = "Streaming";
 "TOOLTIP_LAMP_CONNECTING" = "Connecting...";
 "TOOLTIP_LAMP_DISCONNECTED" = "Disconnected";
+"TOOLTIP_READALL" = "Mark all to read";

@@ -15,6 +15,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
     private var filteredList: [AnalyzeJson.ContentData]? = nil
     private var accountList: [String: AnalyzeJson.AccountData] = [:]
     private var accountIdDict: [String: String] = [:]
+    private var unreadList: [String] = [] // 未読IDのリスト
     var showAutoPagerizeCell = true // 過去遡り用セルを表示するかどうか
     private weak var tableView: TimeLineView?
     private var _selectedRow: Int?
@@ -132,6 +133,12 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
                 
                 self.notify(dataList: addList2)
+                
+                for data in addList2 {
+                    if let id = data.id {
+                        self.unreadList.append(id)
+                    }
+                }
             } else if let firstDate1 = self.list.first?.created_at, let firstDate2 = addList2.first?.created_at, let lastDate1 = self.list.last?.created_at, let lastDate2 = addList2.last?.created_at {
                 
                 if addList2.count == 1 && isBoosted {
@@ -153,6 +160,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                                 if self.selectedRow != nil && index < self.selectedRow! {
                                     self.selectedRow = self.selectedRow! + 1
                                 }
+                                
+                                if let id = newContent.id {
+                                    self.unreadList.append(id)
+                                }
+                                
                                 break
                             }
                             index += 1
@@ -196,6 +208,12 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     }
                     
                     self.notify(dataList: addList2)
+                    
+                    for data in addList2 {
+                        if let id = data.id {
+                            self.unreadList.append(id)
+                        }
+                    }
                 } else {
                     // すでにあるデータを更新する
                     var addFlag = false
@@ -225,12 +243,20 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                                     self.selectedRow = self.selectedRow! + 1
                                 }
                                 
+                                if let id = newContent.id {
+                                    self.unreadList.append(id)
+                                }
+                                
                                 break
                             }
                             index += 1
                         }
                         if !flag {
                             self.list.append(newContent)
+                            
+                            if let id = newContent.id {
+                                self.unreadList.append(id)
+                            }
                         }
                     }
                     
@@ -264,6 +290,13 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     if let vc = TimeLineViewManager.get(key: key) {
                         (vc.view as? TimeLineView)?.model.setFiltering()
                     }
+                }
+            }
+            
+            // タブに未読数を表示
+            for subVC in MainViewController.instance?.subVCList ?? [] {
+                if self.tableView?.accessToken == subVC.accessToken {
+                    subVC.refreshUnreadCount()
                 }
             }
         }
@@ -356,6 +389,11 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     tableView.beginUpdates()
                     tableView.removeRows(at: IndexSet(integer: index), withAnimation: NSTableView.AnimationOptions.effectFade)
                     tableView.endUpdates()
+                    
+                    if let index = self.unreadList.firstIndex(of: deleteId) {
+                        self.unreadList.remove(at: index)
+                    }
+                    
                     break
                 }
             }
@@ -1313,6 +1351,30 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             getBoosterAndFavoriter(data: data, cell: cell)
         }
         
+        // 未読と既読で時刻表示の色を変える
+        if self.tableView?.type != .user && self.unreadList.contains(id) {
+            if self.selectedRow == row {
+                // 既読に変える
+                if let index = self.unreadList.firstIndex(of: id) {
+                    self.unreadList.remove(at: index)
+                    
+                    // タブに未読数を表示
+                    for subVC in MainViewController.instance?.subVCList ?? [] {
+                        if self.tableView?.accessToken == subVC.accessToken {
+                            subVC.refreshUnreadCount()
+                        }
+                    }
+                }
+                cell.dateLabel.textColor = ThemeColor.dateColor
+            } else {
+                // 未読
+                cell.dateLabel.textColor = ThemeColor.nameColor
+            }
+        } else {
+            // 既読
+            cell.dateLabel.textColor = ThemeColor.dateColor
+        }
+        
         return cell
     }
     
@@ -2024,6 +2086,23 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
             }
             
             super.keyDown(with: event)
+        }
+    }
+    
+    // 未読数を返す
+    func unreadCount() -> Int {
+        return unreadList.count
+    }
+    
+    // すべて既読にする
+    func readAll() {
+        unreadList = []
+        
+        // タブに未読数を表示
+        for subVC in MainViewController.instance?.subVCList ?? [] {
+            if self.tableView?.accessToken == subVC.accessToken {
+                subVC.refreshUnreadCount()
+            }
         }
     }
 }

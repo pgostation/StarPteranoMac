@@ -178,6 +178,10 @@ class TimeLineView: NSTableView {
                             
                             strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: strongSelf.accountList)
                             
+                            if isNewRefresh {
+                                strongSelf.model.readAll() // 初回はすべて既読にする
+                            }
+                            
                             // テーブルビューを更新
                             strongSelf.reloadData()
                             
