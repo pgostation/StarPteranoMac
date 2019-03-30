@@ -203,4 +203,21 @@ final class NotificationTableModel: NSObject, NSTableViewDataSource, NSTableView
         
         return cell
     }
+    
+    // 未読数
+    func unreadCount(accessToken: String) -> Int {
+        var count = 0
+        
+        let readDate = SettingsData.newestNotifyDate(accessToken: accessToken) ?? Date(timeIntervalSince1970: 0)
+        
+        for data in self.list {
+            guard let created_at = data.created_at else { continue }
+            let date = DecodeToot.decodeTime(text: created_at)
+            if date > readDate {
+                count += 1
+            }
+        }
+        
+        return count
+    }
 }

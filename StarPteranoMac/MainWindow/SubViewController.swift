@@ -349,7 +349,14 @@ final class SubViewController: NSViewController, NSTabViewDelegate {
             let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: mode)
             let vc = TimeLineViewManager.get(key: key)
             
-            if let view = vc?.view as? TimeLineView {
+            if let vc = vc as? NotificationViewController {
+                let unreadCount = vc.unreadCount()
+                if unreadCount > 0 {
+                    self.tabView.items[index].infoString = "\(unreadCount)"
+                } else {
+                    self.tabView.items[index].infoString = ""
+                }
+            } else if let view = vc?.view as? TimeLineView {
                 let unreadCount = view.model.unreadCount()
                 if unreadCount > 0 {
                     self.tabView.items[index].infoString = "\(unreadCount)"

@@ -50,6 +50,12 @@ final class NotificationViewController: NSViewController {
             if lastDate == nil || date > lastDate! {
                 SettingsData.newestNotifyDate(accessToken: accessToken, date: date)
             }
+            
+            for subVC in MainViewController.instance?.subVCList ?? [] {
+                if self.accessToken == subVC.accessToken {
+                    subVC.refreshUnreadCount()
+                }
+            }
         }
         
         // 30秒以上経過していたら
@@ -134,6 +140,12 @@ final class NotificationViewController: NSViewController {
                             // 表示を更新
                             view.notificationModel.change(addList: list)
                             view.reloadData()
+                            
+                            for subVC in MainViewController.instance?.subVCList ?? [] {
+                                if self?.accessToken == subVC.accessToken {
+                                    subVC.refreshUnreadCount()
+                                }
+                            }
                         }
                     }
                 } catch {
@@ -142,6 +154,13 @@ final class NotificationViewController: NSViewController {
                 print(error)
             }
         })
+    }
+    
+    // 未読数
+    func unreadCount() -> Int {
+        guard let view = self.view as? NotificationTableView else { return 0 }
+        
+        return view.notificationModel.unreadCount(accessToken: accessToken)
     }
 }
 
