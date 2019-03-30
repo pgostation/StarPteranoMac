@@ -293,6 +293,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 }
             }
             
+            if !isNewRefresh && !isStreaming {
+                self.readAll() // 初回はすべて既読にする
+            }
+            
             // タブに未読数を表示
             for subVC in MainViewController.instance?.subVCList ?? [] {
                 if self.tableView?.accessToken == subVC.accessToken {
