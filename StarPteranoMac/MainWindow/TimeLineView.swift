@@ -178,7 +178,7 @@ class TimeLineView: NSTableView {
                             
                             strongSelf.model.change(tableView: strongSelf, addList: contentList, accountList: strongSelf.accountList)
                             
-                            if isNewRefresh {
+                            if !isNewRefresh {
                                 strongSelf.model.readAll() // 初回はすべて既読にする
                             }
                             
@@ -193,6 +193,10 @@ class TimeLineView: NSTableView {
                                         let contentData = AnalyzeJson.analyzeJson(view: strongSelf, model: strongSelf.model, json: responseJson, acct: &acct, isMerge: true)
                                         let contentList = [contentData]
                                         homeLocalTlView.model.change(tableView: homeLocalTlView, addList: contentList, accountList: strongSelf.accountList)
+                                        
+                                        if !isNewRefresh {
+                                            homeLocalTlView.model.readAll() // 初回はすべて既読にする
+                                        }
                                         
                                         // テーブルビューを更新
                                         homeLocalTlView.reloadData()
@@ -832,6 +836,10 @@ class TimeLineView: NSTableView {
             // タイムラインの一番上に移動
             self.scroll(NSPoint.zero)
             self.model.selectRow(timelineView: self, row: 0)
+        case 49: // space
+            if let row = self.model.unreadRow() {
+                self.model.selectRow(timelineView: self, row: row)
+            }
         default:
             break
         }

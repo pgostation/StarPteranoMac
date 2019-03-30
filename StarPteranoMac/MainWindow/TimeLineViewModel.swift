@@ -134,9 +134,9 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 
                 self.notify(dataList: addList2)
                 
-                for data in addList2 {
+                for data in addList2.reversed() {
                     if let id = data.id {
-                        self.unreadList.append(id)
+                        self.unreadList.insert(id, at: 0)
                     }
                 }
             } else if let firstDate1 = self.list.first?.created_at, let firstDate2 = addList2.first?.created_at, let lastDate1 = self.list.last?.created_at, let lastDate2 = addList2.last?.created_at {
@@ -162,7 +162,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                                 }
                                 
                                 if let id = newContent.id {
-                                    self.unreadList.append(id)
+                                    self.unreadList.insert(id, at: 0)
                                 }
                                 
                                 break
@@ -211,7 +211,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     
                     for data in addList2 {
                         if let id = data.id {
-                            self.unreadList.append(id)
+                            self.unreadList.insert(id, at: 0)
                         }
                     }
                 } else {
@@ -244,7 +244,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                                 }
                                 
                                 if let id = newContent.id {
-                                    self.unreadList.append(id)
+                                    self.unreadList.insert(id, at: 0)
                                 }
                                 
                                 break
@@ -255,7 +255,7 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                             self.list.append(newContent)
                             
                             if let id = newContent.id {
-                                self.unreadList.append(id)
+                                self.unreadList.insert(id, at: 0)
                             }
                         }
                     }
@@ -819,6 +819,12 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
         cell.isMiniView = SettingsData.isMiniView
         cell.accountData = account
         cell.visibility = data.visibility
+        
+        for dict in data.tags ?? [[:]] {
+            if let tag = dict["name"] {
+                HashtagCache.addHashtagList(text: tag)
+            }
+        }
         
         if cell.isMiniView != .normal && self.selectedRow != row {
             messageView.sizeToFit()
@@ -2104,5 +2110,22 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                 subVC.refreshUnreadCount()
             }
         }
+    }
+    
+    // 最も古い未読のrowIndexを返す
+    func unreadRow() -> Int? {
+        guard let unreadId = unreadList.last else { return nil }
+        
+        for (index, data) in self.list.enumerated() {
+            if data.id == unreadId {
+                if self.tableView?.type == .user {
+                    return index + 1
+                } else {
+                    return index
+                }
+            }
+        }
+        
+        return nil
     }
 }
