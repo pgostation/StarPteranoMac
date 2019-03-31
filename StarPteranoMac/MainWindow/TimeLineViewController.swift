@@ -105,7 +105,7 @@ final class TimeLineViewController: NSViewController {
         scrollView?.documentView = self.view
     }
     
-    override func viewDidLayout() {
+    override func viewWillLayout() {
         if let frame = self.view.superview?.frame, let view = self.view as? TimeLineView {
             var sumHeight: CGFloat = 0
             let isMiniView = SettingsData.isMiniView
