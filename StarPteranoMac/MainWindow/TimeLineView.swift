@@ -849,6 +849,21 @@ class TimeLineView: NSTableView {
             if let row = self.model.unreadRow() {
                 self.model.selectRow(timelineView: self, row: row)
             }
+        case 8: // c
+            if modifierFlags.contains(NSEvent.ModifierFlags.command) {
+                // トゥートをコピー
+                
+                // 文字列を用意
+                let cell = getCell()
+                let string = (cell?.spolerTextLabel?.string ?? "") + (cell?.messageView?.string ?? "")
+                
+                // ペーストボードにコピー
+                let pasteboard = NSPasteboard.general
+                pasteboard.clearContents()
+                let item = NSPasteboardItem()
+                item.setString(string, forType: NSPasteboard.PasteboardType.string)
+                pasteboard.writeObjects([item])
+            }
         default:
             break
         }
