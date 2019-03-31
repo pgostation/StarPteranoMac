@@ -409,6 +409,12 @@ private class PgoTabItemView: NSView {
             self.removeFromSuperview()
             superview?.addSubview(self)
         }
+        
+        // optionキーを押していれば、タブを選択
+        if event.modifierFlags.contains(NSEvent.ModifierFlags.option) {
+            tabView?.select(itemView: self)
+            tabView?.refresh()
+        }
     }
     
     // マウスがビューから出た時
