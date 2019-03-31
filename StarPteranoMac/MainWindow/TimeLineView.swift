@@ -767,11 +767,26 @@ class TimeLineView: NSTableView {
                 getCell()?.replyAction()
             }
         case 3: // f
-            // お気に入り
-            getCell()?.favoriteAction()
+            if modifierFlags.contains(NSEvent.ModifierFlags.command) {
+                // 検索フィールドにフォーカス移動
+                if let tlVC = TimeLineViewManager.getLastSelectedTLView() {
+                    if let subVC = tlVC.parent as? SubViewController {
+                        if let footerView = subVC.footerVC.view as? FooterView {
+                            let searchField = footerView.searchField
+                            searchField.refusesFirstResponder = false
+                            MainWindow.window?.makeFirstResponder(searchField)
+                        }
+                    }
+                }
+            } else {
+                // お気に入り
+                getCell()?.favoriteAction()
+            }
         case 11: // b
-            // ブースト
-            getCell()?.boostAction()
+            if !modifierFlags.contains(NSEvent.ModifierFlags.command) {
+                // ブースト
+                getCell()?.boostAction()
+            }
         case 4: // h
             // ユーザータイムラインを表示
             getCell()?.tapAccountAction()
