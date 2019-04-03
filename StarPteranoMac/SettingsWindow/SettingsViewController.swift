@@ -229,7 +229,7 @@ private class SettingsView: NSView {
     }
     
     private func setProperties() {
-        backView.backgroundColor = NSColor.white.cgColor
+        backView.backgroundColor = NSColor.textBackgroundColor.cgColor
         
         func setButtonStyle(button: NSButton) {
             button.bezelStyle = .shadowlessSquare
@@ -269,6 +269,10 @@ private class SettingsView: NSView {
         
         filter3Button.title = I18n.get("SETTINGS_FILTER") + "4\n" + (SettingsData.filterName(index: 3) ?? "").prefix(6)
         setButtonStyle(button: filter3Button)
+    }
+    
+    override func updateLayer() {
+        setProperties()
     }
     
     func clearHighlight() {

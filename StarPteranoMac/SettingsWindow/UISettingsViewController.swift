@@ -173,7 +173,7 @@ final class UISettingsView: NSView {
         iconSizeLabel.string = I18n.get("LABEL_ICONSIZE") + ": " + "\(Int(SettingsData.iconSize))"
         iconSizeLabel.fontSize = 12
         iconSizeLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
-        iconSizeLabel.foregroundColor = NSColor.black.cgColor
+        iconSizeLabel.foregroundColor = NSColor.textColor.cgColor
         
         fontSizeStepper.integerValue = Int(SettingsData.fontSize)
         fontSizeStepper.maxValue = 100
@@ -181,7 +181,7 @@ final class UISettingsView: NSView {
         fontSizeLabel.string = I18n.get("LABEL_FONTSIZE") + ": " + "\(Int(SettingsData.fontSize))"
         fontSizeLabel.fontSize = 12
         fontSizeLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
-        fontSizeLabel.foregroundColor = NSColor.black.cgColor
+        fontSizeLabel.foregroundColor = NSColor.textColor.cgColor
         
         previewHeightStepper.integerValue = Int(SettingsData.previewHeight)
         previewHeightStepper.maxValue = 100
@@ -189,7 +189,7 @@ final class UISettingsView: NSView {
         previewHeightLabel.string = I18n.get("LABEL_PREVIEWHEIGHT") + ": " + "\(Int(SettingsData.previewHeight))"
         previewHeightLabel.fontSize = 12
         previewHeightLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
-        previewHeightLabel.foregroundColor = NSColor.black.cgColor
+        previewHeightLabel.foregroundColor = NSColor.textColor.cgColor
     }
     
     override func layout() {

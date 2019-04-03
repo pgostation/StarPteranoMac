@@ -380,18 +380,22 @@ private final class AccountView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setProperties(account: (String, String)) {
+    private func setProperties(account: (String, String)?) {
         self.wantsLayer = true
-        self.layer?.backgroundColor = NSColor.white.cgColor
+        self.layer?.backgroundColor = NSColor.textBackgroundColor.cgColor
         self.layer?.cornerRadius = 6
         
+        hostLabel.foregroundColor = NSColor.textColor.cgColor
+        
+        idLabel.foregroundColor = NSColor.textColor.withAlphaComponent(0.8).cgColor
+        
+        guard let account = account else { return }
+        
         hostLabel.string = account.0
-        hostLabel.foregroundColor = NSColor.black.cgColor
         hostLabel.fontSize = 14
         hostLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
         
         idLabel.string = SettingsData.accountUsername(accessToken: account.1)
-        idLabel.foregroundColor = NSColor.darkGray.cgColor
         idLabel.fontSize = 14
         idLabel.contentsScale = NSScreen.main?.backingScaleFactor ?? 1
         
@@ -406,6 +410,10 @@ private final class AccountView: NSView {
                 self?.iconView.image = image
             }
         }
+    }
+    
+    override func updateLayer() {
+        setProperties(account: nil)
     }
     
     override func layout() {

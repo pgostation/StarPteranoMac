@@ -105,7 +105,7 @@ final class DetailSettingsView: NSView {
         ramCacheLabel.string = I18n.get("LABEL_RAMCACHECOUNT") + ": " + "\(SettingsData.ramCacheCount)"
         ramCacheLabel.fontSize = 12
         ramCacheLabel.contentsScale = (NSScreen.main?.backingScaleFactor)!
-        ramCacheLabel.foregroundColor = NSColor.black.cgColor
+        ramCacheLabel.foregroundColor = NSColor.textColor.cgColor
     }
     
     override func layout() {
