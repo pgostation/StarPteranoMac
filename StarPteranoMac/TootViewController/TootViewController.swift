@@ -81,6 +81,8 @@ final class TootViewController: NSViewController, NSTextViewDelegate {
         view.textField.string = ""
         view.spoilerTextField.string = ""
         view.textCountLabel.stringValue = ""
+        view.protectMode = SettingsData.protectMode
+        view.refresh()
         TootView.inReplyToId = nil
         TootView.scheduledDate = nil
         
