@@ -425,11 +425,7 @@ private final class FollowingTableCell: NSView {
     }
     
     @objc func followAction() {
-        if self.accountData?.acct?.contains("@") == true {
-            ProfileAction.remoteFollow(uri: (self.accountData?.acct)!, hostName: hostName, accessToken: accessToken)
-        } else {
-            ProfileAction.follow(id: self.accountData?.id ?? "", hostName: hostName, accessToken: accessToken)
-        }
+        ProfileAction.follow(id: self.accountData?.id ?? "", hostName: hostName, accessToken: accessToken)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             if let url = URL(string: "https://\(self.hostName)/api/v1/accounts/relationships/?id[]=\(self.accountData?.id ?? "")") {

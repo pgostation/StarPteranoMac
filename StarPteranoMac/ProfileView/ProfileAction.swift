@@ -24,16 +24,6 @@ final class ProfileAction {
         }
     }
     
-    static func remoteFollow(uri: String, hostName: String, accessToken: String) {
-        let url = URL(string: "https://\(hostName)/api/v1/follows")!
-        
-        try? MastodonRequest.post(url: url, accessToken: accessToken, body: ["uri": uri]) { (data, response, error) in
-            if let data = data, data.count > 0 {
-                refresh()
-            }
-        }
-    }
-    
     static func follow(id: String, hostName: String, accessToken: String) {
         let url = URL(string: "https://\(hostName)/api/v1/accounts/\(id)/follow")!
         

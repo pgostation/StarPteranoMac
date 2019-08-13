@@ -484,25 +484,14 @@ final class ProfileViewCell: NSView, NSTextViewDelegate {
                 }))
             }
         } else {
-            if id.suffix(id.count - 1).contains("@") {
-                // リモートフォローする
-                alertController.addAction(MyAlertAction(
-                    title: I18n.get("ACTION_REMOTE_FOLLOW"),
-                    style: MyAlertAction.Style.defaultValue,
-                    handler: { _ in
-                        ProfileAction.remoteFollow(uri: uri, hostName: hostName, accessToken: accessToken)
-                        ProfileViewCell.clearCache()
-                }))
-            } else {
-                // フォローする
-                alertController.addAction(MyAlertAction(
-                    title: I18n.get("ACTION_FOLLOW"),
-                    style: MyAlertAction.Style.defaultValue,
-                    handler: { _ in
-                        ProfileAction.follow(id: id, hostName: hostName, accessToken: accessToken)
-                        ProfileViewCell.clearCache()
-                }))
-            }
+            // フォローする
+            alertController.addAction(MyAlertAction(
+                title: I18n.get("ACTION_FOLLOW"),
+                style: MyAlertAction.Style.defaultValue,
+                handler: { _ in
+                    ProfileAction.follow(id: id, hostName: hostName, accessToken: accessToken)
+                    ProfileViewCell.clearCache()
+            }))
         }
         
         if relationshipData.blocking == 1 {
