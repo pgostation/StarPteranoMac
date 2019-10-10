@@ -163,8 +163,10 @@ class TimeLineView: NSTableView {
                         if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
                             let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
                             if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
-                                if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
-                                    AnalyzeJson.analyzeJsonArray(view: homeLocalTlView, model: homeLocalTlView.model, jsonList: responseJson, isNew: true, isNewRefresh: isNewRefresh, isMerge: true)
+                                DispatchQueue.main.async {
+                                    if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                                        AnalyzeJson.analyzeJsonArray(view: homeLocalTlView, model: homeLocalTlView.model, jsonList: responseJson, isNew: true, isNewRefresh: isNewRefresh, isMerge: true)
+                                    }
                                 }
                             }
                         }
@@ -347,8 +349,10 @@ class TimeLineView: NSTableView {
             if strongSelf.mergeLocalTL && (strongSelf.type == .home || strongSelf.type == .local) {
                 let homeLocalKey = TimeLineViewManager.makeKey(hostName: strongSelf.hostName, accessToken: strongSelf.accessToken, type: .homeLocal, option: nil)
                 if let homeLocalTlVc = TimeLineViewManager.get(key: homeLocalKey) {
-                    if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
-                        homeLocalTlView.analyzeStreamingData(string: string, isMerge: true)
+                    DispatchQueue.main.async {
+                        if let homeLocalTlView = homeLocalTlVc.view as? TimeLineView {
+                            homeLocalTlView.analyzeStreamingData(string: string, isMerge: true)
+                        }
                     }
                 }
             }
@@ -498,16 +502,20 @@ class TimeLineView: NSTableView {
                         let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: SettingsData.TLMode.notifications)
                         if let vc = TimeLineViewManager.get(key: key) as? NotificationViewController {
                             vc.refreshFlag = true
-                            if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
-                                vc.add(isRefresh: true)
+                            DispatchQueue.main.async {
+                                if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
+                                    vc.add(isRefresh: true)
+                                }
                             }
                         }
                         if typeStr == "mention" {
                             let key = TimeLineViewManager.makeKey(hostName: hostName, accessToken: accessToken, type: SettingsData.TLMode.mentions)
                             if let vc = TimeLineViewManager.get(key: key) as? NotificationViewController {
                                 vc.refreshFlag = true
-                                if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
-                                    vc.add(isRefresh: true)
+                                DispatchQueue.main.async {
+                                    if vc.parent != nil && vc.lastRefreshDate.timeIntervalSinceNow <= -30 {
+                                        vc.add(isRefresh: true)
+                                    }
                                 }
                             }
                         }
