@@ -109,16 +109,21 @@ final class ImageUtils {
     // 上下反転する (何故か絵文字が上下反転するので)
     static func flipped(_ image: NSImage) -> EmojiImage {
         let flippedImage = EmojiImage(size: image.size)
-        flippedImage.lockFocus()
         
-        let transform = NSAffineTransform()
-        transform.translateX(by: 0, yBy: image.size.height)
-        transform.scaleX(by: 1.0, yBy: -1.0)
-        transform.concat()
-        
-        let rect = NSRect(origin: NSZeroPoint, size: image.size)
-        image.draw(at: NSZeroPoint, from: rect, operation: .sourceOver, fraction: 1.0)
-        flippedImage.unlockFocus()
+        if #available(OSX 10.15, *) {
+            // macOS Catalinaからは反転しなくなった
+        } else {
+            flippedImage.lockFocus()
+            
+            let transform = NSAffineTransform()
+            transform.translateX(by: 0, yBy: image.size.height)
+            transform.scaleX(by: 1.0, yBy: -1.0)
+            transform.concat()
+            
+            let rect = NSRect(origin: NSZeroPoint, size: image.size)
+            image.draw(at: NSZeroPoint, from: rect, operation: .sourceOver, fraction: 1.0)
+            flippedImage.unlockFocus()
+        }
         
         flippedImage.shortcode = (image as? EmojiImage)?.shortcode
         
