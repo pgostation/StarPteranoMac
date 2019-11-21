@@ -1945,8 +1945,10 @@ class TimeLineViewModel: NSObject, NSTableViewDataSource, NSTableViewDelegate, N
                     
                     // 詳細ビューと元のビューの両方に反映する
                     strongSelf.change(tableView: timelineView, addList: contentList, accountList: strongSelf.accountList)
-                    if let tlView = viewController.view as? TimeLineView {
-                        tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
+                    DispatchQueue.main.async {
+                        if let tlView = viewController.view as? TimeLineView {
+                            tlView.model.change(tableView: tlView, addList: contentList, accountList: tlView.accountList)
+                        }
                     }
                 }
             } catch { }
