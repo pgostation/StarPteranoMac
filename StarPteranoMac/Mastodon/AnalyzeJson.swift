@@ -117,7 +117,7 @@ final class AnalyzeJson {
             }
         }
         
-        let content = json["content"] as? String
+        let content = reblog?["content"] as? String ?? json["content"] as? String
         
         let created_at: String?
         let reblog_created_at: String?
