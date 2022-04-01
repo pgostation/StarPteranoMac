@@ -71,7 +71,7 @@ private class HelperView: NSView {
     private let tapParentView = NSView()
     private var tapViews: [TapView] = []
     private let mode: HelperViewManager.HelperMode
-    private weak var textView: NSTextView?
+    private var textView: NSTextView?
     private let location: Int
     private var selectedNumber = 0
     
@@ -407,7 +407,7 @@ private class TapView: NSButton {
     let label = NSTextField()
     private let text: String
     private let trueText: String
-    private weak var textView: NSTextView?
+    private var textView: NSTextView?
     private let location: Int
     
     init(accessToken: String, text: String, trueText: String, textView: NSTextView?, location: Int) {
